@@ -80,11 +80,30 @@
 </head>
 <body>
 
-<div class="top-section">
-    <div class="header-flex">
-        <header><h1>😆 Emoji</h1></header>
-       <a href="index.html#main" class="back-link">← 基地TOPに戻る</a>
-    </div>
+<header style="background:rgba(0,0,0,0.95); height:60px; display:flex; justify-content:space-between; align-items:center; position:sticky; top:0; z-index:1000; border-bottom:2px solid var(--accent-color); padding:0 15px; box-sizing:border-box;">
+    <a href="index.html#main" style="text-decoration:none; font-weight:bold; font-size:1.1rem; color:var(--accent-color); white-space:nowrap; margin-right:15px;">ボブの秘密基地</a>
+    
+    <nav style="display:flex; gap:10px; overflow-x:auto; white-space:nowrap; -webkit-overflow-scrolling:touch; padding:5px 0;">
+        <style>
+            /* メニューの文字装飾（このページ限定のスタイル） */
+            .nav-item-custom {
+                color: #e0e0e0; text-decoration: none; font-size: 0.85rem; 
+                padding: 6px 10px; border-radius: 4px; border: 1px solid transparent;
+                transition: 0.2s;
+            }
+            .nav-item-custom:hover { background: rgba(0, 212, 255, 0.2); border-color: #00d4ff; }
+            /* スクロールバーを隠す */
+            nav::-webkit-scrollbar { display: none; }
+        </style>
+        <a href="arms.html" class="nav-item-custom">Arms</a>
+        <a href="battle.html" class="nav-item-custom">Battle</a>
+        <a href="tactics.html" class="nav-item-custom">Tactics</a>
+        <a href="hunter.html" class="nav-item-custom">Hunter</a>
+        <a href="trivia.html" class="nav-item-custom">Trivia</a>
+        <a href="emoji.html" class="nav-item-custom">Emoji</a>
+        <a href="link.html" class="nav-item-custom">Link</a>
+    </nav>
+</header>
     
     <div class="search-area">
         <select id="search-column">
