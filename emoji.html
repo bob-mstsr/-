@@ -83,7 +83,7 @@
 <div class="top-section">
     <div class="header-flex">
         <header><h1>😆 Emoji</h1></header>
-        <a href="index.html" class="back-link">← 基地に戻る</a>
+        <a href="index.html" class="back-link">← 基地TOPに戻る</a>
     </div>
     
     <div class="search-area">
@@ -121,22 +121,24 @@
         }
     }
 
-    function renderTable(csvData) {
+function renderTable(csvData) {
         const rows = csvData.split(/\r?\n/).filter(row => row.trim() !== '');
         const tableBody = document.getElementById('emoji-body');
         
         let html = "";
-        // 1行目はヘッダーなので i=1 から開始
         for (let i = 1; i < rows.length; i++) {
-            // カンマ区切り。検索ワードにスペースが含まれる可能性を考慮
             const cols = rows[i].split(',');
             if(cols.length < 4) continue;
+
+            // ★ここが修正ポイント： & を &amp; に置換して、変換を阻止する
+            const decCode = cols[2].replace(/&/g, '&amp;');
+            const hexCode = cols[3].replace(/&/g, '&amp;');
 
             html += `<tr>
                 <td class="emoji-cell">${cols[0]}</td>
                 <td class="word-cell">${cols[1]}</td>
-                <td class="code-cell">${cols[2]}</td>
-                <td class="code-cell">${cols[3]}</td>
+                <td class="code-cell">${decCode}</td>
+                <td class="code-cell">${hexCode}</td>
             </tr>`;
         }
         tableBody.innerHTML = html;
