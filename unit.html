@@ -19,58 +19,70 @@
             --border-color: #444;
         }
 
-        body { font-family: sans-serif; margin: 0; background: var(--bg-color); color: var(--text-color); overflow-x: hidden; }
+        body { font-family: sans-serif; margin: 0; background: var(--bg-color); color: var(--text-color); height: 100vh; display: flex; flex-direction: column; }
 
-        /* --- ヘッダー（最新共通版） --- */
+        /* ヘッダー */
         header {
             background: rgba(0,0,0,0.95); height: 60px; display: flex; 
             justify-content: space-between; align-items: center; 
-            position: sticky; top: 0; z-index: 1000; border-bottom: 2px solid var(--accent-color); 
-            padding: 0 15px; box-sizing: border-box;
+            z-index: 1000; border-bottom: 2px solid var(--accent-color); 
+            padding: 0 15px; flex-shrink: 0;
         }
-        .logo-link { text-decoration: none; font-weight: bold; font-size: 1.1rem; color: var(--accent-color); white-space: nowrap; }
-        .nav-links { display: flex; gap: 10px; overflow-x: auto; white-space: nowrap; -webkit-overflow-scrolling: touch; }
-        .nav-links::-webkit-scrollbar { display: none; }
-        .nav-item-custom { color: #e0e0e0; text-decoration: none; font-size: 0.85rem; padding: 6px 10px; border-radius: 4px; border: 1px solid transparent; transition: 0.2s; }
+        .logo-link { text-decoration: none; font-weight: bold; font-size: 1.1rem; color: var(--accent-color); }
+        .nav-links { display: flex; gap: 10px; overflow-x: auto; white-space: nowrap; }
+        .nav-item-custom { color: #e0e0e0; text-decoration: none; font-size: 0.85rem; padding: 6px 10px; border-radius: 4px; border: 1px solid transparent; }
         .nav-item-custom:hover { background: rgba(0, 212, 255, 0.2); border-color: var(--accent-color); }
 
-        /* --- 検索ツールバー --- */
+        /* 検索エリア */
         .toolbar {
             display: flex; flex-wrap: wrap; align-items: center; gap: 20px;
-            padding: 15px; background: #222; border-bottom: 1px solid var(--accent-color);
-            font-size: 13px; color: white;
+            padding: 10px 15px; background: #222; border-bottom: 1px solid var(--accent-color);
+            font-size: 13px; flex-shrink: 0;
         }
-        .toolbar div { display: flex; align-items: center; }
-        .toolbar input, .toolbar select { 
-            background: #333; color: white; border: 1px solid var(--accent-color); 
-            padding: 4px 8px; border-radius: 4px; margin: 0 5px;
-        }
+        .toolbar input { background: #333; color: white; border: 1px solid var(--accent-color); padding: 4px 8px; border-radius: 4px; }
         .range-input { width: 70px; }
 
-        /* --- テーブルエリア --- */
-        .table-container { width: 100%; height: calc(100vh - 150px); overflow: auto; background: var(--card-bg); }
+        /* 上部スクロールバー用コンテナ */
+        .top-scrollbar-wrapper {
+            width: 100%; overflow-x: auto; background: #222; flex-shrink: 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .top-scrollbar-content { height: 1px; } /* 中身は1pxの高さで、幅だけテーブルに合わせる */
+
+        /* テーブルエリア（ここ自体をスクロールさせる） */
+        .table-wrapper { 
+            flex-grow: 1; 
+            overflow: auto; /* 縦横両方のスクロールをここで管理 */
+            background: var(--card-bg);
+            position: relative;
+        }
         
         #unitTable { width: 100% !important; font-size: 12px; border-collapse: separate; border-spacing: 0; }
         #unitTable th, #unitTable td { 
             white-space: nowrap; padding: 8px 12px; 
             border-bottom: 1px solid var(--border-color); border-right: 1px solid var(--border-color);
-            background-color: var(--card-bg); color: var(--text-color);
+            background-color: var(--card-bg);
         }
 
-        /* 縦固定（ヘッダー） */
-        #unitTable thead th { position: sticky; top: 0; z-index: 100; background-color: #333 !important; color: var(--accent-color); }
+        /* 縦固定（ヘッダー項目名） */
+        #unitTable thead th { 
+            position: sticky; top: 0; z-index: 100; 
+            background-color: #333 !important; color: var(--accent-color); 
+        }
 
         /* 横固定（1列目: No, 2列目: 機体名） */
         #unitTable th:nth-child(1), #unitTable td:nth-child(1) { position: sticky; left: 0; z-index: 10; border-right: 2px solid var(--accent-color); }
         #unitTable th:nth-child(2), #unitTable td:nth-child(2) { position: sticky; left: 55px; z-index: 10; border-right: 2px solid var(--accent-color); }
         
-        /* 角の固定 */
-        #unitTable thead th:nth-child(1) { z-index: 110; }
-        #unitTable thead th:nth-child(2) { z-index: 110; }
+        /* 角の固定用 */
+        #unitTable thead th:nth-child(1) { z-index: 110; left: 0; }
+        #unitTable thead th:nth-child(2) { z-index: 110; left: 55px; }
 
-        /* DataTables標準パーツの調整 */
-        .dataTables_wrapper .dataTables_info, .dataTables_wrapper .dataTables_paginate { color: var(--text-color) !important; padding: 10px; }
-        .dataTables_paginate .paginate_button { color: var(--text-color) !important; background: #333 !important; border: 1px solid var(--border-color) !important; }
+        /* スクロールバーのカスタマイズ（常に見えやすく） */
+        .table-wrapper::-webkit-scrollbar, .top-scrollbar-wrapper::-webkit-scrollbar { height: 12px; width: 12px; }
+        .table-wrapper::-webkit-scrollbar-thumb, .top-scrollbar-wrapper::-webkit-scrollbar-thumb { background: var(--accent-color); border-radius: 10px; }
+        .table-wrapper::-webkit-scrollbar-track, .top-scrollbar-wrapper::-webkit-scrollbar-track { background: #222; }
+
     </style>
 </head>
 <body>
@@ -90,8 +102,8 @@
 </header>
 
 <div class="toolbar">
-    <div id="lenMenu"><strong>表示:</strong> </div>
-    <div id="customFilter"><strong>検索:</strong> </div>
+    <div id="lenMenu"></div>
+    <div id="customFilter"></div>
     <div>
         <strong>No範囲:</strong>
         <input type="number" id="min" class="range-input" placeholder="Min"> ～ 
@@ -99,7 +111,11 @@
     </div>
 </div>
 
-<div class="table-container">
+<div class="top-scrollbar-wrapper" id="topScroll">
+    <div class="top-scrollbar-content" id="topScrollContent"></div>
+</div>
+
+<div class="table-wrapper" id="mainScroll">
     <table id="unitTable" class="display nowrap"></table>
 </div>
 
@@ -107,29 +123,19 @@
 $(document).ready(function () {
     let table = null;
 
-    // No範囲検索ロジックの登録
+    // No範囲検索
     $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
         let min = parseInt($('#min').val(), 10);
         let max = parseInt($('#max').val(), 10);
         let noValue = parseFloat(data[0]) || 0; 
-        if ((isNaN(min) && isNaN(max)) || (isNaN(min) && noValue <= max) || (min <= noValue && isNaN(max)) || (min <= noValue && noValue <= max)) {
-            return true;
-        }
-        return false;
+        return (isNaN(min) && isNaN(max)) || (isNaN(min) && noValue <= max) || (min <= noValue && isNaN(max)) || (min <= noValue && noValue <= max);
     });
 
-    // CSVの読み込みとテーブル生成
     function initUnitTable() {
-        const csvFile = "unit_26.3.24.csv"; // GitHub上のファイル名
-
+        const csvFile = "unit_26.3.24.csv";
         Papa.parse(csvFile, {
-            download: true,
-            header: true,
-            skipEmptyLines: true,
-            encoding: "UTF-8", // 文字化けする場合は "Shift_JIS" に変更
+            download: true, header: true, skipEmptyLines: true, encoding: "UTF-8",
             complete: function (results) {
-                if (!results.data || results.data.length === 0) return;
-
                 const headers = results.meta.fields;
                 let tableHtml = '<thead><tr>';
                 headers.forEach(h => tableHtml += `<th>${h.trim()}</th>`);
@@ -138,40 +144,46 @@ $(document).ready(function () {
 
                 results.data.forEach(row => {
                     let tr = '<tr>';
-                    headers.forEach(h => {
-                        let val = row[h] ?? row[h.trim()] ?? '';
-                        tr += `<td>${val}</td>`;
-                    });
+                    headers.forEach(h => tr += `<td>${row[h] ?? row[h.trim()] ?? ''}</td>`);
                     tr += '</tr>';
                     $('#tableBody').append(tr);
                 });
 
-                // DataTableの初期化
                 table = $('#unitTable').DataTable({
-                    dom: '<"top"lf>rt<"bottom"ip><"clear">',
-                    lengthMenu: [[20, 50, 100, 1000, -1], [20, 50, 100, 1000, "全表示"]],
-                    pageLength: 50,
-                    scrollX: true,
-                    autoWidth: false,
+                    dom: 'lfrtip',
+                    lengthMenu: [[20, 50, 100, -1], [20, 50, 100, "全表示"]],
+                    pageLength: 50, scrollX: false, autoWidth: false,
                     language: { url: "https://cdn.datatables.net/plug-ins/1.13.6/i18n/ja.json" },
                     initComplete: function() {
-                        // 標準コントロールをツールバーへ移動
                         $('.dataTables_length').detach().appendTo('#lenMenu');
                         $('.dataTables_filter').detach().appendTo('#customFilter');
+                        syncScrollbars(); // スクロールバーの同期設定
                     }
                 });
             }
         });
     }
 
-    // 範囲検索のイベント監視
-    $('#min, #max').on('keyup change', function() {
-        if (table) table.draw();
-    });
+    // 上下のスクロールバーを同期させる
+    function syncScrollbars() {
+        const topScroll = $('#topScroll');
+        const mainScroll = $('#mainScroll');
+        const table = $('#unitTable');
 
+        // 上部スクロールバーの中身の幅をテーブルの幅に合わせる
+        $('#topScrollContent').width(table.width());
+
+        topScroll.on('scroll', function() {
+            mainScroll.scrollLeft(topScroll.scrollLeft());
+        });
+        mainScroll.on('scroll', function() {
+            topScroll.scrollLeft(mainScroll.scrollLeft());
+        });
+    }
+
+    $('#min, #max').on('keyup change', function() { if (table) table.draw(); });
     initUnitTable();
 });
 </script>
-
 </body>
 </html>
