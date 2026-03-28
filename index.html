@@ -23,11 +23,10 @@
             overflow-x: hidden;
         }
 
-        /* --- ヘッダー設定 --- */
         header {
             background-color: rgba(0, 0, 0, 0.95);
             height: var(--header-height);
-            display: none; /* 最初（入口）は非表示 */
+            display: none; 
             justify-content: space-between;
             align-items: center;
             position: sticky;
@@ -46,17 +45,15 @@
             margin-right: 15px;
         }
 
-        /* 横スクロール可能なナビゲーション */
         .nav-links {
             display: flex;
             gap: 10px;
-            overflow-x: auto; /* 横スクロールを許可 */
+            overflow-x: auto;
             white-space: nowrap;
-            -webkit-overflow-scrolling: touch; /* iOS用スムーズスクロール */
+            -webkit-overflow-scrolling: touch;
             padding: 5px 0;
         }
 
-        /* スクロールバーを隠す（デザイン重視） */
         .nav-links::-webkit-scrollbar { display: none; }
 
         .nav-item {
@@ -74,11 +71,9 @@
             border-color: var(--accent-color);
         }
 
-        /* --- ページ構成 --- */
         .page { display: none; min-height: 100vh; }
         .page.active { display: flex; flex-direction: column; }
 
-        /* 入口ページ */
         #top-page {
             justify-content: center;
             align-items: center;
@@ -109,7 +104,6 @@
             box-shadow: 0 0 20px var(--accent-color);
         }
 
-        /* カードグリッド */
         .container { max-width: 1200px; margin: 20px auto; padding: 0 15px; }
         .grid {
             display: grid;
@@ -139,6 +133,7 @@
     <header id="main-header">
         <a href="index.html#main" class="logo-link" onclick="location.reload()">ボブの秘密基地</a>
         <nav class="nav-links">
+            <a href="unit.html" class="nav-item">Unit</a>
             <a href="arms.html" class="nav-item">Arms</a>
             <a href="battle.html" class="nav-item">Battle</a>
             <a href="tactics.html" class="nav-item">Tactics</a>
@@ -157,18 +152,25 @@
     <div id="main-page" class="page">
         <div class="container">
             <div class="grid">
+                <a href="unit.html" class="card">
+                    <div class="card-img">🤖</div>
+                    <div class="card-content">
+                        <h3 class="card-title">Unit Database</h3>
+                        <p class="card-desc">機体ステータス・特殊能力データ</p>
+                    </div>
+                </a>
                 <a href="arms.html" class="card">
                     <div class="card-img">💣</div>
                     <div class="card-content">
                         <h3 class="card-title">Arms depot</h3>
-                        <p class="card-desc">武器・装備データと武器庫システム解説</p>
+                        <p class="card-desc">武器・装備データと武器庫システム</p>
                     </div>
                 </a>
                 <a href="battle.html" class="card">
                     <div class="card-img">⚔️</div>
                     <div class="card-content">
                         <h3 class="card-title">Battle Data</h3>
-                        <p class="card-desc">大会などの戦闘記録置き場</p>
+                        <p class="card-desc">戦闘記録・大会結果</p>
                     </div>
                 </a>
                 <a href="tactics.html" class="card">
@@ -182,21 +184,21 @@
                     <div class="card-img">🏹</div>
                     <div class="card-content">
                         <h3 class="card-title">Hunter Chance</h3>
-                        <p class="card-desc">独自システム攻略情報</p>
+                        <p class="card-desc">システム攻略情報</p>
                     </div>
                 </a>
                 <a href="trivia.html" class="card">
                     <div class="card-img">🔍</div>
                     <div class="card-content">
                         <h3 class="card-title">Trivia</h3>
-                        <p class="card-desc">スキル・地形などの豆知識</p>
+                        <p class="card-desc">スキル・地形豆知識</p>
                     </div>
                 </a>
                 <a href="emoji.html" class="card">
                     <div class="card-img">😆</div>
                     <div class="card-content">
                         <h3 class="card-title">Emoji</h3>
-                        <p class="card-desc">html用絵文字タグ一覧</p>
+                        <p class="card-desc">html絵文字タグ一覧</p>
                     </div>
                 </a>
                 <a href="link.html" class="card">
@@ -214,8 +216,6 @@
         function showPage(pageId) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.getElementById(pageId).classList.add('active');
-            
-            // カード画面ならヘッダーを表示、入口なら非表示
             const header = document.getElementById('main-header');
             header.style.display = (pageId === 'main-page') ? 'flex' : 'none';
             window.scrollTo(0, 0);
@@ -226,7 +226,6 @@
             showPage('main-page');
         }
 
-        // 読み込み時の処理
         window.onload = function() {
             if (window.location.hash === '#main') {
                 showPage('main-page');
@@ -235,7 +234,6 @@
             }
         };
 
-        // ハッシュが変更されたとき（戻るボタンなど）の対応
         window.onhashchange = function() {
             if (window.location.hash === '#main') {
                 showPage('main-page');
