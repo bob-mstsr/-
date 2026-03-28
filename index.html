@@ -11,6 +11,7 @@
             --accent-color: #00d4ff;
             --text-color: #e0e0e0;
             --sub-text: #a0a0a0;
+            --header-height: 60px;
         }
 
         body {
@@ -22,11 +23,62 @@
             overflow-x: hidden;
         }
 
-        /* ページ切り替え用 */
+        /* --- ヘッダー設定 --- */
+        header {
+            background-color: rgba(0, 0, 0, 0.95);
+            height: var(--header-height);
+            display: none; /* 最初（入口）は非表示 */
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 2px solid var(--accent-color);
+            padding: 0 15px;
+        }
+
+        .logo-link {
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: var(--accent-color);
+            white-space: nowrap;
+            margin-right: 15px;
+        }
+
+        /* 横スクロール可能なナビゲーション */
+        .nav-links {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto; /* 横スクロールを許可 */
+            white-space: nowrap;
+            -webkit-overflow-scrolling: touch; /* iOS用スムーズスクロール */
+            padding: 5px 0;
+        }
+
+        /* スクロールバーを隠す（デザイン重視） */
+        .nav-links::-webkit-scrollbar { display: none; }
+
+        .nav-item {
+            color: var(--text-color);
+            text-decoration: none;
+            font-size: 0.85rem;
+            padding: 6px 10px;
+            border-radius: 4px;
+            transition: 0.2s;
+            border: 1px solid transparent;
+        }
+
+        .nav-item:hover {
+            background: rgba(0, 212, 255, 0.2);
+            border-color: var(--accent-color);
+        }
+
+        /* --- ページ構成 --- */
         .page { display: none; min-height: 100vh; }
         .page.active { display: flex; flex-direction: column; }
 
-        /* --- 1. トップページ（入口） --- */
+        /* 入口ページ */
         #top-page {
             justify-content: center;
             align-items: center;
@@ -35,12 +87,10 @@
         }
 
         .title-large {
-            font-size: 3rem;
-            letter-spacing: 0.2rem;
+            font-size: 2.5rem;
             margin-bottom: 2rem;
-            text-transform: uppercase;
+            color: var(--accent-color);
             border-bottom: 2px solid var(--accent-color);
-            padding-bottom: 10px;
         }
 
         .enter-btn {
@@ -48,10 +98,9 @@
             font-size: 1.2rem;
             color: var(--accent-color);
             border: 1px solid var(--accent-color);
-            text-decoration: none;
-            transition: 0.3s;
-            cursor: pointer;
             background: transparent;
+            cursor: pointer;
+            transition: 0.3s;
         }
 
         .enter-btn:hover {
@@ -60,150 +109,101 @@
             box-shadow: 0 0 20px var(--accent-color);
         }
 
-        .disclaimer {
-            margin-top: 5rem;
-            font-size: 0.8rem;
-            color: var(--sub-text);
-            max-width: 600px;
-            padding: 20px;
-        }
-
-        /* --- 2. メインページ（ハブ） --- */
-        header {
-            background-color: rgba(0, 0, 0, 0.8);
-            padding: 15px 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            border-bottom: 1px solid #333;
-        }
-
-        .logo { font-weight: bold; font-size: 1.2rem; color: var(--accent-color); }
-        
-        .container {
-            max-width: 1200px;
-            margin: 40px auto;
-            padding: 0 20px;
-        }
-
+        /* カードグリッド */
+        .container { max-width: 1200px; margin: 20px auto; padding: 0 15px; }
         .grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 25px;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
         }
 
         .card {
             background: var(--card-bg);
             border-radius: 8px;
-            overflow: hidden;
-            transition: transform 0.3s;
-            border: 1px solid #333;
             text-decoration: none;
             color: inherit;
-            display: block;
+            border: 1px solid #333;
+            transition: 0.3s;
         }
 
-        .card:hover {
-            transform: translateY(-5px);
-            border-color: var(--accent-color);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
-        }
-
-        .card-img {
-            width: 100%;
-            height: 120px;
-            background: #333;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 3rem;
-            border-bottom: 1px solid #444;
-        }
-
-        .card-content { padding: 20px; }
-        .card-title {
-            font-size: 1.25rem;
-            margin: 0 0 10px 0;
-            color: var(--accent-color);
-        }
-        .card-desc { font-size: 0.9rem; color: var(--sub-text); }
+        .card:hover { transform: translateY(-5px); border-color: var(--accent-color); }
+        .card-img { height: 100px; background: #333; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; }
+        .card-content { padding: 15px; }
+        .card-title { margin: 0 0 5px 0; color: var(--accent-color); }
+        .card-desc { font-size: 0.85rem; color: var(--sub-text); margin: 0; }
 
     </style>
 </head>
 <body>
 
+    <header id="main-header">
+        <a href="index.html#main" class="logo-link" onclick="location.reload()">ボブの秘密基地</a>
+        <nav class="nav-links">
+            <a href="arms.html" class="nav-item">Arms</a>
+            <a href="battle.html" class="nav-item">Battle</a>
+            <a href="tactics.html" class="nav-item">Tactics</a>
+            <a href="hunter.html" class="nav-item">Hunter</a>
+            <a href="trivia.html" class="nav-item">Trivia</a>
+            <a href="emoji.html" class="nav-item">Emoji</a>
+            <a href="link.html" class="nav-item">Link</a>
+        </nav>
+    </header>
+
     <div id="top-page" class="page active">
         <h1 class="title-large">ボブの秘密基地</h1>
-        <button class="enter-btn" onclick="showPage('main-page')">入口</button>
-        <div class="disclaimer">
-            このサイトはじゃりてんさんの運営するMST-SRというゲームの、個人的な攻略情報置き場です。<br>
-            データの正誤など一切の責任を負いませんのでご了承ください。
-        </div>
+        <button class="enter-btn" onclick="goToMain()">入口</button>
     </div>
 
     <div id="main-page" class="page">
-        <header>
-            <div class="logo">ボブの秘密基地</div>
-        </header>
-
         <div class="container">
             <div class="grid">
                 <a href="arms.html" class="card">
                     <div class="card-img">💣</div>
                     <div class="card-content">
                         <h3 class="card-title">Arms depot</h3>
-                        <p class="card-desc">通常武器・装備のデータや独自システム「武器庫」についてのページです。</p>
+                        <p class="card-desc">武器・装備データと武器庫システム解説</p>
                     </div>
                 </a>
-
-                <a href="#" class="card">
+                <a href="battle.html" class="card">
                     <div class="card-img">⚔️</div>
                     <div class="card-content">
                         <h3 class="card-title">Battle Data</h3>
-                        <p class="card-desc">ボブ主催の大会などの戦闘記録置き場のページです。</p>
+                        <p class="card-desc">大会などの戦闘記録置き場</p>
                     </div>
                 </a>
-
                 <a href="tactics.html" class="card">
                     <div class="card-img">🚩</div>
                     <div class="card-content">
                         <h3 class="card-title">Tactics</h3>
-                        <p class="card-desc">戦術についての基礎知識のページです。</p>
+                        <p class="card-desc">個人・団体戦術の基礎知識</p>
                     </div>
                 </a>
-
-                <a href="#" class="card">
+                <a href="hunter.html" class="card">
                     <div class="card-img">🏹</div>
                     <div class="card-content">
                         <h3 class="card-title">Hunter Chance</h3>
-                        <p class="card-desc">独自システム「ハンターチャンス」についての攻略ページです。</p>
+                        <p class="card-desc">独自システム攻略情報</p>
                     </div>
                 </a>
-
-                <a href="#" class="card">
+                <a href="trivia.html" class="card">
                     <div class="card-img">🔍</div>
                     <div class="card-content">
                         <h3 class="card-title">Trivia</h3>
-                        <p class="card-desc">地形、スキル、特性など、意外と知らない豆知識のページです。</p>
+                        <p class="card-desc">スキル・地形などの豆知識</p>
                     </div>
                 </a>
-
                 <a href="emoji.html" class="card">
                     <div class="card-img">😆</div>
                     <div class="card-content">
                         <h3 class="card-title">Emoji</h3>
-                        <p class="card-desc">プロフィールなどで使える絵文字のhtmlタグ一覧です。</p>
+                        <p class="card-desc">html用絵文字タグ一覧</p>
                     </div>
                 </a>
-
-                <a href="#" class="card">
+                <a href="link.html" class="card">
                     <div class="card-img">⭕</div>
                     <div class="card-content">
                         <h3 class="card-title">Link</h3>
-                        <p class="card-desc">リンク集です。</p>
+                        <p class="card-desc">外部リンク集</p>
                     </div>
                 </a>
             </div>
@@ -211,30 +211,38 @@
     </div>
 
     <script>
-        // ページ切り替え用JS
         function showPage(pageId) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.getElementById(pageId).classList.add('active');
-            // 切り替え時に一番上にスクロール
+            
+            // カード画面ならヘッダーを表示、入口なら非表示
+            const header = document.getElementById('main-header');
+            header.style.display = (pageId === 'main-page') ? 'flex' : 'none';
             window.scrollTo(0, 0);
         }
-    </script>
-<script>
-    // ページ表示を切り替える関数
-    function showPage(pageId) {
-        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-        document.getElementById(pageId).classList.add('active');
-        window.scrollTo(0, 0);
-    }
 
-    // URLの末尾が「#main」だったら、最初からカード画面を表示する処理
-    window.onload = function() {
-        if (window.location.hash === '#main') {
+        function goToMain() {
+            location.hash = "main";
             showPage('main-page');
-        } else {
-            showPage('top-page');
         }
-    };
-</script>
+
+        // 読み込み時の処理
+        window.onload = function() {
+            if (window.location.hash === '#main') {
+                showPage('main-page');
+            } else {
+                showPage('top-page');
+            }
+        };
+
+        // ハッシュが変更されたとき（戻るボタンなど）の対応
+        window.onhashchange = function() {
+            if (window.location.hash === '#main') {
+                showPage('main-page');
+            } else {
+                showPage('top-page');
+            }
+        };
+    </script>
 </body>
 </html>
