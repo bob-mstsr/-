@@ -20,14 +20,12 @@
             background-color: var(--bg-color);
             color: var(--text-color);
             line-height: 1.6;
-            overflow-x: hidden;
         }
 
-        /* --- ヘッダー設定 --- */
         header {
             background-color: rgba(0, 0, 0, 0.95);
             height: var(--header-height);
-            display: none; /* 最初は非表示 */
+            display: none; 
             justify-content: space-between;
             align-items: center;
             position: sticky;
@@ -44,41 +42,26 @@
             font-size: 1.1rem;
             color: var(--accent-color);
             white-space: nowrap;
-            margin-right: 15px;
         }
 
-        /* 横スクロール可能なナビゲーション */
         .nav-links {
             display: flex;
             gap: 10px;
             overflow-x: auto;
             white-space: nowrap;
-            -webkit-overflow-scrolling: touch;
-            padding: 5px 0;
         }
-
         .nav-links::-webkit-scrollbar { display: none; }
 
         .nav-item {
             color: var(--text-color);
             text-decoration: none;
             font-size: 0.85rem;
-            padding: 6px 10px;
-            border-radius: 4px;
-            transition: 0.2s;
-            border: 1px solid transparent;
+            padding: 8px 12px;
         }
 
-        .nav-item:hover {
-            background: rgba(0, 212, 255, 0.2);
-            border-color: var(--accent-color);
-        }
-
-        /* --- ページ構成 --- */
-        .page { display: none; min-height: 100vh; }
+        .page { display: none; min-height: 100vh; width: 100%; }
         .page.active { display: flex; flex-direction: column; }
 
-        /* 入口ページ */
         #top-page {
             justify-content: center;
             align-items: center;
@@ -90,7 +73,6 @@
             font-size: 2.5rem;
             margin-bottom: 2rem;
             color: var(--accent-color);
-            border-bottom: 2px solid var(--accent-color);
         }
 
         .enter-btn {
@@ -103,59 +85,60 @@
             transition: 0.3s;
         }
 
-        .enter-btn:hover {
-            background: var(--accent-color);
-            color: #000;
-            box-shadow: 0 0 20px var(--accent-color);
-        }
-
-        /* --- 【重要】カードレイアウトの設定 --- */
         .container { 
+            width: 100%;
             max-width: 1200px; 
-            margin: 30px auto; 
-            padding: 0 20px; 
+            margin: 0 auto; 
+            padding: 20px; 
             box-sizing: border-box;
         }
 
         .grid {
-            display: grid;
-            /* 画面幅に合わせて最小280pxのカードを並べる。1列固定を解除 */
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            display: flex;
+            flex-wrap: wrap;
             gap: 20px;
+            justify-content: center;
         }
 
         .card {
             background: var(--card-bg);
+            border: 1px solid #333;
             border-radius: 12px;
             text-decoration: none;
             color: inherit;
-            border: 1px solid #333;
-            transition: all 0.3s ease;
+            transition: 0.3s;
+            overflow: hidden;
+            flex: 1 1 280px;
+            max-width: 380px;
             display: flex;
             flex-direction: column;
-            overflow: hidden;
         }
 
-        .card:hover { 
+        .card:not(.under-const):hover { 
             transform: translateY(-5px); 
             border-color: var(--accent-color);
             box-shadow: 0 5px 15px rgba(0, 212, 255, 0.3);
         }
 
+        /* 工事中カードのスタイル */
+        .under-const {
+            opacity: 0.6;
+            cursor: default;
+        }
+
         .card-img { 
-            height: 120px; 
+            height: 100px; 
             background: #333; 
             display: flex; 
             align-items: center; 
             justify-content: center; 
-            font-size: 3rem;
+            font-size: 2.5rem;
             border-bottom: 1px solid #444;
         }
 
-        .card-content { padding: 20px; }
-        .card-title { margin: 0 0 10px 0; color: var(--accent-color); font-size: 1.2rem; }
-        .card-desc { font-size: 0.85rem; color: var(--sub-text); margin: 0; }
-
+        .card-content { padding: 15px; }
+        .card-title { margin: 0 0 5px 0; color: var(--accent-color); font-size: 1.1rem; }
+        .card-desc { font-size: 0.85rem; color: var(--sub-text); margin: 0; line-height: 1.4; }
     </style>
 </head>
 <body>
@@ -165,12 +148,12 @@
         <nav class="nav-links">
             <a href="unit.html" class="nav-item">Unit</a>
             <a href="arms.html" class="nav-item">Arms</a>
-            <a href="battle.html" class="nav-item">Battle</a>
+            <a href="#" class="nav-item">Battle</a>
             <a href="tactics.html" class="nav-item">Tactics</a>
-            <a href="hunter.html" class="nav-item">Hunter</a>
-            <a href="trivia.html" class="nav-item">Trivia</a>
+            <a href="#" class="nav-item">Hunter</a>
+            <a href="#" class="nav-item">Trivia</a>
             <a href="emoji.html" class="nav-item">Emoji</a>
-            <a href="link.html" class="nav-item">Link</a>
+            <a href="#" class="nav-item">Link</a>
         </nav>
     </header>
 
@@ -196,10 +179,10 @@
                         <p class="card-desc">武器・装備データと武器庫システム</p>
                     </div>
                 </a>
-                <a href="battle.html" class="card">
+                <a href="javascript:void(0)" class="card under-const">
                     <div class="card-img">⚔️</div>
                     <div class="card-content">
-                        <h3 class="card-title">Battle Data</h3>
+                        <h3 class="card-title">Battle Data (工事中)</h3>
                         <p class="card-desc">戦闘記録・大会結果</p>
                     </div>
                 </a>
@@ -210,17 +193,17 @@
                         <p class="card-desc">個人・団体戦術の基礎知識</p>
                     </div>
                 </a>
-                <a href="hunter.html" class="card">
+                <a href="javascript:void(0)" class="card under-const">
                     <div class="card-img">🏹</div>
                     <div class="card-content">
-                        <h3 class="card-title">Hunter Chance</h3>
+                        <h3 class="card-title">Hunter Chance (工事中)</h3>
                         <p class="card-desc">システム攻略情報</p>
                     </div>
                 </a>
-                <a href="trivia.html" class="card">
+                <a href="javascript:void(0)" class="card under-const">
                     <div class="card-img">🔍</div>
                     <div class="card-content">
-                        <h3 class="card-title">Trivia</h3>
+                        <h3 class="card-title">Trivia (工事中)</h3>
                         <p class="card-desc">スキル・地形豆知識</p>
                     </div>
                 </a>
@@ -231,10 +214,10 @@
                         <p class="card-desc">html絵文字タグ一覧</p>
                     </div>
                 </a>
-                <a href="link.html" class="card">
+                <a href="javascript:void(0)" class="card under-const">
                     <div class="card-img">⭕</div>
                     <div class="card-content">
-                        <h3 class="card-title">Link</h3>
+                        <h3 class="card-title">Link (工事中)</h3>
                         <p class="card-desc">外部リンク集</p>
                     </div>
                 </a>
@@ -250,26 +233,14 @@
             header.style.display = (pageId === 'main-page') ? 'flex' : 'none';
             window.scrollTo(0, 0);
         }
-
-        function goToMain() {
-            location.hash = "main";
-            showPage('main-page');
-        }
-
+        function goToMain() { location.hash = "main"; showPage('main-page'); }
         window.onload = function() {
-            if (window.location.hash === '#main') {
-                showPage('main-page');
-            } else {
-                showPage('top-page');
-            }
+            if (window.location.hash === '#main') showPage('main-page');
+            else showPage('top-page');
         };
-
         window.onhashchange = function() {
-            if (window.location.hash === '#main') {
-                showPage('main-page');
-            } else {
-                showPage('top-page');
-            }
+            if (window.location.hash === '#main') showPage('main-page');
+            else showPage('top-page');
         };
     </script>
 </body>
