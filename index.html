@@ -219,5 +219,22 @@
             window.scrollTo(0, 0);
         }
     </script>
+<script>
+    // ページ表示を切り替える関数
+    function showPage(pageId) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.getElementById(pageId).classList.add('active');
+        window.scrollTo(0, 0);
+    }
+
+    // URLの末尾が「#main」だったら、最初からカード画面を表示する処理
+    window.onload = function() {
+        if (window.location.hash === '#main') {
+            showPage('main-page');
+        } else {
+            showPage('top-page');
+        }
+    };
+</script>
 </body>
 </html>
