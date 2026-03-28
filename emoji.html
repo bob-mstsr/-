@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>Emoji - ボブの秘密基地</title>
+    <style>
+        :root {
+            --bg-color: #1a1c1e;
+            --accent-color: #00d4ff;
+            --text-color: #e0e0e0;
+            --card-bg: #25282c;
+            --border-color: #444;
+            --header-total-height: 165px; 
+        }
+
+        html, body {
+            margin: 0; padding: 0; height: 100%;
+            background-color: var(--bg-color); color: var(--text-color);
+            overflow: hidden; font-family: sans-serif;
+        }
+
+        /* 上部固定エリア */
+        .top-section {
+            height: var(--header-total-height);
+            background: var(--bg-color);
+            border-bottom: 2px solid var(--accent-color);
+            padding: 10px 20px; box-sizing: border-box;
+            position: relative; z-index: 100;
+        }
+
+        .header-flex { display: flex; justify-content: space-between; align-items: center; }
+        header h1 { margin: 5px 0; font-size: 1.4rem; color: var(--accent-color); }
+        .back-link { 
+            color: var(--text-color); text-decoration: none; font-size: 0.9rem; 
+            border: 1px solid var(--text-color); padding: 5px 10px; border-radius: 4px;
+        }
+        .back-link:hover { background: var(--text-color); color: #000; }
+        
+        /* 検索エリア */
+        .search-area { display: flex; gap: 10px; margin-top: 20px; }
+        #search-column {
+            padding: 10px; background: #222; border: 1px solid var(--accent-color);
+            color: white; border-radius: 4px;
+        }
+        #search-box {
+            flex-grow: 1; padding: 10px; background: #222; 
+            border: 1px solid var(--accent-color); color: white; border-radius: 4px;
+        }
+
+        /* データ表示エリア */
+        .main-content {
+            height: calc(100% - var(--header-total-height));
+            overflow: auto; padding: 0 20px 20px 20px; box-sizing: border-box;
+        }
+
+        table {
+            width: 100%; border-collapse: collapse;
+            background: var(--card-bg); font-size: 0.9rem;
+        }
+
+        thead th {
+            position: sticky; top: 0; background: #333;
+            color: var(--accent-color); z-index: 50;
+            padding: 12px 10px; border: 1px solid var(--border-color);
+            white-space: nowrap; box-shadow: 0 2px 2px rgba(0,0,0,0.5);
+        }
+
+        td { border: 1px solid var(--border-color); padding: 12px 10px; text-align: center; }
+        
+        /* 記号だけ大きく表示 */
+        .emoji-cell { font-size: 1.5rem; }
+        /* 検索ワードは左寄せ */
+        .word-cell { text-align: left; color: #aaa; font-size: 0.8rem; }
+        /* コード類はコピーしやすいように等幅フォント */
+        .code-cell { font-family: monospace; color: var(--accent-color); }
+
+        tr:nth-child(even) { background-color: #1e2124; }
+        tr:hover { background-color: #2c3e50; }
+    </style>
+</head>
+<body>
+
+<div class="top-section">
+    <div class="header-flex">
+        <header><h1>😆 Emoji</h1></header>
+        <a href="index.html" class="back-link">← 基地に戻る</a>
+    </div>
+    
+    <div class="search-area">
+        <select id="search-column">
+            <option value="all">すべて</option>
+            <option value="1">検索ワード</option>
+        </select>
+        <input type="text" id="search-box" placeholder="「おうし座」や「星」で検索..." onkeyup="filterData()">
+    </div>
+</div>
+
+<div class="main-content">
+    <table id="emoji-table">
+        <thead>
+            <tr>
+                <th>記号</th>
+                <th>検索ワード</th>
+                <th>10進法</th>
+                <th>16進法</th>
+            </tr>
+        </thead>
+        <tbody id="emoji-body">
+            </tbody>
+    </table>
+</div>
+
+<script>
+    async function loadEmojiData() {
+        try {
+            const response = await fetch('絵文字一覧.csv');
+            const csvText = await response.text();
+            renderTable(csvText);
+        } catch (e) {
+            console.error("CSVの読み込みに失敗しました。");
+        }
+    }
+
+    function renderTable(csvData) {
+        const rows = csvData.split(/\r?\n/).filter(row => row.trim() !== '');
+        const tableBody = document.getElementById('emoji-body');
+        
+        let html = "";
+        // 1行目はヘッダーなので i=1 から開始
+        for (let i = 1; i < rows.length; i++) {
+            // カンマ区切り。検索ワードにスペースが含まれる可能性を考慮
+            const cols = rows[i].split(',');
+            if(cols.length < 4) continue;
+
+            html += `<tr>
+                <td class="emoji-cell">${cols[0]}</td>
+                <td class="word-cell">${cols[1]}</td>
+                <td class="code-cell">${cols[2]}</td>
+                <td class="code-cell">${cols[3]}</td>
+            </tr>`;
+        }
+        tableBody.innerHTML = html;
+    }
+
+    function filterData() {
+        const input = document.getElementById('search-box').value.toUpperCase();
+        const colIndex = document.getElementById('search-column').value;
+        const rows = document.querySelectorAll('#emoji-body tr');
+
+        rows.forEach(row => {
+            let match = false;
+            const cells = row.getElementsByTagName('td');
+            
+            if (colIndex === "all") {
+                match = row.innerText.toUpperCase().indexOf(input) > -1;
+            } else {
+                const targetCell = cells[colIndex]; // 1 = 検索ワード
+                if (targetCell && targetCell.innerText.toUpperCase().indexOf(input) > -1) {
+                    match = true;
+                }
+            }
+            row.style.display = match ? "" : "none";
+        });
+    }
+
+    loadEmojiData();
+</script>
+
+</body>
+</html>
