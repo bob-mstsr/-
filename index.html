@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ボブの秘密基地</title>
+    <style>
+        :root {
+            --bg-color: #1a1c1e;
+            --card-bg: #25282c;
+            --accent-color: #00d4ff;
+            --text-color: #e0e0e0;
+            --sub-text: #a0a0a0;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* ページ切り替え用 */
+        .page { display: none; min-height: 100vh; }
+        .page.active { display: flex; flex-direction: column; }
+
+        /* --- 1. トップページ（入口） --- */
+        #top-page {
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: radial-gradient(circle, #2c3e50 0%, #1a1c1e 100%);
+        }
+
+        .title-large {
+            font-size: 3rem;
+            letter-spacing: 0.2rem;
+            margin-bottom: 2rem;
+            text-transform: uppercase;
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 10px;
+        }
+
+        .enter-btn {
+            padding: 15px 50px;
+            font-size: 1.2rem;
+            color: var(--accent-color);
+            border: 1px solid var(--accent-color);
+            text-decoration: none;
+            transition: 0.3s;
+            cursor: pointer;
+            background: transparent;
+        }
+
+        .enter-btn:hover {
+            background: var(--accent-color);
+            color: #000;
+            box-shadow: 0 0 20px var(--accent-color);
+        }
+
+        .disclaimer {
+            margin-top: 5rem;
+            font-size: 0.8rem;
+            color: var(--sub-text);
+            max-width: 600px;
+            padding: 20px;
+        }
+
+        /* --- 2. メインページ（ハブ） --- */
+        header {
+            background-color: rgba(0, 0, 0, 0.8);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid #333;
+        }
+
+        .logo { font-weight: bold; font-size: 1.2rem; color: var(--accent-color); }
+        
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.3s;
+            border: 1px solid #333;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-color);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+        }
+
+        .card-img {
+            width: 100%;
+            height: 120px;
+            background: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            border-bottom: 1px solid #444;
+        }
+
+        .card-content { padding: 20px; }
+        .card-title {
+            font-size: 1.25rem;
+            margin: 0 0 10px 0;
+            color: var(--accent-color);
+        }
+        .card-desc { font-size: 0.9rem; color: var(--sub-text); }
+
+    </style>
+</head>
+<body>
+
+    <div id="top-page" class="page active">
+        <h1 class="title-large">ボブの秘密基地</h1>
+        <button class="enter-btn" onclick="showPage('main-page')">入口</button>
+        <div class="disclaimer">
+            このサイトはじゃりてんさんの運営するMST-SRというゲームの、個人的な攻略情報置き場です。<br>
+            データの正誤など一切の責任を負いませんのでご了承ください。
+        </div>
+    </div>
+
+    <div id="main-page" class="page">
+        <header>
+            <div class="logo">ボブの秘密基地</div>
+        </header>
+
+        <div class="container">
+            <div class="grid">
+                <a href="arms.html" class="card">
+                    <div class="card-img">💣</div>
+                    <div class="card-content">
+                        <h3 class="card-title">Arms depot</h3>
+                        <p class="card-desc">通常武器・装備のデータや独自システム「武器庫」についてのページです。</p>
+                    </div>
+                </a>
+
+                <a href="#" class="card">
+                    <div class="card-img">⚔️</div>
+                    <div class="card-content">
+                        <h3 class="card-title">Battle Data</h3>
+                        <p class="card-desc">ボブ主催の大会などの戦闘記録置き場のページです。</p>
+                    </div>
+                </a>
+
+                <a href="#" class="card">
+                    <div class="card-img">🚩</div>
+                    <div class="card-content">
+                        <h3 class="card-title">Tactics</h3>
+                        <p class="card-desc">戦術についての基礎知識のページです。</p>
+                    </div>
+                </a>
+
+                <a href="#" class="card">
+                    <div class="card-img">🏹</div>
+                    <div class="card-content">
+                        <h3 class="card-title">Hunter Chance</h3>
+                        <p class="card-desc">独自システム「ハンターチャンス」についての攻略ページです。</p>
+                    </div>
+                </a>
+
+                <a href="#" class="card">
+                    <div class="card-img">🔍</div>
+                    <div class="card-content">
+                        <h3 class="card-title">Trivia</h3>
+                        <p class="card-desc">地形、スキル、特性など、意外と知らない豆知識のページです。</p>
+                    </div>
+                </a>
+
+                <a href="#" class="card">
+                    <div class="card-img">😆</div>
+                    <div class="card-content">
+                        <h3 class="card-title">Emoji</h3>
+                        <p class="card-desc">プロフィールなどで使える絵文字のhtmlタグ一覧です。</p>
+                    </div>
+                </a>
+
+                <a href="#" class="card">
+                    <div class="card-img">⭕</div>
+                    <div class="card-content">
+                        <h3 class="card-title">Link</h3>
+                        <p class="card-desc">リンク集です。</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ページ切り替え用JS
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+            // 切り替え時に一番上にスクロール
+            window.scrollTo(0, 0);
+        }
+    </script>
+</body>
+</html>
