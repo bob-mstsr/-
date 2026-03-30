@@ -22,7 +22,6 @@
             --text-color: #e0e0e0;
             --card-bg: #25282c;
             --border-color: #444;
-            --header-total-height: 125px; /* header(60) + toolbar(65) */
         }
 
         html, body {
@@ -31,7 +30,7 @@
             overflow: hidden; font-family: sans-serif;
         }
 
-        /* 共通ヘッダー様式 */
+        /* 指定された共通ヘッダー様式 */
         header {
             background: rgba(0,0,0,0.95); height: 60px; display: flex; 
             justify-content: space-between; align-items: center; 
@@ -47,13 +46,11 @@
         .nav-item-custom:hover { background: rgba(0, 212, 255, 0.2); border-color: #00d4ff; }
         nav::-webkit-scrollbar { display: none; }
 
-        /* 上部固定エリア（検索ツールバー） */
+        /* 検索エリア */
         .top-section {
-            height: 65px;
-            background: var(--bg-color);
+            height: 65px; background: var(--bg-color);
             border-bottom: 1px solid var(--border-color);
             padding: 10px 20px; box-sizing: border-box;
-            z-index: 100;
         }
 
         .search-area { display: flex; gap: 10px; align-items: center; }
@@ -63,16 +60,16 @@
             max-width: 500px;
         }
 
-        /* ② 配色とデータ表示エリア */
+        /* テーブルエリア */
         .main-content {
-            height: calc(100% - var(--header-total-height));
+            height: calc(100% - 125px); /* header + top-section */
             background: var(--bg-color);
         }
 
         table.dataTable { background-color: var(--card-bg) !important; margin: 0 !important; border-collapse: collapse !important; }
         table.dataTable thead th { 
             background: #333 !important; color: var(--accent-color) !important; 
-            z-index: 50; padding: 12px 10px; border: 1px solid var(--border-color) !important;
+            padding: 12px 10px; border: 1px solid var(--border-color) !important;
         }
         table.dataTable td { 
             border: 1px solid var(--border-color) !important; padding: 8px 10px !important; 
@@ -81,10 +78,9 @@
             font-family: "MS Gothic", "Osaka-mono", monospace;
         }
 
-        /* 固定列（NOと目的派生検索） */
         .dtfc-fixed-left td, .dtfc-fixed-left th { background-color: #2a2d31 !important; z-index: 5; }
 
-        /* 横スクロールバーの視認性向上 */
+        /* スクロールバー */
         .dataTables_scrollBody::-webkit-scrollbar { height: 16px; width: 16px; }
         .dataTables_scrollBody::-webkit-scrollbar-track { background: #111; }
         .dataTables_scrollBody::-webkit-scrollbar-thumb { background: #555; border-radius: 8px; border: 3px solid #111; }
@@ -112,8 +108,7 @@
 
 <div class="top-section">
     <div class="search-area">
-        <input type="text" id="search-box" placeholder="機体名・NOで検索（派生順序は維持されます）">
-        <span id="searchStatus" style="font-size: 12px; color: #888;"></span>
+        <input type="text" id="search-box" placeholder="機体名・NOで検索...">
     </div>
 </div>
 
@@ -124,62 +119,59 @@
 <script>
 $(document).ready(function () {
     let table;
-    let searchTimeout;
 
-    // Shift-JISのCSVをバイナリとして読み込み
     fetch('derivatives.csv')
         .then(response => response.arrayBuffer())
         .then(buffer => {
             const decoder = new TextDecoder('shift-jis');
             const csvText = decoder.decode(buffer);
             
-            Papa.parse(csvText, {
-                header: true,
-                skipEmptyLines: true,
-                complete: function (results) {
-                    initDataTable(results);
-                }
+            // ヘッダーが重複（1, 2, 3...）しているため、列名の代わりに配列として読み込む
+            const results = Papa.parse(csvText, {
+                header: false, // ヘッダーを自動処理せず、手動で制御
+                skipEmptyLines: true
             });
+
+            if (results.data.length > 0) {
+                initDataTable(results.data);
+            }
         });
 
-    function initDataTable(results) {
-        // ②全列（J列からBG列まで全て）を動的に生成するためのカラム設定
-        const columns = results.meta.fields.map(field => ({
-            title: field || " ",
-            data: field,
+    function initDataTable(rawData) {
+        // 1行目をヘッダーとして取得
+        const headerRow = rawData[0];
+        const bodyData = rawData.slice(1);
+
+        // すべての列（J列以降のBG列までも含むすべて）を定義
+        const columns = headerRow.map((title, index) => ({
+            title: title || " ",
+            data: index, // 列番号で紐付け
             orderable: false,
             defaultContent: ""
         }));
 
         table = $('#derivativeTable').DataTable({
-            data: results.data,
+            data: bodyData,
             columns: columns,
             deferRender: true,
-            scrollY: "calc(100vh - 165px)", // ヘッダー(60)+ツールバー(65)+余白分
+            scrollY: "calc(100vh - 165px)",
             scrollX: true,
             scroller: true,
             dom: 'rti',
-            ordering: false, // 派生順序を維持
+            ordering: false,
             fixedColumns: {
-                left: 2 // NOと目的派生検索を固定
+                left: 2 // NOと目的派生検索
             },
             language: { url: "https://cdn.datatables.net/plug-ins/1.13.6/i18n/ja.json" }
         });
 
         // 検索機能
         $('#search-box').on('input', function() {
-            clearTimeout(searchTimeout);
             const keyword = $(this).val();
-            searchTimeout = setTimeout(() => {
-                table.search(keyword).draw();
-                if (keyword.length > 0) {
-                    const firstMatch = table.rows({search:'applied'}).indexes()[0];
-                    if (firstMatch !== undefined) {
-                        table.row(firstMatch).scrollTo();
-                    }
-                    $('.dataTables_scrollBody').unmark().mark(keyword);
-                }
-            }, 400);
+            table.search(keyword).draw();
+            if (keyword.length > 0) {
+                $('.dataTables_scrollBody').unmark().mark(keyword);
+            }
         });
     }
 });
