@@ -3,11 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Derivative Table - ボブの秘密基地</title>
+    <title>Derivative Table - 高速版</title>
     
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/scroller/2.2.0/css/scroller.dataTables.min.css">
+    
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/scroller/2.2.0/js/dataTables.scroller.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js"></script>
 
@@ -25,149 +28,121 @@
         header {
             background: rgba(0,0,0,0.95); height: 60px; display: flex; 
             justify-content: space-between; align-items: center; 
-            z-index: 1000; border-bottom: 2px solid var(--accent-color); 
-            padding: 0 15px; flex-shrink: 0; box-sizing: border-box;
+            z-index: 1000; border-bottom: 2px solid var(--accent-color); padding: 0 15px; flex-shrink: 0;
         }
         .logo-link { text-decoration: none; font-weight: bold; font-size: 1.1rem; color: var(--accent-color); }
 
         .toolbar {
-            display: flex; flex-wrap: wrap; align-items: center; gap: 15px;
-            padding: 10px 15px; background: #222; border-bottom: 1px solid var(--accent-color);
-            font-size: 13px; flex-shrink: 0;
+            display: flex; align-items: center; gap: 15px; padding: 10px 15px; 
+            background: #222; border-bottom: 1px solid var(--accent-color); flex-shrink: 0;
         }
         
         .search-box {
             background: #333; color: white; border: 1px solid var(--accent-color);
-            padding: 8px 15px; border-radius: 4px; outline: none; width: 300px; font-size: 14px;
+            padding: 8px 15px; border-radius: 4px; outline: none; width: 300px;
         }
 
-        .table-wrapper { flex-grow: 1; overflow: auto; background: var(--card-bg); position: relative; }
+        /* テーブルエリアの設定 */
+        .table-container { flex-grow: 1; background: var(--card-bg); overflow: hidden; }
         
-        #derivativeTable { width: 100% !important; font-size: 13px; border-collapse: separate; border-spacing: 0; }
-        #derivativeTable th, #derivativeTable td { 
-            white-space: pre; /* 罫線スペースを維持 */
-            padding: 6px 10px; 
-            border-bottom: 1px solid var(--border-color); border-right: 1px solid var(--border-color);
-            background-color: var(--card-bg);
-            /* 派生表のキモ：等幅フォント */
-            font-family: "MS Gothic", "Osaka-mono", "monospace"; 
+        table.dataTable { font-size: 12px; margin: 0 !important; border-collapse: collapse !important; }
+        table.dataTable td, table.dataTable th { 
+            white-space: pre; padding: 4px 8px !important; 
+            border-bottom: 1px solid var(--border-color) !important;
+            border-right: 1px solid var(--border-color) !important;
+            font-family: "MS Gothic", "Osaka-mono", "monospace";
         }
 
-        #derivativeTable thead th { position: sticky; top: 0; z-index: 100; background-color: #333 !important; color: var(--accent-color); border-bottom: 2px solid var(--accent-color); }
-        
-        /* 列固定：通番、機体名、NOなど（最初の4列） */
-        #derivativeTable th:nth-child(-n+4), #derivativeTable td:nth-child(-n+4) { position: sticky; background-color: #2a2d31; z-index: 10; }
-        #derivativeTable th:nth-child(1), #derivativeTable td:nth-child(1) { left: 0; }
-        #derivativeTable th:nth-child(2), #derivativeTable td:nth-child(2) { left: 70px; }
-        #derivativeTable th:nth-child(3), #derivativeTable td:nth-child(3) { left: 100px; }
-        #derivativeTable th:nth-child(4), #derivativeTable td:nth-child(4) { left: 240px; border-right: 2px solid var(--accent-color); }
+        /* 検索ヒット時のハイライト */
+        mark { background: #ffeb3b; color: #000; padding: 0; }
 
-        /* ハイライト色 */
-        mark { background: #ffeb3b; color: #000; padding: 0 2px; border-radius: 2px; }
-
-        /* スクロールバー装飾 */
-        .table-wrapper::-webkit-scrollbar { height: 12px; width: 12px; }
-        .table-wrapper::-webkit-scrollbar-thumb { background: var(--accent-color); border-radius: 6px; }
+        /* スクロール設定 */
+        .dataTables_scrollBody { border-bottom: none !important; }
     </style>
 </head>
 <body>
 
 <header>
     <a href="index.html#main" class="logo-link">ボブの秘密基地</a>
-    <nav style="display:flex; gap:10px;">
-        <a href="unit.html" style="color:#eee; text-decoration:none; font-size:14px;">Unit</a>
-        <a href="derivatives.html" style="color:var(--accent-color); text-decoration:none; font-size:14px;">Derivatives</a>
-        <a href="arms.html" style="color:#eee; text-decoration:none; font-size:14px;">Arms</a>
-    </nav>
+    <div style="font-size: 12px; color: var(--accent-color);">Derivative Table 高速モード</div>
 </header>
 
 <div class="toolbar">
-    <input type="text" id="searchInput" class="search-box" placeholder="機体名、NOなどで検索...">
-    <div id="searchInfo" style="color: #888;"></div>
+    <input type="text" id="searchInput" class="search-box" placeholder="検索（入力後、少し待つとジャンプします）">
+    <span id="searchStatus" style="font-size: 12px; color: #888;"></span>
 </div>
 
-<div class="table-wrapper" id="mainContainer">
-    <table id="derivativeTable" class="display nowrap"></table>
+<div class="table-container">
+    <table id="derivativeTable" class="display nowrap" style="width:100%"></table>
 </div>
 
 <script>
 $(document).ready(function () {
-    let table = null;
+    let table;
+    let searchTimeout;
 
-    function initTable() {
-        Papa.parse("derivatives.csv", {
-            download: true,
-            header: true,
-            skipEmptyLines: true,
-            encoding: "UTF-8",
-            complete: function (results) {
-                const headers = results.meta.fields;
-                let tableHtml = '<thead><tr>';
-                headers.forEach(h => tableHtml += `<th>${h || ''}</th>`);
-                tableHtml += '</tr></thead><tbody id="tableBody"></tbody>';
-                $('#derivativeTable').html(tableHtml);
+    // CSVの読み込み
+    Papa.parse("derivatives.csv", {
+        download: true,
+        header: true,
+        skipEmptyLines: true,
+        encoding: "UTF-8",
+        complete: function (results) {
+            initDataTable(results);
+        }
+    });
 
-                results.data.forEach(row => {
-                    let tr = '<tr>';
-                    headers.forEach(h => {
-                        let val = row[h] || '';
-                        tr += `<td>${val}</td>`;
-                    });
-                    tr += '</tr>';
-                    $('#tableBody').append(tr);
-                });
+    function initDataTable(results) {
+        const columns = results.meta.fields.map(field => ({
+            title: field,
+            data: field,
+            defaultContent: ""
+        }));
 
-                table = $('#derivativeTable').DataTable({
-                    dom: 'rtip',
-                    paging: false,
-                    scrollX: true,
-                    autoWidth: false,
-                    language: { url: "https://cdn.datatables.net/plug-ins/1.13.6/i18n/ja.json" }
-                });
+        table = $('#derivativeTable').DataTable({
+            data: results.data,
+            columns: columns,
+            deferRender: true,    // 遅延レンダリング（高速化の肝）
+            scrollY: "calc(100vh - 120px)", // 画面の高さに合わせる
+            scrollX: true,
+            scroller: true,       // 仮想スクロール有効（これがあれば重くない）
+            dom: 'rti',           // 余計なUIを隠す
+            paging: true,         // Scrollerを使うため内部的にはON
+            language: { url: "https://cdn.datatables.net/plug-ins/1.13.6/i18n/ja.json" }
+        });
 
-                setupSearch();
+        // 検索とジャンプの処理（デバウンス付）
+        $('#searchInput').on('input', function() {
+            clearTimeout(searchTimeout);
+            const keyword = $(this).val();
+            
+            // 0.5秒入力が止まったら処理開始（フリーズ防止）
+            searchTimeout = setTimeout(() => {
+                table.search(keyword).draw();
+                
+                if (keyword.length > 0) {
+                    highlightAndJump(keyword);
+                }
+            }, 500);
+        });
+    }
+
+    function highlightAndJump(keyword) {
+        // 現在表示されているセルだけハイライト（高速化のため）
+        const $target = $('#derivativeTable tbody');
+        $target.unmark().mark(keyword, {
+            separateWordSearch: false,
+            done: function(count) {
+                $('#searchStatus').text(count + ' 件の候補が見つかりました');
+                
+                // 最初にヒットした行にスクロール
+                const firstMatch = table.rows({search:'applied'}).indexes()[0];
+                if (firstMatch !== undefined) {
+                    table.row(firstMatch).scrollTo();
+                }
             }
         });
     }
-
-    function setupSearch() {
-        const $input = $('#searchInput');
-        const $body = $('#tableBody');
-        const $container = $('#mainContainer');
-
-        $input.on('input', function() {
-            const keyword = $(this).val();
-            
-            // DataTablesのフィルタリング（行の絞り込み）
-            table.search(keyword).draw();
-
-            // ハイライトとジャンプ
-            $body.unmark({
-                done: function() {
-                    if (keyword.length < 1) {
-                        $('#searchInfo').text('');
-                        return;
-                    }
-
-                    $body.mark(keyword, {
-                        separateWordSearch: false,
-                        done: function(count) {
-                            $('#searchInfo').text(count + ' 件ヒット');
-                            
-                            // 最初のハイライト要素までジャンプ
-                            const $firstMatch = $('mark').first();
-                            if ($firstMatch.length) {
-                                const offset = $firstMatch.offset().top - $container.offset().top + $container.scrollTop() - 100;
-                                $container.stop().animate({ scrollTop: offset }, 300);
-                            }
-                        }
-                    });
-                }
-            });
-        });
-    }
-
-    initTable();
 });
 </script>
 </body>
