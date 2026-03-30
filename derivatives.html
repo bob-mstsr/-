@@ -79,9 +79,19 @@
 </head>
 <body>
 
-<header>
-    <a href="index.html#main" class="logo-link">ボブの秘密基地</a>
-    <nav class="nav-links">
+<header style="background:rgba(0,0,0,0.95); height:60px; display:flex; justify-content:space-between; align-items:center; position:sticky; top:0; z-index:1000; border-bottom:2px solid var(--accent-color); padding:0 15px; box-sizing:border-box;">
+    <a href="index.html#main" style="text-decoration:none; font-weight:bold; font-size:1.1rem; color:var(--accent-color); white-space:nowrap; margin-right:15px;">ボブの秘密基地</a>
+    
+    <nav style="display:flex; gap:10px; overflow-x:auto; white-space:nowrap; -webkit-overflow-scrolling:touch; padding:5px 0;">
+        <style>
+            .nav-item-custom {
+                color: #e0e0e0; text-decoration: none; font-size: 0.85rem; 
+                padding: 6px 10px; border-radius: 4px; border: 1px solid transparent;
+                transition: 0.2s;
+            }
+            .nav-item-custom:hover { background: rgba(0, 212, 255, 0.2); border-color: #00d4ff; }
+            nav::-webkit-scrollbar { display: none; }
+        </style>
         <a href="unit.html" class="nav-item-custom">Unit</a>
         <a href="derivatives.html" class="nav-item-custom">Derivatives</a>
         <a href="arms.html" class="nav-item-custom">Arms</a>
@@ -114,7 +124,7 @@ $(document).ready(function () {
         download: true,
         header: true,
         skipEmptyLines: true,
-        encoding: "Shift-JIS", 
+        encoding: "UTF-8", 
         complete: function (results) {
             initDataTable(results);
         }
