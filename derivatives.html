@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Derivative Table - 最終調整版</title>
+    <title>Derivative Table - ボブの秘密基地</title>
     
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
@@ -19,21 +19,24 @@
     <style>
         :root {
             --bg-color: #0f1113;
-            --card-bg: #1e2124;
             --accent-color: #00d4ff;
             --text-color: #e0e0e0;
             --border-color: #444;
-            --sticky-bg: #2a2d31; /* 固定列の背景色 */
+            --sticky-bg: #2a2d31;
         }
 
         body { font-family: sans-serif; margin: 0; background: var(--bg-color); color: var(--text-color); height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
 
+        /* ④ヘッダーリンクの追加 */
         header {
-            background: #000; height: 50px; display: flex; 
+            background: #000; height: 60px; display: flex; 
             justify-content: space-between; align-items: center; 
             z-index: 1000; border-bottom: 2px solid var(--accent-color); padding: 0 15px; flex-shrink: 0;
         }
         .logo-link { text-decoration: none; font-weight: bold; font-size: 1.1rem; color: var(--accent-color); }
+        .nav-links { display: flex; gap: 15px; }
+        .nav-item { color: #ccc; text-decoration: none; font-size: 0.9rem; }
+        .nav-item:hover { color: var(--accent-color); }
 
         .toolbar {
             display: flex; align-items: center; gap: 15px; padding: 10px 15px; 
@@ -42,48 +45,36 @@
         
         .search-box {
             background: #333; color: white; border: 1px solid var(--accent-color);
-            padding: 8px 15px; border-radius: 4px; outline: none; width: 300px; font-size: 14px;
+            padding: 8px 15px; border-radius: 4px; outline: none; width: 300px;
         }
 
-        /* テーブルエリア：ここがスクロールバーの位置を決める */
-        .table-container { 
-            flex-grow: 1; 
-            background: var(--bg-color); 
-            overflow: hidden; 
-            padding: 0 10px 10px 10px;
-        }
+        /* テーブルコンテナ設定 */
+        .table-container { flex-grow: 1; background: var(--bg-color); overflow: hidden; padding: 0 5px; }
         
-        table.dataTable { font-size: 13px !important; background-color: var(--card-bg) !important; margin: 0 !important; }
-        
-        /* セルのデザイン */
+        table.dataTable { font-size: 13px !important; margin: 0 !important; }
         table.dataTable td, table.dataTable th { 
-            white-space: pre; 
-            padding: 8px 12px !important; 
+            white-space: pre; padding: 6px 10px !important; 
             border-bottom: 1px solid var(--border-color) !important;
             border-right: 1px solid var(--border-color) !important;
-            font-family: "MS Gothic", "Osaka-mono", monospace;
+            font-family: "MS Gothic", "Osaka-mono", monospace; /* 記号の幅を維持 */
         }
 
-        /* ヘッダー */
-        table.dataTable thead th { background-color: #333 !important; color: var(--accent-color); border-bottom: 2px solid var(--accent-color) !important; }
+        /* ②ソートアイコンを非表示（派生順を守るため） */
+        table.dataTable thead .sorting,
+        table.dataTable thead .sorting_asc,
+        table.dataTable thead .sorting_desc { background-image: none !important; cursor: default; }
 
-        /* 列の固定設定 (CSSによる制御) */
-        .dtfc-fixed-left { background-color: var(--sticky-bg) !important; z-index: 5; }
-        
-        /* 横スクロールバーを見やすく強調 */
-        .dataTables_scrollBody::-webkit-scrollbar { height: 16px; width: 16px; }
+        /* ③横スクロールバーを太く見やすく */
+        .dataTables_scrollBody::-webkit-scrollbar { height: 18px; }
         .dataTables_scrollBody::-webkit-scrollbar-track { background: #111; }
         .dataTables_scrollBody::-webkit-scrollbar-thumb { 
-            background: #555; 
-            border-radius: 8px; 
-            border: 3px solid #111; 
+            background: #666; border-radius: 10px; border: 3px solid #111;
         }
         .dataTables_scrollBody::-webkit-scrollbar-thumb:hover { background: var(--accent-color); }
 
-        /* 偶数行の色分け */
-        table.dataTable tbody tr:nth-child(even) { background-color: #25282c !important; }
-        table.dataTable tbody tr:hover td { background-color: #2d353d !important; }
-
+        /* 固定列の背景 */
+        .dtfc-fixed-left { background-color: var(--sticky-bg) !important; z-index: 5; }
+        
         mark { background: #ffeb3b; color: #000; padding: 0 2px; }
     </style>
 </head>
@@ -91,11 +82,15 @@
 
 <header>
     <a href="index.html#main" class="logo-link">ボブの秘密基地</a>
-    <div style="font-size: 12px; color: var(--accent-color);">Derivative Table (High-Speed & Fixed)</div>
+    <nav class="nav-links">
+        <a href="unit.html" class="nav-item">Unit</a>
+        <a href="arms.html" class="nav-item">Arms</a>
+        <a href="tactics.html" class="nav-item">Tactics</a>
+    </nav>
 </header>
 
 <div class="toolbar">
-    <input type="text" id="searchInput" class="search-box" placeholder="機体名、NOなどで検索...">
+    <input type="text" id="searchInput" class="search-box" placeholder="検索（派生順は維持されます）">
     <span id="searchStatus" style="font-size: 12px; color: #888;"></span>
 </div>
 
@@ -108,7 +103,7 @@ $(document).ready(function () {
     let table;
     let searchTimeout;
 
-    // ファイル名を derivatives.csv に合わせて読み込み
+    // ①文字化け対策（Shift-JIS指定）
     Papa.parse("derivatives.csv", {
         download: true,
         header: true,
@@ -123,6 +118,7 @@ $(document).ready(function () {
         const columns = results.meta.fields.map(field => ({
             title: field || " ",
             data: field,
+            orderable: false, // ②全体での並び替えを禁止
             defaultContent: ""
         }));
 
@@ -130,13 +126,12 @@ $(document).ready(function () {
             data: results.data,
             columns: columns,
             deferRender: true,
-            scrollY: "calc(100vh - 130px)", // ★画面下部にスクロールバーを配置するための高さ計算
+            scrollY: "calc(100vh - 140px)",
             scrollX: true,
             scroller: true,
             dom: 'rti',
-            fixedColumns: {
-                left: 2 // ★2列目（目的派生検索）まで固定
-            },
+            ordering: false, // ②初期の並び替えも無効化（CSVの順序を守る）
+            fixedColumns: { left: 2 }, // 2列目まで固定
             language: { url: "https://cdn.datatables.net/plug-ins/1.13.6/i18n/ja.json" }
         });
 
@@ -152,7 +147,6 @@ $(document).ready(function () {
                     if (firstMatch !== undefined) {
                         table.row(firstMatch).scrollTo();
                     }
-                    // 見えている範囲をハイライト
                     $('.dataTables_scrollBody').unmark().mark(keyword);
                 }
             }, 400);
