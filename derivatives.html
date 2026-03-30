@@ -28,15 +28,15 @@
 
         body { font-family: sans-serif; margin: 0; background: var(--bg-color); color: var(--text-color); height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
 
-        /* ③ヘッダーとナビゲーション */
         header {
             background: #000; min-height: 60px; display: flex; 
             flex-direction: column; justify-content: center; align-items: center; 
             z-index: 1000; border-bottom: 2px solid var(--accent-color); padding: 5px 15px; flex-shrink: 0;
         }
         .logo-link { text-decoration: none; font-weight: bold; font-size: 1.1rem; color: var(--accent-color); margin-bottom: 5px; }
-        .nav-links { display: flex; gap: 10px; overflow-x: auto; max-width: 100%; padding-bottom: 5px; }
-        .nav-item-custom { color: #ccc; text-decoration: none; font-size: 0.8rem; white-space: nowrap; padding: 2px 5px; border: 1px solid #444; border-radius: 3px; }
+        .nav-links { display: flex; gap: 8px; overflow-x: auto; max-width: 100%; padding-bottom: 5px; scrollbar-width: none; }
+        .nav-links::-webkit-scrollbar { display: none; }
+        .nav-item-custom { color: #ccc; text-decoration: none; font-size: 0.75rem; white-space: nowrap; padding: 3px 8px; border: 1px solid #444; border-radius: 3px; background: #222; }
         .nav-item-custom:hover { border-color: var(--accent-color); color: var(--accent-color); }
 
         .toolbar {
@@ -49,10 +49,10 @@
             padding: 8px 15px; border-radius: 4px; outline: none; width: 300px;
         }
 
-        /* ②配色：C列以降もすべてダーク背景に統一 */
         .table-container { flex-grow: 1; background: var(--bg-color); overflow: hidden; }
-        table.dataTable { background-color: var(--card-bg) !important; margin: 0 !important; }
-        table.dataTable tbody tr { background-color: var(--card-bg) !important; }
+        
+        /* ②配色：全セルをダーク背景、テキストを明るい色に強制 */
+        table.dataTable, table.dataTable tbody tr { background-color: var(--card-bg) !important; }
         table.dataTable td, table.dataTable th { 
             white-space: pre; padding: 6px 10px !important; 
             border-bottom: 1px solid var(--border-color) !important;
@@ -62,12 +62,9 @@
             font-family: "MS Gothic", "Osaka-mono", monospace;
         }
 
-        /* 固定列の背景色 */
-        .dtfc-fixed-left { background-color: var(--sticky-bg) !important; z-index: 5; }
-        .dtfc-fixed-left td { background-color: var(--sticky-bg) !important; }
+        .dtfc-fixed-left td, .dtfc-fixed-left th { background-color: var(--sticky-bg) !important; z-index: 5; }
 
-        /* ③横スクロールバーを見やすく */
-        .dataTables_scrollBody::-webkit-scrollbar { height: 16px; }
+        .dataTables_scrollBody::-webkit-scrollbar { height: 16px; width: 16px; }
         .dataTables_scrollBody::-webkit-scrollbar-track { background: #111; }
         .dataTables_scrollBody::-webkit-scrollbar-thumb { 
             background: #555; border-radius: 8px; border: 3px solid #111;
@@ -79,19 +76,9 @@
 </head>
 <body>
 
-<header style="background:rgba(0,0,0,0.95); height:60px; display:flex; justify-content:space-between; align-items:center; position:sticky; top:0; z-index:1000; border-bottom:2px solid var(--accent-color); padding:0 15px; box-sizing:border-box;">
-    <a href="index.html#main" style="text-decoration:none; font-weight:bold; font-size:1.1rem; color:var(--accent-color); white-space:nowrap; margin-right:15px;">ボブの秘密基地</a>
-    
-    <nav style="display:flex; gap:10px; overflow-x:auto; white-space:nowrap; -webkit-overflow-scrolling:touch; padding:5px 0;">
-        <style>
-            .nav-item-custom {
-                color: #e0e0e0; text-decoration: none; font-size: 0.85rem; 
-                padding: 6px 10px; border-radius: 4px; border: 1px solid transparent;
-                transition: 0.2s;
-            }
-            .nav-item-custom:hover { background: rgba(0, 212, 255, 0.2); border-color: #00d4ff; }
-            nav::-webkit-scrollbar { display: none; }
-        </style>
+<header>
+    <a href="index.html#main" class="logo-link">ボブの秘密基地</a>
+    <nav class="nav-links">
         <a href="unit.html" class="nav-item-custom">Unit</a>
         <a href="derivatives.html" class="nav-item-custom">Derivatives</a>
         <a href="arms.html" class="nav-item-custom">Arms</a>
@@ -105,7 +92,7 @@
 </header>
 
 <div class="toolbar">
-    <input type="text" id="searchInput" class="search-box" placeholder="検索（派生順は維持されます）">
+    <input type="text" id="searchInput" class="search-box" placeholder="機体検索...">
     <span id="searchStatus" style="font-size: 12px; color: #888;"></span>
 </div>
 
@@ -118,17 +105,21 @@ $(document).ready(function () {
     let table;
     let searchTimeout;
 
-    // ①文字化け対策（Shift-JIS）
-    // ※もし直らない場合はここを "UTF-8" に変えて、CSVもUTF-8で保存し直してください
-    Papa.parse("derivatives.csv", {
-        download: true,
-        header: true,
-        skipEmptyLines: true,
-        encoding: "UTF-8", 
-        complete: function (results) {
-            initDataTable(results);
-        }
-    });
+    // ①文字化け対策：fetchを使ってバイナリとして読み込み、再デコードする
+    fetch('derivatives.csv')
+        .then(response => response.arrayBuffer())
+        .then(buffer => {
+            const decoder = new TextDecoder('shift-jis');
+            const csvText = decoder.decode(buffer);
+            
+            Papa.parse(csvText, {
+                header: true,
+                skipEmptyLines: true,
+                complete: function (results) {
+                    initDataTable(results);
+                }
+            });
+        });
 
     function initDataTable(results) {
         const columns = results.meta.fields.map(field => ({
@@ -142,7 +133,7 @@ $(document).ready(function () {
             data: results.data,
             columns: columns,
             deferRender: true,
-            scrollY: "calc(100vh - 160px)", // スクロールバーの位置調整
+            scrollY: "calc(100vh - 150px)",
             scrollX: true,
             scroller: true,
             dom: 'rti',
@@ -151,11 +142,9 @@ $(document).ready(function () {
             language: { url: "https://cdn.datatables.net/plug-ins/1.13.6/i18n/ja.json" }
         });
 
-        // 検索とジャンプ
         $('#searchInput').on('input', function() {
             clearTimeout(searchTimeout);
             const keyword = $(this).val();
-            
             searchTimeout = setTimeout(() => {
                 table.search(keyword).draw();
                 if (keyword.length > 0) {
