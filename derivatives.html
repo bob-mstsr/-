@@ -18,10 +18,9 @@
             --text-color: #e0e0e0;
             --card-bg: #25282c;
             --border-color: #444;
-            --highlight-color: #ffeb3b; /* ハイライト色（黄色） */
         }
 
-        body { font-family: sans-serif; margin: 0; background: var(--bg-color); color: var(--text-color); height: 100vh; display: flex; flex-direction: column; }
+        body { font-family: sans-serif; margin: 0; background: var(--bg-color); color: var(--text-color); height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
 
         header {
             background: rgba(0,0,0,0.95); height: 60px; display: flex; 
@@ -39,32 +38,34 @@
         
         .search-box {
             background: #333; color: white; border: 1px solid var(--accent-color);
-            padding: 6px 12px; border-radius: 4px; outline: none; width: 250px;
+            padding: 8px 15px; border-radius: 4px; outline: none; width: 300px; font-size: 14px;
         }
 
         .table-wrapper { flex-grow: 1; overflow: auto; background: var(--card-bg); position: relative; }
         
-        #derivativeTable { width: 100% !important; font-size: 12px; border-collapse: separate; border-spacing: 0; }
+        #derivativeTable { width: 100% !important; font-size: 13px; border-collapse: separate; border-spacing: 0; }
         #derivativeTable th, #derivativeTable td { 
-            white-space: pre; /* 改行やスペースを維持 */
-            padding: 4px 8px; 
+            white-space: pre; /* 罫線スペースを維持 */
+            padding: 6px 10px; 
             border-bottom: 1px solid var(--border-color); border-right: 1px solid var(--border-color);
-            background-color: var(--card-bg); color: var(--text-color);
-            font-family: "Consolas", "Monaco", "Courier New", monospace; /* 等幅フォント */
+            background-color: var(--card-bg);
+            /* 派生表のキモ：等幅フォント */
+            font-family: "MS Gothic", "Osaka-mono", "monospace"; 
         }
 
-        #derivativeTable thead th { position: sticky; top: 0; z-index: 100; background-color: #333 !important; color: var(--accent-color); }
+        #derivativeTable thead th { position: sticky; top: 0; z-index: 100; background-color: #333 !important; color: var(--accent-color); border-bottom: 2px solid var(--accent-color); }
         
-        /* 1〜4列目あたりまで固定（Noや機体名） */
+        /* 列固定：通番、機体名、NOなど（最初の4列） */
         #derivativeTable th:nth-child(-n+4), #derivativeTable td:nth-child(-n+4) { position: sticky; background-color: #2a2d31; z-index: 10; }
         #derivativeTable th:nth-child(1), #derivativeTable td:nth-child(1) { left: 0; }
-        #derivativeTable th:nth-child(2), #derivativeTable td:nth-child(2) { left: 40px; }
-        #derivativeTable th:nth-child(3), #derivativeTable td:nth-child(3) { left: 80px; }
-        #derivativeTable th:nth-child(4), #derivativeTable td:nth-child(4) { left: 120px; border-right: 2px solid var(--accent-color); }
+        #derivativeTable th:nth-child(2), #derivativeTable td:nth-child(2) { left: 70px; }
+        #derivativeTable th:nth-child(3), #derivativeTable td:nth-child(3) { left: 100px; }
+        #derivativeTable th:nth-child(4), #derivativeTable td:nth-child(4) { left: 240px; border-right: 2px solid var(--accent-color); }
 
-        mark { background: var(--highlight-color); color: black; padding: 0; }
-        
-        /* スクロールバー */
+        /* ハイライト色 */
+        mark { background: #ffeb3b; color: #000; padding: 0 2px; border-radius: 2px; }
+
+        /* スクロールバー装飾 */
         .table-wrapper::-webkit-scrollbar { height: 12px; width: 12px; }
         .table-wrapper::-webkit-scrollbar-thumb { background: var(--accent-color); border-radius: 6px; }
     </style>
@@ -76,15 +77,16 @@
     <nav style="display:flex; gap:10px;">
         <a href="unit.html" style="color:#eee; text-decoration:none; font-size:14px;">Unit</a>
         <a href="derivatives.html" style="color:var(--accent-color); text-decoration:none; font-size:14px;">Derivatives</a>
+        <a href="arms.html" style="color:#eee; text-decoration:none; font-size:14px;">Arms</a>
     </nav>
 </header>
 
 <div class="toolbar">
-    <input type="text" id="searchInput" class="search-box" placeholder="機体名やNoで検索してジャンプ...">
-    <span id="searchStatus" style="font-size: 11px; color: #888;"></span>
+    <input type="text" id="searchInput" class="search-box" placeholder="機体名、NOなどで検索...">
+    <div id="searchInfo" style="color: #888;"></div>
 </div>
 
-<div class="table-wrapper" id="scrollTarget">
+<div class="table-wrapper" id="mainContainer">
     <table id="derivativeTable" class="display nowrap"></table>
 </div>
 
@@ -93,73 +95,75 @@ $(document).ready(function () {
     let table = null;
 
     function initTable() {
-        // ファイル名をアップロードしたものに合わせる（または derivatives.csv にリネーム）
-        const csvFile = "derivatives.csv"; 
-
-        Papa.parse(csvFile, {
+        Papa.parse("derivatives.csv", {
             download: true,
-            header: false, // 冒頭2行を飛ばすため一旦false
+            header: true,
             skipEmptyLines: true,
             encoding: "UTF-8",
             complete: function (results) {
-                const rawData = results.data;
-                if (rawData.length < 3) return;
-
-                // 冒頭2行を削除し、3行目をヘッダーとして採用
-                const headers = rawData[2]; 
-                const bodyData = rawData.slice(3);
-
+                const headers = results.meta.fields;
                 let tableHtml = '<thead><tr>';
                 headers.forEach(h => tableHtml += `<th>${h || ''}</th>`);
                 tableHtml += '</tr></thead><tbody id="tableBody"></tbody>';
                 $('#derivativeTable').html(tableHtml);
 
-                bodyData.forEach(row => {
+                results.data.forEach(row => {
                     let tr = '<tr>';
-                    row.forEach(val => {
-                        tr += `<td>${val || ''}</td>`;
+                    headers.forEach(h => {
+                        let val = row[h] || '';
+                        tr += `<td>${val}</td>`;
                     });
                     tr += '</tr>';
                     $('#tableBody').append(tr);
                 });
 
                 table = $('#derivativeTable').DataTable({
-                    dom: 'rtip', // 標準検索窓は隠す
+                    dom: 'rtip',
                     paging: false,
                     scrollX: true,
                     autoWidth: false,
                     language: { url: "https://cdn.datatables.net/plug-ins/1.13.6/i18n/ja.json" }
                 });
 
-                // カスタム検索機能
-                $('#searchInput').on('input', function() {
-                    const keyword = $(this).val();
-                    
-                    // 1. 検索実行
-                    table.search(keyword).draw();
-                    
-                    // 2. ハイライト適用
-                    $('#tableBody').unmark({
-                        done: function() {
-                            $('#tableBody').mark(keyword, {
-                                separateWordSearch: false,
-                                done: function() {
-                                    // 3. 最初のヒット位置へジャンプ
-                                    const firstMatch = $('mark').first();
-                                    if (firstMatch.length && keyword !== "") {
-                                        const container = $('#scrollTarget');
-                                        const pos = firstMatch.offset().top - container.offset().top + container.scrollTop() - 100;
-                                        container.stop().animate({ scrollTop: pos }, 300);
-                                        $('#searchStatus').text('ヒットしました');
-                                    } else {
-                                        $('#searchStatus').text('');
-                                    }
-                                }
-                            });
+                setupSearch();
+            }
+        });
+    }
+
+    function setupSearch() {
+        const $input = $('#searchInput');
+        const $body = $('#tableBody');
+        const $container = $('#mainContainer');
+
+        $input.on('input', function() {
+            const keyword = $(this).val();
+            
+            // DataTablesのフィルタリング（行の絞り込み）
+            table.search(keyword).draw();
+
+            // ハイライトとジャンプ
+            $body.unmark({
+                done: function() {
+                    if (keyword.length < 1) {
+                        $('#searchInfo').text('');
+                        return;
+                    }
+
+                    $body.mark(keyword, {
+                        separateWordSearch: false,
+                        done: function(count) {
+                            $('#searchInfo').text(count + ' 件ヒット');
+                            
+                            // 最初のハイライト要素までジャンプ
+                            const $firstMatch = $('mark').first();
+                            if ($firstMatch.length) {
+                                const offset = $firstMatch.offset().top - $container.offset().top + $container.scrollTop() - 100;
+                                $container.stop().animate({ scrollTop: offset }, 300);
+                            }
                         }
                     });
-                });
-            }
+                }
+            });
         });
     }
 
