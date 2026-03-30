@@ -19,6 +19,7 @@
     <style>
         :root {
             --bg-color: #0f1113;
+            --card-bg: #1e2124;
             --accent-color: #00d4ff;
             --text-color: #e0e0e0;
             --border-color: #444;
@@ -27,16 +28,16 @@
 
         body { font-family: sans-serif; margin: 0; background: var(--bg-color); color: var(--text-color); height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
 
-        /* ④ヘッダーリンクの追加 */
+        /* ③ヘッダーとナビゲーション */
         header {
-            background: #000; height: 60px; display: flex; 
-            justify-content: space-between; align-items: center; 
-            z-index: 1000; border-bottom: 2px solid var(--accent-color); padding: 0 15px; flex-shrink: 0;
+            background: #000; min-height: 60px; display: flex; 
+            flex-direction: column; justify-content: center; align-items: center; 
+            z-index: 1000; border-bottom: 2px solid var(--accent-color); padding: 5px 15px; flex-shrink: 0;
         }
-        .logo-link { text-decoration: none; font-weight: bold; font-size: 1.1rem; color: var(--accent-color); }
-        .nav-links { display: flex; gap: 15px; }
-        .nav-item { color: #ccc; text-decoration: none; font-size: 0.9rem; }
-        .nav-item:hover { color: var(--accent-color); }
+        .logo-link { text-decoration: none; font-weight: bold; font-size: 1.1rem; color: var(--accent-color); margin-bottom: 5px; }
+        .nav-links { display: flex; gap: 10px; overflow-x: auto; max-width: 100%; padding-bottom: 5px; }
+        .nav-item-custom { color: #ccc; text-decoration: none; font-size: 0.8rem; white-space: nowrap; padding: 2px 5px; border: 1px solid #444; border-radius: 3px; }
+        .nav-item-custom:hover { border-color: var(--accent-color); color: var(--accent-color); }
 
         .toolbar {
             display: flex; align-items: center; gap: 15px; padding: 10px 15px; 
@@ -48,33 +49,31 @@
             padding: 8px 15px; border-radius: 4px; outline: none; width: 300px;
         }
 
-        /* テーブルコンテナ設定 */
-        .table-container { flex-grow: 1; background: var(--bg-color); overflow: hidden; padding: 0 5px; }
-        
-        table.dataTable { font-size: 13px !important; margin: 0 !important; }
+        /* ②配色：C列以降もすべてダーク背景に統一 */
+        .table-container { flex-grow: 1; background: var(--bg-color); overflow: hidden; }
+        table.dataTable { background-color: var(--card-bg) !important; margin: 0 !important; }
+        table.dataTable tbody tr { background-color: var(--card-bg) !important; }
         table.dataTable td, table.dataTable th { 
             white-space: pre; padding: 6px 10px !important; 
             border-bottom: 1px solid var(--border-color) !important;
             border-right: 1px solid var(--border-color) !important;
-            font-family: "MS Gothic", "Osaka-mono", monospace; /* 記号の幅を維持 */
+            color: var(--text-color) !important;
+            background-color: var(--card-bg) !important;
+            font-family: "MS Gothic", "Osaka-mono", monospace;
         }
 
-        /* ②ソートアイコンを非表示（派生順を守るため） */
-        table.dataTable thead .sorting,
-        table.dataTable thead .sorting_asc,
-        table.dataTable thead .sorting_desc { background-image: none !important; cursor: default; }
+        /* 固定列の背景色 */
+        .dtfc-fixed-left { background-color: var(--sticky-bg) !important; z-index: 5; }
+        .dtfc-fixed-left td { background-color: var(--sticky-bg) !important; }
 
-        /* ③横スクロールバーを太く見やすく */
-        .dataTables_scrollBody::-webkit-scrollbar { height: 18px; }
+        /* ③横スクロールバーを見やすく */
+        .dataTables_scrollBody::-webkit-scrollbar { height: 16px; }
         .dataTables_scrollBody::-webkit-scrollbar-track { background: #111; }
         .dataTables_scrollBody::-webkit-scrollbar-thumb { 
-            background: #666; border-radius: 10px; border: 3px solid #111;
+            background: #555; border-radius: 8px; border: 3px solid #111;
         }
         .dataTables_scrollBody::-webkit-scrollbar-thumb:hover { background: var(--accent-color); }
 
-        /* 固定列の背景 */
-        .dtfc-fixed-left { background-color: var(--sticky-bg) !important; z-index: 5; }
-        
         mark { background: #ffeb3b; color: #000; padding: 0 2px; }
     </style>
 </head>
@@ -83,9 +82,15 @@
 <header>
     <a href="index.html#main" class="logo-link">ボブの秘密基地</a>
     <nav class="nav-links">
-        <a href="unit.html" class="nav-item">Unit</a>
-        <a href="arms.html" class="nav-item">Arms</a>
-        <a href="tactics.html" class="nav-item">Tactics</a>
+        <a href="unit.html" class="nav-item-custom">Unit</a>
+        <a href="derivatives.html" class="nav-item-custom">Derivatives</a>
+        <a href="arms.html" class="nav-item-custom">Arms</a>
+        <a href="battle.html" class="nav-item-custom">Battle</a>
+        <a href="tactics.html" class="nav-item-custom">Tactics</a>
+        <a href="hunter.html" class="nav-item-custom">Hunter</a>
+        <a href="trivia.html" class="nav-item-custom">Trivia</a>
+        <a href="emoji.html" class="nav-item-custom">Emoji</a>
+        <a href="link.html" class="nav-item-custom">Link</a>
     </nav>
 </header>
 
@@ -103,12 +108,13 @@ $(document).ready(function () {
     let table;
     let searchTimeout;
 
-    // ①文字化け対策（Shift-JIS指定）
+    // ①文字化け対策（Shift-JIS）
+    // ※もし直らない場合はここを "UTF-8" に変えて、CSVもUTF-8で保存し直してください
     Papa.parse("derivatives.csv", {
         download: true,
         header: true,
         skipEmptyLines: true,
-        encoding: "Shift-JIS",
+        encoding: "Shift-JIS", 
         complete: function (results) {
             initDataTable(results);
         }
@@ -118,7 +124,7 @@ $(document).ready(function () {
         const columns = results.meta.fields.map(field => ({
             title: field || " ",
             data: field,
-            orderable: false, // ②全体での並び替えを禁止
+            orderable: false,
             defaultContent: ""
         }));
 
@@ -126,12 +132,12 @@ $(document).ready(function () {
             data: results.data,
             columns: columns,
             deferRender: true,
-            scrollY: "calc(100vh - 140px)",
+            scrollY: "calc(100vh - 160px)", // スクロールバーの位置調整
             scrollX: true,
             scroller: true,
             dom: 'rti',
-            ordering: false, // ②初期の並び替えも無効化（CSVの順序を守る）
-            fixedColumns: { left: 2 }, // 2列目まで固定
+            ordering: false, 
+            fixedColumns: { left: 2 }, 
             language: { url: "https://cdn.datatables.net/plug-ins/1.13.6/i18n/ja.json" }
         });
 
