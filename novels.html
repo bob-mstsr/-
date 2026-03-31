@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>Novels - ボブの秘密基地</title>
+    <style>
+        :root {
+            --bg-color: #1a1c1e;
+            --accent-color: #00d4ff;
+            --text-color: #e0e0e0;
+            --card-bg: #25282c;
+            --card-hover: #2d3136;
+        }
+
+        html, body {
+            margin: 0; padding: 0; height: 100%;
+            background-color: var(--bg-color); color: var(--text-color);
+            font-family: 'Segoe UI', Meiryo, sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* 共通ヘッダー（他ページと統一） */
+        header {
+            background: rgba(0,0,0,0.95); height: 60px; display: flex; 
+            justify-content: space-between; align-items: center; 
+            position: sticky; top: 0; z-index: 1000; 
+            border-bottom: 2px solid var(--accent-color); padding: 0 15px; box-sizing: border-box;
+        }
+
+        .nav-item-custom {
+            color: #e0e0e0; text-decoration: none; font-size: 0.85rem; 
+            padding: 6px 10px; border-radius: 4px; border: 1px solid transparent;
+            transition: 0.2s;
+        }
+        .nav-item-custom:hover { background: rgba(0, 212, 255, 0.2); border-color: #00d4ff; }
+
+        /* コンテンツエリア */
+        .container { max-width: 900px; margin: 40px auto; padding: 0 20px; }
+
+        .page-title {
+            font-size: 2rem; border-left: 5px solid var(--accent-color);
+            padding-left: 15px; margin-bottom: 30px; letter-spacing: 2px;
+        }
+
+        /* カテゴリタブ */
+        .tabs { display: flex; gap: 10px; margin-bottom: 30px; border-bottom: 1px solid #444; }
+        .tab-btn {
+            padding: 10px 20px; background: none; border: none; color: #888;
+            cursor: pointer; font-size: 1rem; transition: 0.3s; position: relative;
+        }
+        .tab-btn.active { color: var(--accent-color); font-weight: bold; }
+        .tab-btn.active::after {
+            content: ""; position: absolute; bottom: 0; left: 0; width: 100%;
+            height: 3px; background: var(--accent-color);
+        }
+
+        /* 小説カード */
+        .novel-list { display: none; flex-direction: column; gap: 15px; }
+        .novel-list.active { display: flex; }
+
+        .novel-card {
+            background: var(--card-bg); border: 1px solid #333; border-radius: 8px;
+            padding: 20px; text-decoration: none; color: inherit;
+            display: flex; justify-content: space-between; align-items: center;
+            transition: 0.2s; position: relative; overflow: hidden;
+        }
+        .novel-card:hover {
+            background: var(--card-hover); border-color: var(--accent-color);
+            transform: translateX(5px);
+        }
+
+        .novel-info h3 { margin: 0 0 5px 0; font-size: 1.1rem; }
+        .novel-info .date { font-size: 0.8rem; color: #888; }
+        
+        .badge {
+            background: #ff4d00; color: white; font-size: 0.7rem;
+            padding: 2px 8px; border-radius: 10px; margin-left: 10px;
+            vertical-align: middle;
+        }
+
+        .arrow { color: var(--accent-color); font-size: 1.2rem; }
+
+    </style>
+</head>
+<body>
+
+<header>
+    <a href="index.html#main" style="text-decoration:none; font-weight:bold; font-size:1.1rem; color:var(--accent-color);">ボブの秘密基地</a>
+    <nav style="display:flex; gap:10px;">
+        <a href="unit.html" class="nav-item-custom">Unit</a>
+        <a href="derivatives.html" class="nav-item-custom">Derivatives</a>
+        <a href="arms.html" class="nav-item-custom">Arms</a>
+        <a href="battle.html" class="nav-item-custom">Battle</a>
+        <a href="novels.html" class="nav-item-custom">Novels</a>
+        <a href="tactics.html" class="nav-item-custom">Tactics</a>
+        <a href="hunter.html" class="nav-item-custom">Hunter</a>
+        <a href="trivia.html" class="nav-item-custom">Trivia</a>
+        <a href="emoji.html" class="nav-item-custom">Emoji</a>
+        <a href="link.html" class="nav-item-custom">Link</a>
+        <a href="trivia.html" class="nav-item-custom">Trivia</a>
+    </nav>
+</header>
+
+<div class="container">
+    <h1 class="page-title">📖 Novels <span style="font-size: 1rem; color: #888;">- 戦記アーカイブ</span></h1>
+
+    <div class="tabs">
+        <button class="tab-btn active" onclick="showCategory('internal')">勢力内戦</button>
+        <button class="tab-btn" onclick="showCategory('exchange')">勢力交流戦</button>
+        <button class="tab-btn" onclick="showCategory('tournament')">トナメ</button>
+    </div>
+
+    <div id="internal" class="novel-list active">
+        <a href="2026.3.22　勢力内　第一回タッグマッチ　エキシビジョン.html" class="novel-card">
+            <div class="novel-info">
+                <h3>第一回タッグマッチ：エキシビジョン <span class="badge">NEW</span></h3>
+                <div class="date">2026.03.22</div>
+            </div>
+            <div class="arrow">▶</div>
+        </a>
+
+        <a href="2026.3.21　勢力内　第一回タッグマッチ　決勝戦.html" class="novel-card">
+            <div class="novel-info">
+                <h3>第一回タッグマッチ：決勝戦</h3>
+                <div class="date">2026.03.21</div>
+            </div>
+            <div class="arrow">▶</div>
+        </a>
+
+        <a href="2026.3.19　勢力内　第一回タッグマッチ　1回戦第二試合.html" class="novel-card">
+            <div class="novel-info">
+                <h3>第一回タッグマッチ：1回戦 第二試合</h3>
+                <div class="date">2026.03.19</div>
+            </div>
+            <div class="arrow">▶</div>
+        </a>
+
+        <a href="2026.3.18　勢力内　第一回タッグマッチ　1回戦第一試合.html" class="novel-card">
+            <div class="novel-info">
+                <h3>第一回タッグマッチ：1回戦 第一試合</h3>
+                <div class="date">2026.03.18</div>
+            </div>
+            <div class="arrow">▶</div>
+        </a>
+    </div>
+
+    <div id="exchange" class="novel-list">
+        <div style="padding: 20px; color: #666;">記録待ち...</div>
+    </div>
+
+    <div id="tournament" class="novel-list">
+        <div style="padding: 20px; color: #666;">記録待ち...</div>
+    </div>
+</div>
+
+<script>
+    function showCategory(id) {
+        // 全リストを非表示
+        document.querySelectorAll('.novel-list').forEach(list => list.classList.remove('active'));
+        // 全ボタンのactive解除
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+        
+        // 選択されたものを表示
+        document.getElementById(id).classList.add('active');
+        event.currentTarget.classList.add('active');
+    }
+</script>
+
+</body>
+</html>
