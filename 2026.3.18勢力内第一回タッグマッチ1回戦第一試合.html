@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="ja" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MST Battle Novelization</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Inter:wght@300;400;600&family=Noto+Sans+JP:wght@300;400;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        display: ['Cinzel', 'serif'],
+                        sans: ['Inter', 'Noto Sans JP', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            deep: '#0a0c10',
+                            surface: '#161b22',
+                            accent: '#e63946', // Crimson energy
+                            gold: '#c6a84d',   // Muted gold
+                            glow: 'rgba(230, 57, 70, 0.15)',
+                        }
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 1.5s ease-out forwards',
+                        'slide-up': 'slideUp 1s ease-out forwards',
+                        'glow-pulse': 'glowPulse 3s infinite ease-in-out',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        slideUp: {
+                            '0%': { transform: 'translateY(20px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' },
+                        },
+                        glowPulse: {
+                            '0%, 100%': { opacity: '0.4' },
+                            '50%': { opacity: '0.8' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #0a0c10;
+            color: #e2e8f0;
+            -webkit-font-smoothing: antialiased;
+        }
+        .glass-container {
+            background: rgba(22, 27, 34, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+        .narrative-text p {
+            margin-bottom: 2rem;
+            line-height: 1.9;
+            letter-spacing: 0.02em;
+        }
+        .accent-gradient {
+            background: linear-gradient(90deg, #c6a84d, #e63946);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .reading-line {
+            position: absolute;
+            left: 0;
+            width: 2px;
+            height: 100%;
+            background: linear-gradient(to bottom, transparent, #e63946, transparent);
+            opacity: 0.3;
+        }
+        ::selection {
+            background: #e63946;
+            color: white;
+        }
+    </style>
+</head>
+<body class="font-sans selection:bg-brand-accent selection:text-white overflow-x-hidden">
+
+    <!-- Ambient Background Elements -->
+    <div class="fixed inset-0 pointer-events-none overflow-hidden z-0">
+        <div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-brand-accent opacity-[0.03] blur-[120px] rounded-full"></div>
+        <div class="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-brand-gold opacity-[0.03] blur-[120px] rounded-full"></div>
+    </div>
+
+    <!-- Header Section -->
+    <header class="relative pt-24 pb-16 px-6 text-center z-10 animate-fade-in">
+        <div class="inline-block mb-4 px-3 py-1 border border-brand-gold/30 rounded-full text-[10px] uppercase tracking-[0.3em] text-brand-gold font-semibold">
+            Special Exhibition Match
+        </div>
+        <h1 class="font-display text-5xl md:text-7xl lg:text-8xl tracking-tighter mb-6">
+            MST BATTLE<br>
+            <span class="accent-gradient">NOVELIZATION</span>
+        </h1>
+        <div class="w-24 h-1 bg-gradient-to-r from-transparent via-brand-accent to-transparent mx-auto rounded-full"></div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="relative z-10 max-w-4xl mx-auto px-6 pb-32">
+        <div class="glass-container rounded-3xl p-8 md:p-16 lg:p-20 relative animate-slide-up">
+            <!-- Decorative corner -->
+            <div class="absolute top-0 right-0 p-4 opacity-20">
+                <svg width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M60 0H50V50H0V60H60V0Z" fill="currentColor"/>
+                </svg>
+            </div>
+
+            <article class="narrative-text text-lg md:text-xl text-slate-300 font-light leading-relaxed">
+                <p class="text-brand-gold font-medium italic border-l-4 border-brand-gold pl-6 py-2 mb-12">
+                    「さあ諸君！ ついに幕を開ける秘密結社タッグバトル大会――その記念すべき第一戦！」<br>
+                    MCのかみねこが明るい声でアリーナに呼びかける。
+                </p>
+
+                <p>
+                    「静かに着実に力を蓄えてきた『秘密結社第一部隊』！ 冷静沈着なる戦略家ライナセロス、そして華麗なる実力者アルトリア！ 対するは、熱き魂と予測不能の『ほなぼ』！ 炎のナイトとボブのコンビだ！」
+                </p>
+
+                <p>
+                    会場の熱気が一気に高まる。<br>
+                    「第一試合の敗者には『クリスマス仕様福江』か『初霜改二』が贈られる特別プレゼント付き！ 勝利を掴むのはどちらか！ ガンダムファイト……レディィィィ……ゴォォォォッ！！」
+                </p>
+
+                <p class="text-white font-normal">
+                    開戦の合図と同時、炎のナイトが叫んだ。<br>
+                    <span class="text-brand-accent font-bold">「行くぞおおおっ！！」</span><br>
+                    乗機であるノーベルガンダム(BSM)が眩い黄金のオーラに包める。猛然とダッシュし、目の前の敵を粉砕しようと拳を振り上げた。
+                </p>
+
+                <p>
+                    だが、その前にアルトリアのランスロット・アルビオンゼロが立ち塞がる。<br>
+                    「甘いわね！」<br>
+                    アルトリアがビーム撹乱幕を散布し、ノーベルガンダムの強襲を的確に阻む。すぐさま大型ビームサーベルを引き抜き、相手の動きを読んで鋭い斬撃を放った。
+                </p>
+
+                <p>
+                    「ボブ、頼む！」炎のナイトが叫ぶ。<br>
+                    ボブのΨガンダム・グシオンリベイクは一気に後方へ跳躍した。一瞬で距離を広げ、遠距離からの狙撃態勢に入る。<br>
+                    アルトリアは標的をボブに変更し猛追するが、ボブはトリッキーな機動でビームサーベルの連撃をヒラリと躱した。
+                </p>
+
+                <div class="my-16 flex items-center justify-center gap-4">
+                    <div class="h-[1px] flex-1 bg-gradient-to-r from-transparent to-brand-accent/30"></div>
+                    <div class="w-2 h-2 rounded-full bg-brand-accent animate-glow-pulse"></div>
+                    <div class="h-[1px] flex-1 bg-gradient-to-l from-transparent to-brand-accent/30"></div>
+                </div>
+
+                <p>
+                    一方、前線に取り残された炎のナイトは、姿の見えない敵に翻弄されていた。<br>
+                    「どこだ……！？」<br>
+                    ライナセロスのゴールドフレーム天ミナCだ。ミラージュコロイドを展開し、完全に気配を絶っている。いぶし銀の古参兵は一切の言葉を発さず、死角からノーベルガンダムに取り付いた。
+                </p>
+
+                <p class="text-brand-accent/90 italic">
+                    「うおおっ、ENが吸い取られる！？」<br>
+                    刃がノーベルガンダムの装甲に食い込み、エネルギーを根こそぎ奪っていく。炎のナイトは勘を頼りに反撃を試みるが、攻撃はライナセロスの装甲に弾かれるか、虚空を斬るばかり。
+                </p>
+
+                <p>
+                    後方ではボブが戦場端からロングレンジ・ライフルを構えていた。<br>
+                    「まぁ、中身に問題ない限りは大丈夫さ」<br>
+                    ボブが放つビームを、アルトリアは華麗な機動で次々と回避し、じりじりと距離を詰めていく。
+                </p>
+
+                <p class="bg-brand-accent/10 border-l-4 border-brand-accent p-6 rounded-r-lg">
+                    戦局が完全に傾いたのは11ターン目だった。<br>
+                    「まだまだぁ！……なっ、弾切れだと！？」<br>
+                    炎のナイトのノーベルガンダムが沈黙する。激しい攻防の末、全ての武装の残弾が底を突いていた。
+                </p>
+
+                <p>
+                    その隙を、歴戦のライナセロスが見逃すはずがない。<br>
+                    静寂の中、ゴールドフレーム天ミナCが急接近。右腕の複合兵装トリケロス天が、無防備なノーベルガンダムを容赦なく貫いた。
+                </p>
+
+                <p class="text-2xl font-bold text-brand-accent tracking-widest text-center my-12">
+                    「ぐおおおおっ！」
+                </p>
+
+                <p>
+                    炎のナイト、撃墜。ライナセロスが無言のまま確実な戦果を挙げる。
+                </p>
+
+                <p>
+                    「元気出して、イカルド！そのくらいで済んでよかったじゃない」<br>
+                    相棒を失ってもボブのペースは崩れない。極限まで距離を取りながら、迫り来るライナセロスへライフルを連射する。
+                </p>
+
+                <p>
+                    だが、ライナセロスはトリケロス天で攻撃を冷静に防ぎ切る。再びミラージュコロイドを展開し、無言のプレッシャーをかけながら距離を詰める。
+                </p>
+
+                <p>
+                    追いつめられたボブの前に、今度はアルトリアのランスロット・アルビオンゼロが猛スピードで突っ込んできた。<br>
+                    ボブはプレッシャーをかけながら迎撃を試みるが、アルトリアの勢いは止まらない。
+                </p>
+
+                <p class="italic text-slate-400">
+                    「僕ら、うまくやれてないね。新しいやり方と戦術が必要だよ」<br>
+                    ボブが独り言のようにつぶやくと、通信帯域から謎の声が響いた。<br>
+                    『ん〜、わかった。脱ごう！』
+                </p>
+
+                <p class="text-white font-semibold">
+                    「そこよっ！！」<br>
+                    ふざけた通信に構うことなく、アルトリアの大型ビームサーベルがグシオンリベイクを両断する。機体は真っ二つに裂け、爆散した。
+                </p>
+
+                <div class="mt-20 border-t border-white/10 pt-12">
+                    <p>
+                        アリーナに終了のブザーが鳴り響く。<br>
+                        煙が晴れた戦場には、静かに佇むライナセロスと、サーベルを振り抜いた姿勢のアルトリアの姿があった。
+                    </p>
+
+                    <p class="text-brand-gold text-2xl font-display mt-8">
+                        「何とか勝てましたね♪」
+                    </p>
+                    
+                    <p>
+                        アルトリアがふっと微笑んで勝利を宣言すると、観客席から割れんばかりの歓声が沸き起こった。<br>
+                        連携と冷静な立ち回りが光った秘密結社第一部隊、堂々の勝利である。
+                    </p>
+                </div>
+            </article>
+        </div>
+
+        <!-- Scroll Indicator / Decoration -->
+        <div class="mt-24 text-center">
+            <div class="inline-flex flex-col items-center gap-4 opacity-40 hover:opacity-100 transition-opacity duration-500">
+                <span class="text-[10px] tracking-[0.4em] uppercase font-bold text-brand-gold">End of Transmission</span>
+                <div class="w-px h-16 bg-gradient-to-b from-brand-gold to-transparent"></div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Subtle interaction: Parallax-ish move on ambient lights
+        document.addEventListener('mousemove', (e) => {
+            const x = e.clientX / window.innerWidth;
+            const y = e.clientY / window.innerHeight;
+            
+            const lights = document.querySelectorAll('.fixed > div');
+            lights[0].style.transform = `translate(${x * 30}px, ${y * 30}px)`;
+            lights[1].style.transform = `translate(${-x * 40}px, ${-y * 40}px)`;
+        });
+
+        // Entrance animation enhancement
+        window.addEventListener('load', () => {
+            const paragraphs = document.querySelectorAll('.narrative-text p');
+            paragraphs.forEach((p, index) => {
+                p.style.opacity = '0';
+                p.style.transform = 'translateY(10px)';
+                p.style.transition = `all 0.8s ease-out ${index * 0.05}s`;
+                
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            p.style.opacity = '1';
+                            p.style.transform = 'translateY(0)';
+                        }
+                    });
+                }, { threshold: 0.1 });
+                
+                observer.observe(p);
+            });
+        });
+    </script>
+</body>
+</html>
