@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MSTactics Battle Chronicle | Revenge Match</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Noto+Sans+JP:wght@300;400;700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'space-black': '#0a0c10',
+                        'deep-slate': '#161b22',
+                        'electric-blue': '#00d2ff',
+                        'neon-accent': '#39ff14',
+                        'heat-orange': '#ff4d00',
+                        'luminous-white': '#e6edf3',
+                    },
+                    fontFamily: {
+                        display: ['Orbitron', 'Rajdhani', 'sans-serif'],
+                        body: ['Noto Sans JP', 'sans-serif'],
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'glow': 'glow 2s ease-in-out infinite alternate',
+                    },
+                    keyframes: {
+                        glow: {
+                            'from': { textShadow: '0 0 5px #fff, 0 0 10px #fff, 0 0 15px #00d2ff' },
+                            'to': { textShadow: '0 0 10px #fff, 0 0 20px #00d2ff, 0 0 30px #00d2ff' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #0a0c10;
+            background-image: 
+                radial-gradient(circle at 50% 0%, rgba(0, 210, 255, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 0% 100%, rgba(255, 77, 0, 0.03) 0%, transparent 40%);
+            background-attachment: fixed;
+            color: #e6edf3;
+            overflow-x: hidden;
+        }
+
+        .glass-header {
+            background: rgba(10, 12, 16, 0.8);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(0, 210, 255, 0.2);
+        }
+
+        .content-card {
+            background: rgba(22, 27, 34, 0.4);
+            border-left: 2px solid rgba(0, 210, 255, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .content-card:hover {
+            border-left: 2px solid #00d2ff;
+            background: rgba(22, 27, 34, 0.6);
+        }
+
+        .narrative-p {
+            line-height: 2;
+            letter-spacing: 0.02em;
+        }
+
+        .dialogue-box {
+            position: relative;
+            padding-left: 1.5rem;
+            margin: 2.5rem 0;
+            font-style: italic;
+            color: #00d2ff;
+            border-left: 4px solid #ff4d00;
+        }
+
+        .scanline {
+            width: 100%;
+            height: 2px;
+            background: rgba(0, 210, 255, 0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 50;
+            pointer-events: none;
+            animation: move-scanline 8s linear infinite;
+        }
+
+        @keyframes move-scanline {
+            0% { transform: translateY(-100vh); }
+            100% { transform: translateY(100vh); }
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0a0c10;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #161b22;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #00d2ff;
+        }
+
+        .glitch-hover:hover {
+            animation: glitch 0.3s cubic-bezier(.25,.46,.45,.94) both infinite;
+        }
+
+        @keyframes glitch {
+            0% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(-2px, -2px); }
+            60% { transform: translate(2px, 2px); }
+            80% { transform: translate(2px, -2px); }
+            100% { transform: translate(0); }
+        }
+    </style>
+</head>
+<body class="font-body selection:bg-electric-blue selection:text-space-black">
+
+    <div class="scanline"></div>
+
+    <!-- Fixed Header -->
+    <header class="glass-header fixed top-0 w-full z-40 px-6 py-4 flex justify-between items-center">
+        <div class="flex items-center space-x-3">
+            <div class="w-2 h-8 bg-heat-orange animate-pulse"></div>
+            <h1 class="font-display text-xl md:text-2xl font-bold tracking-tighter uppercase">
+                MS<span class="text-electric-blue">Tactics</span> <span class="text-xs font-medium text-slate-500 hidden sm:inline">// Chronicle</span>
+            </h1>
+        </div>
+        <div class="text-[10px] font-display text-slate-500 tracking-[0.2em] uppercase hidden md:block">
+            Tactical Analysis Stream: <span class="text-neon-accent">Active</span>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="relative pt-32 pb-24 px-6 max-w-3xl mx-auto">
+        
+        <!-- Hero Title Section -->
+        <section class="mb-20 text-center">
+            <div class="inline-block px-3 py-1 border border-heat-orange text-heat-orange text-[10px] font-display mb-4 uppercase tracking-widest">
+                Battle Record #772-B
+            </div>
+            <h2 class="text-4xl md:text-6xl font-display font-black mb-6 tracking-tight leading-none bg-gradient-to-b from-white to-slate-500 bg-clip-text text-transparent">
+                熱砂の復讐劇
+            </h2>
+            <div class="h-1 w-24 bg-electric-blue mx-auto mb-8"></div>
+        </section>
+
+        <!-- Novel Content -->
+        <article class="space-y-12">
+            
+            <div class="content-card p-8 rounded-tr-3xl">
+                <p class="narrative-p text-lg leading-relaxed">
+                    リベンジマッチの火蓋は、熱砂の戦場にて切って落とされた。
+                </p>
+                <p class="narrative-p mt-8">
+                    先に勝利を収めた秘密結社第1部隊のライナセロスとアルトリア、そしてイーブイフレンズ代表のかみねことなぎさ。対するは、敗北の悔しさを力に変えたリベンジャーズの炎のナイト、ボブ、オロコン、オズナの4人だ。
+                </p>
+            </div>
+
+            <div class="py-12 flex flex-col items-center">
+                <div class="dialogue-box max-w-md w-full">
+                    <p class="font-display text-xl uppercase font-bold tracking-wide italic">
+                        「これは熱い！別に、倒してしまっても構わんのだろう？それでは皆さんお待ちかねェ！下剋上の舞台は整ったァ！！レディィィゴォォォッ！！」
+                    </p>
+                </div>
+            </div>
+
+            <section class="space-y-8">
+                <h3 class="font-display text-heat-orange text-sm tracking-[0.3em] flex items-center space-x-4">
+                    <span>PHASE 01</span>
+                    <span class="h-px flex-grow bg-slate-800"></span>
+                    <span class="text-xs text-slate-500 uppercase">Engagement</span>
+                </h3>
+                
+                <p class="narrative-p">
+                    炎のナイトの咆哮が通信回線に響き渡る。緒戦の距離は24。まず動いたのは、白銀のΨエルガイムを駆るオズナだった。対峙するかみねこのガンダムローズΨは、機体性能を活かした機敏な動きでローゼス・ハリケーンを放つ。
+                </p>
+
+                <div class="dialogue-box">
+                    <p class="text-lg">「逃がさないのサ！」</p>
+                </div>
+
+                <p class="narrative-p">
+                    かみねこの叫びと共に放たれたヒート攻撃を、オズナはツインメリットコーティングの防備を固めるアタッカーディフェンスで真っ向から受け流す。物理とヒートを相殺するシールドの働きにより、被害は最小限に抑えられた。
+                </p>
+            </section>
+
+            <section class="space-y-8">
+                <h3 class="font-display text-electric-blue text-sm tracking-[0.3em] flex items-center space-x-4">
+                    <span>PHASE 02</span>
+                    <span class="h-px flex-grow bg-slate-800"></span>
+                    <span class="text-xs text-slate-500 uppercase">Tactical Exchange</span>
+                </h3>
+                
+                <p class="narrative-p">
+                    第2ターン、炎のナイトのノーベルガンダムが戦場を駆ける。しかし、かみねこの放った14連撃が、ナイトの足を止めた。機動力で勝るScissors型移動を狙い撃ちにする、Rock型の鋭い攻撃だ。ナイトは373のダメージを被り、姿勢を崩す。
+                </p>
+
+                <p class="narrative-p">
+                    第3ターン。スピナ・ロディに乗り込むオロコンが、冷静に戦況を分析する。「当たらなければ、尻尾の毛一本だって焦げはしないわ！」と余裕を見せるが、なぎさの放つ刺客のような一撃が機体をかすめた。
+                </p>
+
+                <p class="narrative-p">
+                    戦いは混迷を極めていく。第4ターン、アルトリアのランスロット・アルビオンゼロが煙幕を張り、攪乱を試みる。しかし、オズナは冷静だった。
+                </p>
+
+                <div class="dialogue-box">
+                    <p class="text-lg">「泣いても涙がでないや」</p>
+                </div>
+
+                <p class="narrative-p">
+                    と呟きながらパワーランチャーを斉射し、アルトリアの装甲を削り取る。
+                </p>
+            </section>
+
+            <section class="space-y-8 bg-deep-slate/30 p-8 border-y border-slate-800">
+                <h3 class="font-display text-neon-accent text-sm tracking-[0.3em] flex items-center space-x-4">
+                    <span>PHASE 15</span>
+                    <span class="h-px flex-grow bg-slate-800"></span>
+                    <span class="text-xs text-slate-500 uppercase">Critical Strike</span>
+                </h3>
+
+                <p class="narrative-p">
+                    第15ターン、戦況が大きく動いた。金色の亡霊、ライナセロスのゴールドフレーム天ミナCがミラージュコロイドを展開。姿を消したまま、ボブのΨガンダム・グシオンリベイクの背後に回り込む。ボブは狙撃態勢に入っていたが、接近を許してしまった。
+                </p>
+
+                <div class="dialogue-box border-slate-500 text-slate-400">
+                    <p class="text-lg">「僕ら、うまくやれてないね。新しいやり方と戦術が必要だよ」</p>
+                </div>
+
+                <p class="narrative-p">
+                    ボブが弱音を吐く間もなく、ライナセロスのトリケロス天が炸裂。1125という致命的なダメージを受け、ボブの機体は火を噴いた。リベンジャーズ、1機喪失。
+                </p>
+            </section>
+
+            <section class="space-y-8">
+                <h3 class="font-display text-heat-orange text-sm tracking-[0.3em] flex items-center space-x-4">
+                    <span>PHASE 22-59</span>
+                    <span class="h-px flex-grow bg-slate-800"></span>
+                    <span class="text-xs text-slate-500 uppercase">Attrition</span>
+                </h3>
+
+                <p class="narrative-p">
+                    しかし、その犠牲を炎のナイトが無駄にすることはなかった。第22ターン、ナイトは格闘戦の間合いに踏み込む。アルトリアの執拗な回避運動を読みきり、ビームサーベルを一閃。
+                </p>
+
+                <div class="dialogue-box">
+                    <p class="text-lg">「はい、今日はここまで！出直してきてね？」</p>
+                </div>
+
+                <p class="narrative-p">
+                    負けました……と悲鳴を上げるアルトリアのランスロットを撃破し、ナイトは戦況を五分に戻した。
+                </p>
+
+                <p class="narrative-p">
+                    中盤戦、戦いは消耗戦へと突入する。かみねことなぎさの機体は、激しい攻撃の代償として弾切れとエネルギー枯渇に直面していた。第30ターンを過ぎたころ、ガンダムローズΨのオーバーヒートが深刻化する。
+                </p>
+
+                <p class="narrative-p">
+                    オロコンはその隙を見逃さず、ガトリングシールドでかみねこにプレッシャーを与える。「見せてもらおうか、新しいトレーナーの実力とやらを！」と獅子奮迅の勢いで攻め立てる。
+                </p>
+
+                <p class="narrative-p">
+                    第59ターン。限界に達したなぎさはコアランダーを射出し、脱出を図る。しかし、それを見逃す炎のナイトではない。「なぎさ、今楽にしてあげるよ！」と叫び、第68ターンに必殺の一撃を叩き込み、刺客の息の根を止めた。
+                </p>
+
+                <p class="narrative-p">
+                    ライナセロスも黙ってはいない。孤軍奮闘するオロコンに対し、第62ターンに無情な掃射を浴びせ、秘密結社のリーダーを沈めた。
+                </p>
+            </section>
+
+            <section class="space-y-8 text-center pt-10">
+                <p class="font-display text-electric-blue text-2xl tracking-widest font-bold">
+                    [ FINAL STAGE ]
+                </p>
+                <div class="h-px w-full bg-gradient-to-r from-transparent via-electric-blue to-transparent opacity-30"></div>
+                <p class="narrative-p italic">
+                    残るはライナセロスとかみねこ、対するは炎のナイトとオズナ。
+                </p>
+            </section>
+
+            <section class="space-y-8">
+                <p class="narrative-p">
+                    第75ターン。かみねこは接近戦を試みるが、炎のナイトのサポートAI、エアの冷静な誘導が勝った。「はい、今日はここまで！」と再び告げるナイトのサーベルが、かみねこの足を止める。イーブイフレンズ、全滅。
+                </p>
+
+                <p class="narrative-p font-bold text-xl text-center border-y border-slate-800 py-6 my-10">
+                    最後の一騎打ちは、ライナセロスのゴールドフレーム天ミナCと、炎のナイトのノーベルガンダムとなった。
+                </p>
+
+                <p class="narrative-p">
+                    両者ともに満身創痍。第80ターン、ライナセロスの鋭い突きがナイトを襲う。「被弾した！？ッ……！！」と呻くナイトに、エアが叱咤を飛ばす。「問題ありません！まだやれます！！」
+                </p>
+
+                <p class="narrative-p">
+                    第83ターン、決着の時。ライナセロスは至近距離で弾丸を補給し、最後の攻勢に出る。しかし、ナイトは勘を頼りに機体を翻し、ゴールドフレームの懐に飛び込んだ。
+                </p>
+
+                <div class="text-center py-10">
+                    <h4 class="font-display text-4xl md:text-5xl font-black italic tracking-tighter text-white animate-glow glitch-hover cursor-default">
+                        「見えた！やーーってやるぜっ！！」
+                    </h4>
+                </div>
+
+                <p class="narrative-p">
+                    ノーベルガンダムの最大出力が、ゴールドフレームの装甲を貫く。ライナセロスの沈黙と共に、戦場に静寂が訪れた。
+                </p>
+            </section>
+
+            <!-- Conclusion -->
+            <section class="mt-20 p-10 border-2 border-electric-blue rounded-lg bg-deep-slate/50">
+                <p class="narrative-p text-xl font-bold text-center text-electric-blue mb-4">
+                    MISSION ACCOMPLISHED
+                </p>
+                <p class="narrative-p text-center">
+                    リベンジャーズの勝利だ。接戦の末、彼らは第1戦の雪辱を見事に果たしたのである。炎のナイトのポジティブな叫びが、鳴り止ない通信回線の中をどこまでも響いていた。
+                </p>
+            </section>
+
+        </article>
+
+        <!-- Dynamic element for aesthetic -->
+        <div class="mt-24 flex justify-center space-x-2">
+            <span class="w-1.5 h-1.5 bg-electric-blue rounded-full animate-bounce"></span>
+            <span class="w-1.5 h-1.5 bg-electric-blue rounded-full animate-bounce" style="animation-delay: 0.2s"></span>
+            <span class="w-1.5 h-1.5 bg-electric-blue rounded-full animate-bounce" style="animation-delay: 0.4s"></span>
+        </div>
+        
+    </main>
+
+    <script>
+        // Smooth scroll effect for sections
+        document.addEventListener('DOMContentLoaded', () => {
+            const sections = document.querySelectorAll('section');
+            const observerOptions = {
+                threshold: 0.1
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('opacity-100', 'translate-y-0');
+                        entry.target.classList.remove('opacity-0', 'translate-y-10');
+                    }
+                });
+            }, observerOptions);
+
+            sections.forEach(section => {
+                section.classList.add('transition-all', 'duration-1000', 'opacity-0', 'translate-y-10');
+                observer.observe(section);
+            });
+        });
+    </script>
+</body>
+</html>

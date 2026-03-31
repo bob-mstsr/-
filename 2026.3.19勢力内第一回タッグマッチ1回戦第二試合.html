@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MSTactics Battle Chronicle | Episode 02</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Noto+Sans+JP:wght@300;400;700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'space-black': '#0a0c10',
+                        'cyber-gray': '#161b22',
+                        'neon-blue': '#00f2ff',
+                        'electric-violet': '#8b5cf6',
+                        'plasma-orange': '#f97316',
+                        'luminous-white': '#e6edf3',
+                    },
+                    fontFamily: {
+                        display: ['Orbitron', 'sans-serif'],
+                        accent: ['Rajdhani', 'sans-serif'],
+                        body: ['Noto Sans JP', 'sans-serif'],
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'glow-line': 'glowLine 3s linear infinite',
+                    },
+                    keyframes: {
+                        glowLine: {
+                            '0%': { transform: 'translateX(-100%)' },
+                            '100%': { transform: 'translateX(100%)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #0a0c10;
+            color: #e6edf3;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 50% 0%, rgba(0, 242, 255, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 100% 100%, rgba(139, 92, 246, 0.05) 0%, transparent 50%);
+        }
+
+        .glass-header {
+            background: rgba(10, 12, 16, 0.8);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(0, 242, 255, 0.2);
+        }
+
+        .narrative-container {
+            max-width: 720px;
+            margin: 0 auto;
+        }
+
+        .drop-cap::first-letter {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 900;
+            float: left;
+            font-size: 4rem;
+            line-height: 0.8;
+            padding-right: 0.5rem;
+            color: #00f2ff;
+            text-shadow: 0 0 15px rgba(0, 242, 255, 0.5);
+        }
+
+        .battle-turn {
+            position: relative;
+            padding-left: 2rem;
+            border-left: 2px solid rgba(0, 242, 255, 0.3);
+            margin: 4rem 0;
+        }
+
+        .battle-turn::before {
+            content: '';
+            position: absolute;
+            left: -6px;
+            top: 0;
+            width: 10px;
+            height: 10px;
+            background: #00f2ff;
+            box-shadow: 0 0 10px #00f2ff;
+            border-radius: 50%;
+        }
+
+        .dialogue {
+            position: relative;
+            background: rgba(139, 92, 246, 0.1);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            border-right: 4px solid #8b5cf6;
+            font-style: italic;
+        }
+
+        .highlight-red { color: #ff4d4d; text-shadow: 0 0 8px rgba(255, 77, 77, 0.4); }
+        .highlight-blue { color: #00f2ff; text-shadow: 0 0 8px rgba(0, 242, 255, 0.4); }
+        .highlight-orange { color: #f97316; text-shadow: 0 0 8px rgba(249, 115, 22, 0.4); }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #0a0c10; }
+        ::-webkit-scrollbar-thumb { background: #161b22; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #00f2ff; }
+    </style>
+</head>
+<body class="font-body selection:bg-neon-blue selection:text-space-black">
+
+    <!-- Header -->
+    <header class="glass-header fixed top-0 w-full z-50 py-4 px-6 md:px-12 flex justify-between items-center">
+        <div class="flex items-center gap-3">
+            <div class="w-2 h-8 bg-neon-blue animate-pulse"></div>
+            <h1 class="font-display text-xl md:text-2xl tracking-tighter font-black italic">
+                MST<span class="text-neon-blue">ACTICS</span> <span class="text-xs font-accent tracking-[0.3em] uppercase opacity-60 ml-2">Battle Chronicle</span>
+            </h1>
+        </div>
+        <div class="hidden md:block font-accent text-sm tracking-widest text-neon-blue opacity-80">
+            SYSTEM STATUS: ONLINE // DATA_LOG_ID: 02_BTLE
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="pt-32 pb-24 px-6 md:px-12">
+        <div class="narrative-container">
+            
+            <!-- Intro Section -->
+            <section class="mb-16">
+                <p class="text-xs font-accent text-neon-blue tracking-[0.4em] uppercase mb-4 opacity-70">Case File: Giant Killing</p>
+                <h2 class="font-display text-3xl md:text-5xl font-bold mb-10 leading-tight">
+                    秘密結社の<span class="text-plasma-orange">黄昏</span>、<br>
+                    戦場に咲く二輪の<span class="text-neon-blue">薔薇</span>
+                </h2>
+                
+                <p class="drop-cap text-lg md:text-xl leading-relaxed text-luminous-white/90 mb-8">
+                    秘密結社MST。数え切れないほどの戦士を擁するこの巨大クランで、今、一組の若きコンビがジャイアントキリングを目論んでいた。
+                </p>
+                
+                <p class="text-lg md:text-xl leading-relaxed text-luminous-white/90 mb-8">
+                    今回のダッグマッチ一回戦・第二試合。対戦カードは「ゆるキャワしっぽ団」対「イーブイフレンズ」。
+                </p>
+
+                <p class="text-lg md:text-xl leading-relaxed text-luminous-white/90 mb-8">
+                    秘密結社のリーダーにして絶対的なカリスマ、<span class="highlight-orange">オロコン</span>。そしてイケイケのアタッカー、<span class="highlight-orange">オズナ</span>。この二人が組んだ「ゆるキャワしっぽ団」に対し、かみねことなぎさの「イーブイフレンズ」は驚きの決断を下していた。
+                </p>
+
+                <div class="dialogue font-display text-xl md:text-2xl not-italic border-l-4 border-r-0 border-neon-blue bg-neon-blue/5">
+                    「私たちのコンビネーションを見せる時が来たようです！」
+                </div>
+
+                <p class="text-lg md:text-xl leading-relaxed text-luminous-white/90 mb-8">
+                    大会の企画者でもある<span class="highlight-blue">かみねこ</span>は、相棒の<span class="highlight-blue">なぎさ</span>と共に、高火力機体であるガンダムローズを二機揃えて戦場に降り立った。機動力重視の相手に対し、圧倒的な火力ですべてを焼き払う戦略だ。
+                </p>
+            </section>
+
+            <!-- Battle Start -->
+            <section class="battle-turn">
+                <h3 class="font-accent text-neon-blue text-sm tracking-widest mb-4 uppercase">Range: 60 // Engagement Initiated</h3>
+                <p class="text-lg md:text-xl leading-relaxed text-luminous-white/90 mb-8">
+                    距離６０。戦闘開始の合図と共に、オズナのエルガイムが先行する。
+                </p>
+                
+                <div class="dialogue">
+                    「ここから空が見えるのが好きなんだァ。いいよネッ、空」
+                </div>
+
+                <p class="text-lg md:text-xl leading-relaxed text-luminous-white/90 mb-8">
+                    オズナは軽口を叩きながら、ミサイルポッドを乱射した。エルガイムのSA、つまりスピード重視の機動による牽制だ。だが、イーブイフレンズは動じない。
+                </p>
+
+                <p class="text-lg md:text-xl leading-relaxed text-luminous-white/90 mb-8">
+                    かみねこはAA（攻撃重視機動）、なぎさはDA（防御重視機動）。二人は「アタッカー・ディフェンス」の戦術を展開。なぎさが盾となって攻撃をいなし、その隙にかみねこが攻撃を叩き込む猛烈な布陣だ。
+                </p>
+
+                <p class="font-display text-2xl text-center py-10 tracking-[0.2em] text-neon-blue uppercase animate-pulse-slow">
+                    — ローゼス・ハリケーン —
+                </p>
+
+                <p class="text-lg md:text-xl leading-relaxed text-luminous-white/90 mb-8">
+                    黄金のオーラが広がり、無数のエネルギーの刃が弧を描く。エルガイムのツインメリットコーティングは強力だが、ローズ二機の挟み撃ちには苦戦を強いられた。第３ターンまで、オズナはスピードで回避を試みるが、攻撃タイプのかみねこの追従を振り切れない。
+                </p>
+            </section>
+
+            <!-- Mid Battle -->
+            <section class="battle-turn">
+                <h3 class="font-accent text-plasma-orange text-sm tracking-widest mb-4 uppercase">Turn 04 // Armor Integrity Compromised</h3>
+                <p class="text-lg md:text-xl leading-relaxed text-luminous-white/90 mb-8">
+                    第４ターン。ついに均衡が崩れた。
+                </p>
+                
+                <div class="dialogue border-plasma-orange bg-plasma-orange/5">
+                    「後悔しても遅いのサ！」
+                </div>
+
+                <p class="text-lg md:text-xl leading-relaxed text-luminous-white/90 mb-8">
+                    かみねこの叫びと共に放たれたローゼス・ハリケーン。エルガイムの特殊装甲を貫き、<span class="highlight-red font-bold">４５１</span>のダメージがオズナを襲う。エルガイムの機動力が一気に削ぎ落とされた。
+                </p>
+
+                <p class="text-lg md:text-xl leading-relaxed text-luminous-white/90 mb-8">
+                    戦場が加熱し、第５ターン。距離は３３まで縮まる。なぎさのガンダムローズがオーバーヒートを起こすほどの激発だ。オズナは必死に反撃するが、ガンダムローズの重厚な装甲が攻撃を阻む。
+                </p>
+            </section>
+
+            <!-- Climax -->
+            <section class="battle-turn">
+                <h3 class="font-accent text-electric-violet text-sm tracking-widest mb-4 uppercase">Tactical Shift // Leaders Move</h3>
+                <p class="text-lg md:text-xl leading-relaxed text-luminous-white/90 mb-8">
+                    ここでついに、 strategist、オロコンが動いた。
+                </p>
+                <p class="text-lg md:text-xl leading-relaxed text-luminous-white/90 mb-8">
+                    スピナ・ロディを駆るオロコンは、ビーム攪乱幕を散布。一転して視界を奪い、近接戦闘を無力化しようとする。
+                </p>
+
+                <div class="dialogue border-electric-violet bg-electric-violet/5">
+                    「見せてもらおうか、新しいトレーナーのバトルの実力とやらを！」
+                </div>
+
+                <p class="text-lg md:text-xl leading-relaxed text-luminous-white/90 mb-8">
+                    だが、なぎさはこの瞬間を待っていた。
+                </p>
+                <p class="text-lg md:text-xl leading-relaxed text-luminous-white/90 mb-8">
+                    なぎさの機体はDA。防御重視の機動は、相手の攻撃的な動きをいなし、カウンターを当てることに長けている。攪乱幕の中でも、なぎさのセンサーはオロコンを捉えていた。
+                </p>
+
+                <div class="dialogue">
+                    「まだよ、まだ私の火は消えてないんだから！」
+                </div>
+
+                <p class="text-lg md:text-xl leading-relaxed text-luminous-white/90 mb-12">
+                    オロコンが吼えるが、なぎさのローゼス・ハリケーンが攪乱幕を切り裂いてスピナ・ロディに直撃する。<span class="highlight-red font-bold">４８３ダメージ</span>。装甲の薄いリーダー機は、跡形もなく爆散した。
+                </p>
+            </section>
+
+            <!-- Ending -->
+            <section class="mt-20 border-t border-cyber-gray pt-16">
+                <div class="inline-block px-4 py-1 border border-neon-blue text-neon-blue font-accent text-xs tracking-widest uppercase mb-8">
+                    Combat Termination Phase
+                </div>
+                
+                <p class="text-lg md:text-xl leading-relaxed text-luminous-white/90 mb-8">
+                    オロコン撃破。静まり返る戦場に、オズナの苦笑いが響く。
+                </p>
+                
+                <div class="dialogue border-gray-500 bg-gray-500/5">
+                    「視界がモノクロになる～…」
+                </div>
+
+                <p class="text-lg md:text-xl leading-relaxed text-luminous-white/90 mb-8">
+                    第７ターン。距離６８。ボロボロのエルガイムで最後のミサイルを放つオズナだったが、もはや勝負はついていた。
+                </p>
+
+                <p class="text-lg md:text-xl leading-relaxed text-luminous-white/90 mb-8">
+                    かみねこが最後の引き金を引く。
+                </p>
+
+                <div class="dialogue border-neon-blue bg-neon-blue/5">
+                    「すべては、ボクのかんぺきなけいかくなのサ！」
+                </div>
+
+                <p class="text-3xl md:text-4xl font-display font-black text-center my-12 text-neon-blue">
+                    DIRECT HIT: <span class="text-plasma-orange">1475</span> DAMAGE
+                </p>
+
+                <p class="text-xl md:text-2xl leading-relaxed font-bold text-luminous-white mb-8 border-l-4 border-neon-blue pl-6 py-2">
+                    最大勢力のリーダーとその最先鋭を、二機のバラが飲み込んだ。イーブイフレンズによる圧倒的勝利。戦略と火力が噛み合った瞬間、歴史は塗り替えられたのだ。
+                </p>
+            </section>
+
+            <!-- Victory Badge -->
+            <div class="mt-24 p-12 bg-cyber-gray rounded-2xl border border-white/5 flex flex-col items-center text-center relative overflow-hidden group">
+                <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                <h4 class="font-display text-4xl mb-4 text-neon-blue tracking-widest">VICTORY</h4>
+                <p class="font-accent text-xl tracking-[0.5em] mb-2 uppercase opacity-80">Team: Eevee Friends</p>
+                <div class="w-full h-px bg-gradient-to-r from-transparent via-neon-blue to-transparent my-4"></div>
+                <p class="text-sm opacity-60">TACTICAL ARCHIVE SAVED // END OF LOG</p>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- UI Accents -->
+    <div class="fixed bottom-8 right-8 pointer-events-none hidden md:block">
+        <div class="text-[10px] font-accent opacity-30 rotate-90 origin-bottom-right">
+            TIMESTAMP: 2024.05.21_04:22 // BATTLE_ID: MST_S1_002
+        </div>
+    </div>
+
+</body>
+</html>

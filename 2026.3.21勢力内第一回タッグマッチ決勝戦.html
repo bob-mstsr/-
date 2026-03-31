@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MSTactics Battle Chronicle | Final Battle</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Noto+Sans+JP:wght@300;400;700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'space-black': '#0a0a0c',
+                        'slate-deep': '#12141d',
+                        'neon-blue': '#00f2ff',
+                        'neon-orange': '#ff5f00',
+                        'neon-green': '#39ff14',
+                        'luminous-white': '#f0f4f8',
+                    },
+                    fontFamily: {
+                        display: ['Orbitron', 'sans-serif'],
+                        accent: ['Rajdhani', 'sans-serif'],
+                        body: ['Noto Sans JP', 'sans-serif'],
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'glow': 'glow 2s ease-in-out infinite alternate',
+                    },
+                    keyframes: {
+                        glow: {
+                            '0%': { textShadow: '0 0 5px rgba(0, 242, 255, 0.2)' },
+                            '100%': { textShadow: '0 0 20px rgba(0, 242, 255, 0.6), 0 0 30px rgba(0, 242, 255, 0.4)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #0a0a0c;
+            color: #f0f4f8;
+            background-image: 
+                radial-gradient(circle at 50% 50%, rgba(18, 20, 29, 0) 0%, rgba(10, 10, 12, 1) 100%),
+                linear-gradient(rgba(0, 242, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 242, 255, 0.03) 1px, transparent 1px);
+            background-size: 100% 100%, 50px 50px, 50px 50px;
+            scroll-behavior: smooth;
+        }
+
+        .glass-panel {
+            background: rgba(18, 20, 29, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(0, 242, 255, 0.1);
+        }
+
+        .narrative-p {
+            line-height: 2;
+            margin-bottom: 2rem;
+            font-size: 1.125rem;
+            font-weight: 300;
+            color: rgba(240, 244, 248, 0.9);
+        }
+
+        .dialogue {
+            position: relative;
+            padding-left: 1.5rem;
+            border-left: 3px solid #ff5f00;
+            font-weight: 500;
+            color: #ffffff;
+            margin: 2.5rem 0;
+            font-style: italic;
+        }
+
+        .turn-heading {
+            font-family: 'Orbitron', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            color: #00f2ff;
+            border-bottom: 1px solid rgba(0, 242, 255, 0.3);
+            padding-bottom: 0.5rem;
+            margin-top: 4rem;
+            margin-bottom: 2rem;
+            display: inline-block;
+        }
+
+        .scanline {
+            width: 100%;
+            height: 2px;
+            background: rgba(0, 242, 255, 0.1);
+            position: fixed;
+            top: 0;
+            z-index: 100;
+            pointer-events: none;
+            animation: scan 8s linear infinite;
+        }
+
+        @keyframes scan {
+            0% { top: 0; }
+            100% { top: 100%; }
+        }
+
+        ::selection {
+            background: #00f2ff;
+            color: #0a0a0c;
+        }
+    </style>
+</head>
+<body class="font-body selection:bg-neon-blue selection:text-space-black">
+    <div class="scanline"></div>
+
+    <!-- Fixed Header -->
+    <header class="fixed top-0 left-0 w-full z-50 glass-panel border-b border-white/5 px-6 py-4">
+        <div class="max-w-5xl mx-auto flex justify-between items-center">
+            <h1 class="font-display text-xl md:text-2xl font-black tracking-tighter text-neon-blue animate-glow">
+                MST<span class="text-white">TACTICS</span> <span class="font-light text-sm tracking-widest ml-2 opacity-70">CHRONICLE</span>
+            </h1>
+            <div class="flex items-center gap-4">
+                <div class="hidden md:block h-1 w-24 bg-gradient-to-r from-neon-blue to-transparent rounded-full"></div>
+                <span class="font-accent text-xs tracking-[0.3em] uppercase opacity-60">Battle Log // Final</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="relative pt-32 pb-24 px-6 md:px-12">
+        <article class="max-w-3xl mx-auto">
+            
+            <!-- Intro Section -->
+            <section class="mb-16">
+                <div class="inline-block px-3 py-1 mb-6 border border-neon-orange text-neon-orange font-accent text-xs tracking-widest uppercase">
+                    Status: Combat Engaged
+                </div>
+                <h2 class="font-display text-4xl md:text-6xl font-bold mb-8 leading-tight bg-clip-text text-transparent bg-gradient-to-br from-white to-gray-500">
+                    頂上決戦：秘密結社第一部隊 vs イーブイフレンズ
+                </h2>
+                <p class="narrative-p text-xl text-luminous-white font-normal border-l-4 border-neon-blue pl-6">
+                    秘密結社主催のタッグバトル大会。幾多の激戦を勝ち抜き、ついに決勝戦の舞台が整った。会場を揺らすギャラリーの歓声。その中心で、大会の企画者にして実況を務めるかみねこが、自らガンダムローズΨに乗り込みマイクを叩いた。
+                </p>
+            </section>
+
+            <!-- Dialogue Block -->
+            <div class="dialogue">
+                「さあ諸君。ついにここまで勝ち上がってきた猛者たちによる、タッグバトル大会決勝戦を始めよう。<br>
+                まずは！冷静なる判断力と圧倒的な突破力で頂点に手をかける精鋭、秘密結社第一部隊。戦略の要たるライナセロスと、華麗なる剣撃の使い手アルトリア。<br>
+                対するは、自然の力を自在に操り、圧倒的火力で全てをねじ伏せてきたコンビ。イーブイフレンズ、なぎさと私、かみねこだ。<br>
+                頂上決戦、ここに開幕。タッグバトル大会、決勝戦。秘密結社第一部隊対イーブイフレンズ。両チーム、準備はいいか。<br>
+                バトルスタート。レディ……ゴォォォォッ。」
+            </div>
+
+            <p class="narrative-p">
+                戦場に緊張の糸が張り詰めると同時に、通信チャンネルにオロコンの声が響く。
+            </p>
+            
+            <div class="dialogue border-neon-green">
+                「あ、熱い。熱すぎる。初代最強タッグの栄冠は、果たしてどの組に輝くのか。」
+            </div>
+
+            <p class="narrative-p">
+                続いて、大ベテランの炎のナイトが不敵に笑いながら言葉を添えた。
+            </p>
+
+            <div class="dialogue border-gray-400">
+                「これは熱い。別に、倒してしまっても構わんのだろう。下剋上の舞台は整った。勝利の栄冠は誰の手に。決勝戦、いよいよ開幕だ。」
+            </div>
+
+            <!-- Battle Sequence -->
+            <div class="space-y-4">
+                <h3 class="turn-heading">Phase 01: Initial Contact</h3>
+                <p class="narrative-p">
+                    一ターン目。現在の距離は三十四。
+                </p>
+                <p class="narrative-p">
+                    先手を取ったのはイーブイフレンズだった。かみねことなぎさの二人は、両者ともにアタッカーを徹底的に攻め抜く攻撃戦術、ダブルAAを選択。火力に特化し、一気に勝負を決める構えだ。
+                </p>
+                <p class="narrative-p">
+                    対する秘密結社第一部隊は、アルトリアが後方からアタッカー・サポート（AS）に徹し、前線のライナセロスの命中精度と破壊力を底上げする。ライナセロス自身はデフェンダー・アタック（DA）として、敵の猛攻をいなしつつ確実に致命傷を叩き込む構えを取る。
+                </p>
+                <p class="narrative-p italic text-neon-blue/80 bg-neon-blue/5 p-4 rounded-lg border-l-2 border-neon-blue">
+                    これが、メカ戦略ガイドにも記された対抗戦術、アタッカー・ディフェンス。攻撃の激流を、サポートを受けた防壁で跳ね返す。
+                </p>
+                <p class="narrative-p">
+                    かみねこは、ゆっくりと距離を離しながら索敵を開始した。<br>
+                    「どこだ。ゴールドフレーム天ミナCを見つけられない。」
+                </p>
+                <p class="narrative-p">
+                    ライナセロスの機体はミラージュコロイドを展開し、完全にその姿を隠している。<br>
+                    「勘でいくしかない。喰らえ。ローゼス・ハリケーン。」
+                </p>
+                <p class="narrative-p">
+                    かみねこは移動を気にせず、広範囲を制圧する激しい攻撃を選んだ。黄金のオーラを纏った花びらが旋風を巻き起こし、天ミナCの装甲を捉える。五ヒット。八十二のダメージ。
+                </p>
+                <p class="narrative-p">
+                    しかし、ライナセロスは揺るがない。<br>
+                    「そこか。」
+                </p>
+                <p class="narrative-p">
+                    姿を現した天ミナCは、アルトリアのASによって強化された感知能力で、かみねこの退路を完璧に読み切っていた。移動を意識し、ピンポイントで急所を狙い打つ激しい攻撃。
+                </p>
+                <p class="narrative-p font-bold text-neon-orange">
+                    トリケロス天。<br>
+                    轟音とともに、かみねこの機体に二百二十五ダメージが刻まれた。
+                </p>
+
+                <h3 class="turn-heading">Phase 02: Escalation</h3>
+                <p class="narrative-p">
+                    二ターン目。距離は二十七。次はなぎさが前に出る。<br>
+                    「見えなくても、当てる。」
+                </p>
+                <p class="narrative-p">
+                    なぎさもまた、索敵外の敵に対して広域制圧攻撃、ローゼス・ハリケーンを放つ。しかし、ライナセロスの装甲は固い。わずか十一ダメージ。<br>
+                    「くっ。エネルギーを吸い取れない。」
+                </p>
+                <p class="narrative-p">
+                    なぎさの焦りに呼応するかのように、ライナセロスが動く。<br>
+                    「こっちの番だ。」
+                </p>
+                <p class="narrative-p font-bold text-neon-orange">
+                    トリケロス天。<br>
+                    アルトリアの支援を受けたその一撃は、なぎさの期待を粉砕せんばかりの威力で迫った。三百五十一ダメージ。なぎさの機体から激しい火花が上がる。
+                </p>
+
+                <h3 class="turn-heading">Phase 03: The Fall</h3>
+                <p class="narrative-p">
+                    三ターン目。距離はわずか四。なぎさは距離を取ろうとするが、ライナセロスの接近は止まらない。なぎさは再び勘頼みの攻撃を繰り出すが、わずかに装甲をかすめただけだった。
+                </p>
+                <p class="narrative-p">
+                    「なぎさ。脱出を。」<br>
+                    かみねこの叫びも虚しく、ライナセロスの正確無比な追撃がなぎさを捉えた。
+                </p>
+                <p class="narrative-p font-bold text-neon-orange">
+                    トリケロス天。三百四十八ダメージ。<br>
+                    ライナセロス、一機撃破。爆炎に包まれ、なぎさが戦場から脱落した。
+                </p>
+
+                <h3 class="turn-heading">Phase 04: Lone Stand</h3>
+                <p class="narrative-p">
+                    四ターン目。距離十。一人残されたかみねこが歯を食いしばる。<br>
+                    「まだ、終わらせない。」
+                </p>
+                <p class="narrative-p">
+                    かみねこはプレッシャーをかけ続け、コアランダーで脱出を試みる。必死の思いで放った攻撃だったが、ライナセロスはトリケロス天のシールド機能でそれを完璧に防ぎきった。さらに、強力なエネルギー吸収がガンダムローズΨを襲う。
+                </p>
+                <p class="narrative-p">
+                    「エネルギーを吸い取られた。出力が。」<br>
+                    そこへライナセロスの猛攻が畳み掛ける。三百十一ダメージ。かみねこの残存HPは、もはや風前の灯だ。
+                </p>
+
+                <h3 class="turn-heading">Final Phase: Conclusion</h3>
+                <p class="narrative-p">
+                    五ターン目。かみねこは、満身創痍の機体を無理やり操作し、最後の一撃を放った。ライナセロスに五十六のダメージを与えるのが精一杯だった。
+                </p>
+                <p class="narrative-p italic text-neon-blue">
+                    通信回路を開いたかみねこが、穏やかな声で呟く。<br>
+                    「はてしないたびになるけどせいぜいガンバるのサ。」
+                </p>
+                <p class="narrative-p">
+                    それが、彼女の最後の一言だった。ライナセロスの非情なる一撃、トリケロス天が炸裂する。三百二十一ダメージ。
+                </p>
+                <p class="narrative-p font-bold text-2xl text-center my-12 tracking-widest text-white underline decoration-neon-blue decoration-4">
+                    かみねこ、撃沈。<br>
+                    秘密結社第一部隊、勝利。
+                </p>
+            </div>
+
+            <!-- Epilogue -->
+            <section class="mt-24 pt-12 border-t border-white/10">
+                <p class="narrative-p">
+                    凄まじい熱気に包まれていた会場に、しばしの静寂が訪れ、そして爆発的な喝采が巻き起こった。
+                </p>
+                <p class="narrative-p">
+                    一回戦を圧倒的な火力で勝ち上がったイーブイフレンズを、秘密結社のベテランコンビが完璧な連携とタクティクスで返り討ちにする。予想外の、そしてあまりに鮮やかな瞬殺劇だった。
+                </p>
+                <p class="narrative-p text-2xl font-display font-bold text-neon-blue">
+                    初代最強タッグの栄冠を掴み取ったのは、秘密結社第一部隊、ライナセロスとアルトリア。
+                </p>
+                <p class="narrative-p">
+                    戦略と連携が、力のみを凌駕する。その現実を彼らは見せつけたのだった。
+                </p>
+            </section>
+
+        </article>
+    </main>
+
+    <!-- Visual Enhancements (Floating particles via CSS) -->
+    <div class="fixed inset-0 pointer-events-none overflow-hidden -z-10">
+        <div class="absolute top-1/4 left-1/4 w-64 h-64 bg-neon-blue opacity-[0.03] blur-[100px] animate-pulse-slow"></div>
+        <div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-neon-orange opacity-[0.02] blur-[120px] animate-pulse-slow" style="animation-delay: 2s;"></div>
+    </div>
+
+    <script>
+        // Simple scroll reveal effect for paragraphs
+        const observerOptions = {
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = "1";
+                    entry.target.style.transform = "translateY(0)";
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.narrative-p, .dialogue, .turn-heading').forEach(el => {
+            el.style.opacity = "0";
+            el.style.transform = "translateY(20px)";
+            el.style.transition = "all 0.8s cubic-bezier(0.22, 1, 0.36, 1)";
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>
