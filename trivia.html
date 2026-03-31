@@ -14,7 +14,7 @@
             --text-color: #e0e0e0;
             --card-bg: #25282c;
             --border-color: #444;
-            --header-total-height: 165px; /* header(60) + toolbar/tabs(105) */
+            --header-total-height: 165px;
         }
 
         html, body {
@@ -23,7 +23,7 @@
             overflow: hidden; font-family: sans-serif;
         }
 
-        /* 共通ヘッダー（提供された様式を維持） */
+        /* 共通ヘッダー */
         header {
             background: rgba(0,0,0,0.95); height: 60px; display: flex; 
             justify-content: space-between; align-items: center; 
@@ -37,9 +37,8 @@
             transition: 0.2s;
         }
         .nav-item-custom:hover { background: rgba(0, 212, 255, 0.2); border-color: #00d4ff; }
-        nav::-webkit-scrollbar { display: none; }
 
-        /* 上部固定エリア（検索＋タブ） */
+        /* 上部固定エリア */
         .top-section {
             background: var(--bg-color);
             border-bottom: 2px solid var(--accent-color);
@@ -54,14 +53,13 @@
             max-width: 500px;
         }
 
-        /* タブデザイン：13個並ぶため横スクロール可能に */
+        /* タブデザイン */
         .tabs-container {
             display: flex; gap: 5px; overflow-x: auto; white-space: nowrap;
             -webkit-overflow-scrolling: touch;
         }
         .tabs-container::-webkit-scrollbar { height: 6px; }
         .tabs-container::-webkit-scrollbar-thumb { background: #444; border-radius: 10px; }
-        .tabs-container::-webkit-scrollbar-track { background: transparent; }
 
         .tab-btn {
             padding: 8px 18px; background: #333; border: none;
@@ -69,9 +67,8 @@
             font-size: 0.85rem; transition: 0.2s;
         }
         .tab-btn.active { background: var(--accent-color); color: #000; font-weight: bold; }
-        .tab-btn:hover:not(.active) { background: #444; }
 
-        /* メインコンテンツ（テキスト表示エリア） */
+        /* メインコンテンツ */
         .main-content {
             height: calc(100% - 165px);
             overflow-y: auto; padding: 20px; box-sizing: border-box;
@@ -83,20 +80,18 @@
             border-left: 4px solid var(--accent-color); 
             line-height: 1.8; white-space: pre-wrap; 
             font-family: "MS Gothic", "Osaka-mono", monospace;
-            font-size: 0.95rem;
-            min-height: 100%;
+            font-size: 0.95rem; min-height: 100%;
             box-shadow: 0 4px 10px rgba(0,0,0,0.3);
         }
 
-        /* 検索ハイライト */
         mark { background: #ffeb3b; color: #000; padding: 0 2px; border-radius: 2px; }
     </style>
 </head>
 <body>
 
 <header>
-    <a href="index.html#main" style="text-decoration:none; font-weight:bold; font-size:1.1rem; color:var(--accent-color); white-space:nowrap; margin-right:15px;">ボブの秘密基地</a>
-    <nav style="display:flex; gap:10px; overflow-x:auto; white-space:nowrap; -webkit-overflow-scrolling:touch; padding:5px 0;">
+    <a href="index.html#main" style="text-decoration:none; font-weight:bold; font-size:1.1rem; color:var(--accent-color);">ボブの秘密基地</a>
+    <nav style="display:flex; gap:10px; overflow-x:auto;">
         <a href="unit.html" class="nav-item-custom">Unit</a>
         <a href="derivatives.html" class="nav-item-custom">Derivatives</a>
         <a href="arms.html" class="nav-item-custom">Arms</a>
@@ -113,17 +108,15 @@
     <div class="search-area">
         <input type="text" id="search-box" placeholder="表示中のテキスト内を検索...">
     </div>
-    <div class="tabs-container" id="tabs-container">
-        </div>
+    <div class="tabs-container" id="tabs-container"></div>
 </div>
 
 <div class="main-content" id="scroll-container">
-    <div id="content-display" class="info-box">ファイルを読み込んでいます...</div>
+    <div id="content-display" class="info-box">読み込み中...</div>
 </div>
 
 <script>
 $(document).ready(function () {
-    // 全13ファイルの定義
     const triviaFiles = [
         { name: "遊び方", file: "「MSタクティクスSR」_の遊び方.txt" },
         { name: "Q&A", file: "Q&A（公式転載）.txt" },
@@ -142,13 +135,11 @@ $(document).ready(function () {
 
     const $content = $('#content-display');
     const $search = $('#search-box');
-    let currentText = "";
 
-    // タブの生成
-    triviaFiles.forEach((item, index) => {
+    // タブ生成
+    triviaFiles.forEach((item) => {
         const $btn = $('<button class="tab-btn"></button>')
             .text(item.name)
-            .attr('data-file', item.file)
             .on('click', function() {
                 $('.tab-btn').removeClass('active');
                 $(this).addClass('active');
@@ -157,36 +148,27 @@ $(document).ready(function () {
         $('#tabs-container').append($btn);
     });
 
-    // 最初のタブ（遊び方）を自動選択
     $('.tab-btn').first().click();
 
-    // テキストファイルの読み込み
     function loadContent(fileName) {
         $content.text("読み込み中...");
         
         fetch(fileName)
-            .then(response => {
-                if (!response.ok) throw new Error('File not found');
-                return response.arrayBuffer();
-            })
+            .then(response => response.arrayBuffer())
             .then(buffer => {
-                // MST関連ファイルに合わせてShift-JISでデコード
-                const decoder = new TextDecoder('shift-jis');
-                const text = decoder.decode(buffer);
-                currentText = text;
+                // 1. まずはUTF-8で試してみる
+                let text = new TextDecoder('utf-8').decode(buffer);
+                
+                // 2. 文字化け特有の記号「」が含まれているかチェック
+                // もしくは、明らかに文字化けしている可能性が高い場合にShift-JISで再試行
+                if (text.includes('\uFFFD')) {
+                    text = new TextDecoder('shift-jis').decode(buffer);
+                }
+                
                 displayContent(text);
             })
             .catch(err => {
-                // Shift-JISで失敗した場合やファイルがない場合のフォールバック（UTF-8）
-                fetch(fileName)
-                    .then(res => res.text())
-                    .then(text => {
-                        currentText = text;
-                        displayContent(text);
-                    })
-                    .catch(e => {
-                        $content.text("エラー: ファイル [" + fileName + "] を読み込めませんでした。\nファイル名が正しいか、同じフォルダにあるか確認してください。");
-                    });
+                $content.text("エラー: ファイルが読み込めませんでした。");
             });
     }
 
@@ -196,17 +178,11 @@ $(document).ready(function () {
         $('#scroll-container').scrollTop(0);
     }
 
-    // ハイライト機能
-    $search.on('input', function() {
-        applyHighlight();
-    });
+    $search.on('input', applyHighlight);
 
     function applyHighlight() {
         const keyword = $search.val();
-        $content.unmark().mark(keyword, {
-            "accuracy": "partially",
-            "separateWordSearch": true
-        });
+        $content.unmark().mark(keyword, { "accuracy": "partially" });
     }
 });
 </script>
