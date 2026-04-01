@@ -235,29 +235,66 @@
                     <div class="card-content">
                         <h3 class="card-title">Link (工事中)</h3>
                         <p class="card-desc">外部リンク集</p>
-                    </div>
+                   </div>
                 </a>
+             <a href="secret.html" id="secret-card" class="card" style="display: none; opacity: 0; transform: translateY(20px); transition: opacity 2s ease, transform 2s ease;">
+    <div class="card-img">🕶️</div>
+    <div class="card-content">
+        <h3 class="card-title">Secret Room</h3>
+        <p class="card-desc"style="color: #00ff00; font-family: monospace;">>迚ｩ鄂ｮ縺ｧ縺吮飭...侵入成功&gt;&gt;&gt;ACCESS GRANTED</p>
+    </div>
+</a>
             </div>
         </div>
     </div>
 
-    <script>
-        function showPage(pageId) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.getElementById(pageId).classList.add('active');
-            const header = document.getElementById('main-header');
-            header.style.display = (pageId === 'main-page') ? 'flex' : 'none';
-            window.scrollTo(0, 0);
+<script>
+    function showPage(pageId) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.getElementById(pageId).classList.add('active');
+        
+        const header = document.getElementById('main-header');
+        const secretCard = document.getElementById('secret-card');
+
+        if (pageId === 'main-page') {
+            header.style.display = 'flex';
+            
+            // メインページに入ってから10秒後に実行
+            setTimeout(() => {
+                if (secretCard) {
+                    secretCard.style.display = 'flex'; // まず枠組みを存在させる
+                    
+                    // ブラウザがdisplay:flexを認識した直後にアニメーションを開始させるためのわずかな待ち
+                    setTimeout(() => {
+                        secretCard.style.opacity = '1';       // 透明度を100%に
+                        secretCard.style.transform = 'translateY(0)'; // 元の位置(0)へ移動
+                    }, 50);
+                }
+            }, 10000); // 10000ミリ秒 = 10秒
+
+        } else {
+            header.style.display = 'none';
+            // 他のページ（トップなど）に戻った時はリセットする
+            if (secretCard) {
+                secretCard.style.display = 'none';
+                secretCard.style.opacity = '0';
+                secretCard.style.transform = 'translateY(20px)';
+            }
         }
-        function goToMain() { location.hash = "main"; showPage('main-page'); }
-        window.onload = function() {
-            if (window.location.hash === '#main') showPage('main-page');
-            else showPage('top-page');
-        };
-        window.onhashchange = function() {
-            if (window.location.hash === '#main') showPage('main-page');
-            else showPage('top-page');
-        };
-    </script>
+        window.scrollTo(0, 0);
+    }
+
+    function goToMain() { location.hash = "main"; showPage('main-page'); }
+    
+    window.onload = function() {
+        if (window.location.hash === '#main') showPage('main-page');
+        else showPage('top-page');
+    };
+    
+    window.onhashchange = function() {
+        if (window.location.hash === '#main') showPage('main-page');
+        else showPage('top-page');
+    };
+</script>
 </body>
 </html>
