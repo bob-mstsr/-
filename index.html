@@ -282,6 +282,8 @@
             }
         }
         window.scrollTo(0, 0);
+   // GoatCounter手動トラッキング
+    if (window.goatcounter) goatcounter.count({ path: '/#' + pageId });
     }
 
     function goToMain() { location.hash = "main"; showPage('main-page'); }
