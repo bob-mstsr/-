@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        :root {
+            --bg-color: #1a1c1e;
+            --accent-color: #00d4ff;
+            --text-color: #e0e0e0;
+            --card-bg: #25282c;
+            --highlight-yellow: #ffff00;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: "Meiryo", "Hiragino Kaku Gothic ProN", sans-serif;
+            line-height: 1.8;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: var(--accent-color);
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 10px;
+            font-size: 1.5rem;
+        }
+
+        h2 {
+            color: var(--accent-color);
+            border-left: 4px solid var(--accent-color);
+            padding-left: 15px;
+            margin-top: 40px;
+            font-size: 1.2rem;
+            background: rgba(0, 212, 255, 0.05);
+        }
+
+        .image-container {
+            margin: 20px 0;
+            text-align: center;
+            background: #000;
+            padding: 10px;
+            border: 1px solid #444;
+        }
+
+        .image-container img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid var(--accent-color);
+        }
+
+        .caption {
+            font-size: 0.8rem;
+            color: #888;
+            margin-top: 5px;
+        }
+
+        ul {
+            list-style-type: square;
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        .highlight {
+            color: var(--highlight-yellow);
+            font-weight: bold;
+        }
+
+        .formula-box {
+            background: var(--card-bg);
+            border: 1px dashed var(--accent-color);
+            padding: 20px;
+            margin: 20px 0;
+            font-family: monospace;
+            text-align: center;
+            font-size: 1.1rem;
+        }
+
+        .example-box {
+            background: #111;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            border-left: 3px solid #666;
+        }
+
+        .note {
+            background: rgba(255, 255, 0, 0.1);
+            padding: 10px;
+            border: 1px solid var(--highlight-yellow);
+            margin-top: 20px;
+            font-size: 0.95rem;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+ <div class="image-container">
+        <img src="HC概略.png" alt="HC概略">
+        <div class="caption">▲ハンターチャンス全体像</div>
+    </div>
+
+
+
+    <h1>◆HC（ハンターチャンス）とは？</h1>
+    <p>
+        勝利すると相手の機体をゲット出来る素敵なバトル！<br>
+名声150,000以上必要なあの機体や、ポイント10億以上必要なあの機体が手に入るかも！？<br>
+    </p>
+
+    <div class="image-container">
+        <img src="セル.png" alt="セル出現画像">
+        <div class="caption">▲鹵獲した強力な敵機体の例</div>
+    </div>
+
+    <h2>◆準備する機体は？</h2>
+    <p>
+        いつもの水神様たち（ザク・マリンタイプやガンダイバー）が最有力です。 <br>
+        地形を選べるため、海洋にして<b>特殊武器+アナライザー</b>で御威光を賜りましょう。 
+    </p>
+    <p>
+        ただ、彼らの特殊武器の射程は近・中距離。遠距離特化で育てているとなかなかに厳しい…TT <br>
+        唯一の遠距離射程水中特攻武器の「35.6cm連装砲」は、何と重量が192もあり、水神様たちには担げません。 <br>
+        そこで、海洋に強い上に装備可能重量の大きい<b>艦これ機体</b>の出番です。 
+    </p>
+    <p>
+        幸い、敵の強さは自機の強さに関係無さそうな為 <br>
+HPの大きい艦これ機体で遠くからチクチクと削って貰う戦法も有効です。 
+    </p>
+
+    <div class="image-container">
+        <img src="コンゴウでHC.png" alt="コンゴウでの戦闘">
+        <div class="caption">▲重量級機体を活かした遠距離戦術</div>
+    </div>
+
+    <h2>◆注意点</h2>
+    <ul>
+        ⚠️ <b>ごほうびボタンを押すと消えます！</b> 脳死でクリックしてしまい何度逃した事か…<br>
+        ⚠️ <b>鹵獲に成功すると、それなりのポイントと名声を消費します！</b> 数十万ポイント＋名声数十はざらです。<br>
+        ⚠️ 鹵獲した機体は、仕様により暫くは売りに出せない事があります。<br>
+        ⚠️ 敵の強さは自分の<b>「気力」依存</b>です。気力150だと敵HPは8000オーバーになります。 <br>
+        ⚠️ 基本的には後述の方法でタイミングを測り、<b>気力50でのチャレンジ</b>をお勧めします。 <br>
+    </ul>
+
+    <h2>◆HCの発生タイミング（検証中：98％解析完了）</h2>
+    <p>
+        HCが現れるタイミングは決まっており、狙って気力を調整することが出来ます。 <br>
+        気力の調整方法は、HCが現れる直前に模擬戦や掃討盤などで負けるだけです。 
+　　　　いつHCが現れるのかと言うと、これが多少複雑ですので、順に説明します
+    </p>
+
+    <h3>☆パターンA：その日、<span class="highlight">二回目以降のHC</span>が発生するタイミング</h3>
+    <p>
+        日付によって前回のHCから何回目の戦闘で再びHCが発生するかが決まっています。 <br>
+（オロさんが見つけて下さいました！大・感・謝！！！）<br>
+        この必要な戦闘回数を<b>『加算値』</b>と呼びます。別タブの早見表をご参照ください。 
+    </p>
+
+    <h3>☆パターンB：その日、<span class="highlight">最初のHC</span>が発生するタイミング</h3>
+    <p>『日付の変わる前の最後の総戦闘回数の、次に来る加算値の倍数』がその日最初のHCが現れるタイミングです。 </p>
+
+    <div class="formula-box">
+        {（前日最後の総戦闘回数 ÷ 加算値の商） + 1} × 加算値
+    </div>
+
+    <div class="example-box">
+        <strong>4/2の最初に来るHCを知りたい場合</strong><br>
+        （条件①：2日の加算値＝156、4/1の最終総戦闘回数が<span class="highlight">100000</span>の場合）<br>
+        1. 100000 ÷ 156 ＝ 641.025...<br>
+        2. 小数点以下を切り捨てて +1 する → 641 + 1 ＝ <b>642</b><br>
+        3. 642 × 156 ＝ <span class="highlight">100152</span><br>
+        ⇒ 4/2の最初のHCは、総戦闘回数 100152 で発生します。 <br><br>
+
+        （条件②：2日の加算値＝156、4/1の最終総戦闘回数が<span class="highlight">100151</span>の場合）<br>
+        1. 100151 ÷ 156 ＝ 641.993...<br>
+        2. 小数点以下を切り捨てて +1 する → 641 + 1 ＝ <b>642</b><br>
+        3. 642 × 156 ＝ <span class="highlight">100152</span><br>
+        ⇒ 4/1の最後の戦闘回数が100151の場合、4/2は1回目の戦闘がHCになります。 <br><br>
+
+        （条件③：2日の加算値＝156、4/1の最終総戦闘回数が<span class="highlight">100160</span>の場合）<br>
+        1. 100151 ÷ 156 ＝ 642.051...<br>
+        2. 小数点以下を切り捨てて +1 する → 642 + 1 ＝ <b>643</b><br>
+        3. 643 × 156 ＝ <span class="highlight">100308</span><br>
+        ⇒ 4/1の最後の戦闘回数が100160の場合、4/2最初に来るHCは100308と大分先になります。
+
+    </div>
+
+    <div class="note">
+        <strong>効率化のコツ：</strong><br>
+        効率よくHCを回したければ、前日の最後の総戦闘回数を、翌日の加算値の倍数の手前で止めておくことが有効です。 
+    </div>
+</div>
+
+</body>
+</html>

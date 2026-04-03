@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>Hunter Chance - ボブの秘密基地</title>
+    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <style>
+        :root {
+            --bg-color: #1a1c1e;
+            --accent-color: #00d4ff;
+            --text-color: #e0e0e0;
+            --card-bg: #25282c;
+            --border-color: #444;
+        }
+
+        html, body {
+            margin: 0; padding: 0; height: 100%;
+            background-color: var(--bg-color); color: var(--text-color);
+            overflow: hidden; font-family: sans-serif;
+        }
+
+        /* 共通ヘッダー */
+        header {
+            background: rgba(0,0,0,0.95); height: 60px; display: flex; 
+            justify-content: space-between; align-items: center; 
+            position: sticky; top: 0; z-index: 1000; 
+            border-bottom: 2px solid var(--accent-color); padding: 0 15px; box-sizing: border-box;
+        }
+
+        .nav-item-custom {
+            color: #e0e0e0; text-decoration: none; font-size: 0.85rem; 
+            padding: 6px 10px; border-radius: 4px; border: 1px solid transparent;
+            transition: 0.2s;
+        }
+        .nav-item-custom:hover { background: rgba(0, 212, 255, 0.2); border-color: #00d4ff; }
+
+        /* 上部タブエリア */
+        .top-section {
+            background: var(--bg-color); border-bottom: 2px solid var(--accent-color);
+            padding: 10px 20px 0 20px; box-sizing: border-box; z-index: 100;
+        }
+
+        .tabs-container { display: flex; gap: 5px; overflow-x: auto; white-space: nowrap; }
+        .tab-btn {
+            padding: 8px 18px; background: #333; border: none;
+            color: var(--text-color); cursor: pointer; border-radius: 4px 4px 0 0;
+            font-size: 0.85rem; transition: 0.2s;
+        }
+        .tab-btn.active { background: var(--accent-color); color: #000; font-weight: bold; }
+
+        /* コンテンツ表示エリア */
+        .main-content {
+            height: calc(100% - 110px); overflow-y: auto; padding: 20px; box-sizing: border-box;
+        }
+
+        #content-frame { width: 100%; height: 100%; border: none; background: transparent; }
+
+        /* --- 早見表（静的テーブル）専用のスタイル --- */
+        .hayami-container {
+            max-width: 900px; margin: 0 auto; background: var(--card-bg); 
+            padding: 20px; border-radius: 8px; border: 1px solid var(--accent-color);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+
+        .hayami-table {
+            width: 100%; border-collapse: collapse; color: var(--text-color);
+            text-align: center; font-family: 'Courier New', monospace;
+        }
+
+        .hayami-table th {
+            background: var(--accent-color); color: #000; padding: 12px;
+            font-size: 0.9rem; white-space: nowrap; position: sticky; top: -20px;
+        }
+
+        .hayami-table td { border: 1px solid #444; padding: 10px; font-size: 1rem; }
+        .hayami-table tr:nth-child(even) { background: rgba(255,255,255,0.03); }
+        .hayami-table tr:hover { background: rgba(0, 212, 255, 0.1); }
+
+        .day-cell { color: var(--accent-color); font-weight: bold; width: 20%; }
+        .value-cell { width: 30%; }
+        .unit-no-cell { width: 50%; font-size: 0.9rem; color: #aaa; }
+
+        .table-caption {
+            text-align: center; color: var(--accent-color); margin-bottom: 15px;
+            font-size: 1.2rem; font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <a href="index.html#main" style="text-decoration:none; font-weight:bold; font-size:1.1rem; color:var(--accent-color);">ボブの秘密基地</a>
+    <nav style="display:flex; gap:10px; overflow-x:auto;">
+        <a href="unit.html" class="nav-item-custom">Unit</a>
+        <a href="derivatives.html" class="nav-item-custom">Derivatives</a>
+        <a href="arms.html" class="nav-item-custom">Arms</a>
+        <a href="battle.html" class="nav-item-custom">Battle</a>
+        <a href="novels.html" class="nav-item-custom">Novels</a>
+        <a href="tactics.html" class="nav-item-custom">Tactics</a>
+        <a href="hunter.html" class="nav-item-custom">Hunter</a>
+        <a href="trivia.html" class="nav-item-custom">Trivia</a>
+        <a href="emoji.html" class="nav-item-custom">Emoji</a>
+        <a href="link.html" class="nav-item-custom">Link</a>
+    </nav>
+</header>
+
+<div class="top-section">
+    <div class="tabs-container" id="tabs-container">
+        <button class="tab-btn active" data-type="html" data-file="special_battle.html">特殊戦闘（HCやスクランブルなど）</button>
+        <button class="tab-btn" data-type="html" data-file="hunter_info.html">HCについて</button>
+        <button class="tab-btn" data-type="static">HC加算値早見表</button>
+    </div>
+</div>
+
+<div class="main-content">
+    <iframe id="content-frame" style="display:block;"></iframe>
+
+    <div id="static-table-area" class="hayami-container" style="display:none;">
+        <div class="table-caption">HC加算値早見表（全暦対応版）</div>
+        <table class="hayami-table">
+            <thead>
+                <tr>
+                    <th>暦</th>
+                    <th>前回HCからの加算値</th>
+                    <th>出現する敵の機体No</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td class="day-cell">1日</td><td class="value-cell">153</td><td class="unit-no-cell">1000 - 1999</td></tr>
+                <tr><td class="day-cell">2日</td><td class="value-cell">156</td><td class="unit-no-cell">2000 - 2999</td></tr>
+                <tr><td class="day-cell">3日</td><td class="value-cell">159</td><td class="unit-no-cell">3000 - 3999</td></tr>
+                <tr><td class="day-cell">4日</td><td class="value-cell">162</td><td class="unit-no-cell">4000 - 4999</td></tr>
+                <tr><td class="day-cell">5日</td><td class="value-cell">165</td><td class="unit-no-cell">5000 - 5999</td></tr>
+                <tr><td class="day-cell">6日</td><td class="value-cell">168</td><td class="unit-no-cell">6000 - 6999</td></tr>
+                <tr><td class="day-cell">7日</td><td class="value-cell">171</td><td class="unit-no-cell">7000 - 7999</td></tr>
+                <tr><td class="day-cell">8日</td><td class="value-cell">174</td><td class="unit-no-cell">8000 - 8999</td></tr>
+                <tr><td class="day-cell">9日</td><td class="value-cell">177</td><td class="unit-no-cell">0 - 999</td></tr>
+                <tr><td class="day-cell">10日</td><td class="value-cell">180</td><td class="unit-no-cell">0 - 999</td></tr>
+                <tr><td class="day-cell">11日</td><td class="value-cell">183</td><td class="unit-no-cell">1000 - 1999</td></tr>
+                <tr><td class="day-cell">12日</td><td class="value-cell">186</td><td class="unit-no-cell">2000 - 2999</td></tr>
+                <tr><td class="day-cell">13日</td><td class="value-cell">189</td><td class="unit-no-cell">3000 - 3999</td></tr>
+                <tr><td class="day-cell">14日</td><td class="value-cell">192</td><td class="unit-no-cell">4000 - 4999</td></tr>
+                <tr><td class="day-cell">15日</td><td class="value-cell">165</td><td class="unit-no-cell">5000 - 5999</td></tr>
+                <tr><td class="day-cell">16日</td><td class="value-cell">168</td><td class="unit-no-cell">6000 - 6999</td></tr>
+                <tr><td class="day-cell">17日</td><td class="value-cell">171</td><td class="unit-no-cell">7000 - 7999</td></tr>
+                <tr><td class="day-cell">18日</td><td class="value-cell">174</td><td class="unit-no-cell">8000 - 8999</td></tr>
+                <tr><td class="day-cell">19日</td><td class="value-cell">177</td><td class="unit-no-cell">0 - 999</td></tr>
+                <tr><td class="day-cell">20日</td><td class="value-cell">180</td><td class="unit-no-cell">0 - 999</td></tr>
+                <tr><td class="day-cell">21日</td><td class="value-cell">183</td><td class="unit-no-cell">1000 - 1999</td></tr>
+                <tr><td class="day-cell">22日</td><td class="value-cell">186</td><td class="unit-no-cell">2000 - 2999</td></tr>
+                <tr><td class="day-cell">23日</td><td class="value-cell">189</td><td class="unit-no-cell">3000 - 3999</td></tr>
+                <tr><td class="day-cell">24日</td><td class="value-cell">192</td><td class="unit-no-cell">4000 - 4999</td></tr>
+                <tr><td class="day-cell">25日</td><td class="value-cell">195</td><td class="unit-no-cell">5000 - 5999</td></tr>
+                <tr><td class="day-cell">26日</td><td class="value-cell">198</td><td class="unit-no-cell">6000 - 6999</td></tr>
+                <tr><td class="day-cell">27日</td><td class="value-cell">201</td><td class="unit-no-cell">7000 - 7999</td></tr>
+                <tr><td class="day-cell">28日</td><td class="value-cell">204</td><td class="unit-no-cell">8000 - 8999</td></tr>
+                <tr><td class="day-cell">29日</td><td class="value-cell">207</td><td class="unit-no-cell">0 - 999</td></tr>
+                <tr><td class="day-cell">30日</td><td class="value-cell">210</td><td class="unit-no-cell">0 - 999</td></tr>
+                <tr><td class="day-cell">31日</td><td class="value-cell">213</td><td class="unit-no-cell">1000 - 1999</td></tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+$(document).ready(function () {
+    const $iframe = $('#content-frame');
+    const $staticArea = $('#static-table-area');
+
+    // タブ切り替えの処理
+    $('.tab-btn').on('click', function() {
+        $('.tab-btn').removeClass('active');
+        $(this).addClass('active');
+
+        const type = $(this).data('type');
+        const file = $(this).data('file');
+
+        if (type === 'html') {
+            $staticArea.hide();
+            $iframe.attr('src', file).show();
+        } else if (type === 'static') {
+            $iframe.hide();
+            $staticArea.show();
+        }
+    });
+
+    // 初期状態では「特殊戦闘」のページを表示
+    $iframe.attr('src', 'special_battle.html');
+});
+</script>
+</body>
+</html>
