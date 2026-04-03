@@ -57,35 +57,29 @@
 
         #content-frame { width: 100%; height: 100%; border: none; background: transparent; }
 
-        /* --- 早見表（静的テーブル）専用のスタイル --- */
+        /* テキスト表示エリア用スタイル */
+        #text-content-display {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            line-height: 1.6;
+            font-family: "Meiryo", "MS PGothic", sans-serif;
+        }
+
+        /* 早見表（静的テーブル）のスタイル */
         .hayami-container {
             max-width: 900px; margin: 0 auto; background: var(--card-bg); 
             padding: 20px; border-radius: 8px; border: 1px solid var(--accent-color);
             box-shadow: 0 4px 15px rgba(0,0,0,0.5);
         }
-
         .hayami-table {
             width: 100%; border-collapse: collapse; color: var(--text-color);
             text-align: center; font-family: 'Courier New', monospace;
         }
-
-        .hayami-table th {
-            background: var(--accent-color); color: #000; padding: 12px;
-            font-size: 0.9rem; white-space: nowrap; position: sticky; top: -20px;
-        }
-
+        .hayami-table th { background: var(--accent-color); color: #000; padding: 12px; font-size: 0.9rem; }
         .hayami-table td { border: 1px solid #444; padding: 10px; font-size: 1rem; }
         .hayami-table tr:nth-child(even) { background: rgba(255,255,255,0.03); }
-        .hayami-table tr:hover { background: rgba(0, 212, 255, 0.1); }
-
-        .day-cell { color: var(--accent-color); font-weight: bold; width: 20%; }
-        .value-cell { width: 30%; }
-        .unit-no-cell { width: 50%; font-size: 0.9rem; color: #aaa; }
-
-        .table-caption {
-            text-align: center; color: var(--accent-color); margin-bottom: 15px;
-            font-size: 1.2rem; font-weight: bold;
-        }
+        .day-cell { color: var(--accent-color); font-weight: bold; }
+        .table-caption { text-align: center; color: var(--accent-color); margin-bottom: 15px; font-size: 1.2rem; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -108,57 +102,55 @@
 
 <div class="top-section">
     <div class="tabs-container" id="tabs-container">
-        <button class="tab-btn active" data-type="html" data-file="special_battle.html">特殊戦闘（HCやスクランブルなど）</button>
+        <button class="tab-btn active" data-type="txt" data-file="特殊戦闘（HCやスクランブルなど）.txt">特殊戦闘（HCやスクランブルなど）</button>
         <button class="tab-btn" data-type="html" data-file="hunter_info.html">HCについて</button>
         <button class="tab-btn" data-type="static">HC加算値早見表</button>
     </div>
 </div>
 
 <div class="main-content">
-    <iframe id="content-frame" style="display:block;"></iframe>
+    <div id="text-content-display" style="display:block;"></div>
+    
+    <iframe id="content-frame" style="display:none;"></iframe>
 
     <div id="static-table-area" class="hayami-container" style="display:none;">
         <div class="table-caption">HC加算値早見表（全暦対応版）</div>
         <table class="hayami-table">
             <thead>
-                <tr>
-                    <th>暦</th>
-                    <th>前回HCからの加算値</th>
-                    <th>出現する敵の機体No</th>
-                </tr>
+                <tr><th>暦</th><th>前回HCからの加算値</th><th>出現する敵の機体No</th></tr>
             </thead>
             <tbody>
-                <tr><td class="day-cell">1日</td><td class="value-cell">153</td><td class="unit-no-cell">1000 - 1999</td></tr>
-                <tr><td class="day-cell">2日</td><td class="value-cell">156</td><td class="unit-no-cell">2000 - 2999</td></tr>
-                <tr><td class="day-cell">3日</td><td class="value-cell">159</td><td class="unit-no-cell">3000 - 3999</td></tr>
-                <tr><td class="day-cell">4日</td><td class="value-cell">162</td><td class="unit-no-cell">4000 - 4999</td></tr>
-                <tr><td class="day-cell">5日</td><td class="value-cell">165</td><td class="unit-no-cell">5000 - 5999</td></tr>
-                <tr><td class="day-cell">6日</td><td class="value-cell">168</td><td class="unit-no-cell">6000 - 6999</td></tr>
-                <tr><td class="day-cell">7日</td><td class="value-cell">171</td><td class="unit-no-cell">7000 - 7999</td></tr>
-                <tr><td class="day-cell">8日</td><td class="value-cell">174</td><td class="unit-no-cell">8000 - 8999</td></tr>
-                <tr><td class="day-cell">9日</td><td class="value-cell">177</td><td class="unit-no-cell">0 - 999</td></tr>
-                <tr><td class="day-cell">10日</td><td class="value-cell">180</td><td class="unit-no-cell">0 - 999</td></tr>
-                <tr><td class="day-cell">11日</td><td class="value-cell">183</td><td class="unit-no-cell">1000 - 1999</td></tr>
-                <tr><td class="day-cell">12日</td><td class="value-cell">186</td><td class="unit-no-cell">2000 - 2999</td></tr>
-                <tr><td class="day-cell">13日</td><td class="value-cell">189</td><td class="unit-no-cell">3000 - 3999</td></tr>
-                <tr><td class="day-cell">14日</td><td class="value-cell">192</td><td class="unit-no-cell">4000 - 4999</td></tr>
-                <tr><td class="day-cell">15日</td><td class="value-cell">165</td><td class="unit-no-cell">5000 - 5999</td></tr>
-                <tr><td class="day-cell">16日</td><td class="value-cell">168</td><td class="unit-no-cell">6000 - 6999</td></tr>
-                <tr><td class="day-cell">17日</td><td class="value-cell">171</td><td class="unit-no-cell">7000 - 7999</td></tr>
-                <tr><td class="day-cell">18日</td><td class="value-cell">174</td><td class="unit-no-cell">8000 - 8999</td></tr>
-                <tr><td class="day-cell">19日</td><td class="value-cell">177</td><td class="unit-no-cell">0 - 999</td></tr>
-                <tr><td class="day-cell">20日</td><td class="value-cell">180</td><td class="unit-no-cell">0 - 999</td></tr>
-                <tr><td class="day-cell">21日</td><td class="value-cell">183</td><td class="unit-no-cell">1000 - 1999</td></tr>
-                <tr><td class="day-cell">22日</td><td class="value-cell">186</td><td class="unit-no-cell">2000 - 2999</td></tr>
-                <tr><td class="day-cell">23日</td><td class="value-cell">189</td><td class="unit-no-cell">3000 - 3999</td></tr>
-                <tr><td class="day-cell">24日</td><td class="value-cell">192</td><td class="unit-no-cell">4000 - 4999</td></tr>
-                <tr><td class="day-cell">25日</td><td class="value-cell">195</td><td class="unit-no-cell">5000 - 5999</td></tr>
-                <tr><td class="day-cell">26日</td><td class="value-cell">198</td><td class="unit-no-cell">6000 - 6999</td></tr>
-                <tr><td class="day-cell">27日</td><td class="value-cell">201</td><td class="unit-no-cell">7000 - 7999</td></tr>
-                <tr><td class="day-cell">28日</td><td class="value-cell">204</td><td class="unit-no-cell">8000 - 8999</td></tr>
-                <tr><td class="day-cell">29日</td><td class="value-cell">207</td><td class="unit-no-cell">0 - 999</td></tr>
-                <tr><td class="day-cell">30日</td><td class="value-cell">210</td><td class="unit-no-cell">0 - 999</td></tr>
-                <tr><td class="day-cell">31日</td><td class="value-cell">213</td><td class="unit-no-cell">1000 - 1999</td></tr>
+                <tr><td class="day-cell">1日</td><td>153</td><td>1000 - 1999</td></tr>
+                <tr><td class="day-cell">2日</td><td>156</td><td>2000 - 2999</td></tr>
+                <tr><td class="day-cell">3日</td><td>159</td><td>3000 - 3999</td></tr>
+                <tr><td class="day-cell">4日</td><td>162</td><td>4000 - 4999</td></tr>
+                <tr><td class="day-cell">5日</td><td>165</td><td>5000 - 5999</td></tr>
+                <tr><td class="day-cell">6日</td><td>168</td><td>6000 - 6999</td></tr>
+                <tr><td class="day-cell">7日</td><td>171</td><td>7000 - 7999</td></tr>
+                <tr><td class="day-cell">8日</td><td>174</td><td>8000 - 8999</td></tr>
+                <tr><td class="day-cell">9日</td><td>177</td><td>0 - 999</td></tr>
+                <tr><td class="day-cell">10日</td><td>180</td><td>0 - 999</td></tr>
+                <tr><td class="day-cell">11日</td><td>183</td><td>1000 - 1999</td></tr>
+                <tr><td class="day-cell">12日</td><td>186</td><td>2000 - 2999</td></tr>
+                <tr><td class="day-cell">13日</td><td>189</td><td>3000 - 3999</td></tr>
+                <tr><td class="day-cell">14日</td><td>192</td><td>4000 - 4999</td></tr>
+                <tr><td class="day-cell">15日</td><td>165</td><td>5000 - 5999</td></tr>
+                <tr><td class="day-cell">16日</td><td>168</td><td>6000 - 6999</td></tr>
+                <tr><td class="day-cell">17日</td><td>171</td><td>7000 - 7999</td></tr>
+                <tr><td class="day-cell">18日</td><td>174</td><td>8000 - 8999</td></tr>
+                <tr><td class="day-cell">19日</td><td>177</td><td>0 - 999</td></tr>
+                <tr><td class="day-cell">20日</td><td>180</td><td>0 - 999</td></tr>
+                <tr><td class="day-cell">21日</td><td>183</td><td>1000 - 1999</td></tr>
+                <tr><td class="day-cell">22日</td><td>186</td><td>2000 - 2999</td></tr>
+                <tr><td class="day-cell">23日</td><td>189</td><td>3000 - 3999</td></tr>
+                <tr><td class="day-cell">24日</td><td>192</td><td>4000 - 4999</td></tr>
+                <tr><td class="day-cell">25日</td><td>195</td><td>5000 - 5999</td></tr>
+                <tr><td class="day-cell">26日</td><td>198</td><td>6000 - 6999</td></tr>
+                <tr><td class="day-cell">27日</td><td>201</td><td>7000 - 7999</td></tr>
+                <tr><td class="day-cell">28日</td><td>204</td><td>8000 - 8999</td></tr>
+                <tr><td class="day-cell">29日</td><td>207</td><td>0 - 999</td></tr>
+                <tr><td class="day-cell">30日</td><td>210</td><td>0 - 999</td></tr>
+                <tr><td class="day-cell">31日</td><td>213</td><td>1000 - 1999</td></tr>
             </tbody>
         </table>
     </div>
@@ -168,8 +160,25 @@
 $(document).ready(function () {
     const $iframe = $('#content-frame');
     const $staticArea = $('#static-table-area');
+    const $display = $('#text-content-display');
 
-    // タブ切り替えの処理
+    function loadTxtFile(fileName) {
+        $display.html("読み込み中...");
+        fetch(fileName)
+            .then(response => response.arrayBuffer())
+            .then(buffer => {
+                let text = new TextDecoder('utf-8').decode(buffer);
+                if (text.includes('\uFFFD')) {
+                    text = new TextDecoder('shift-jis').decode(buffer);
+                }
+                // txt内のHTMLタグ（font等）を有効にするためhtml()で挿入
+                $display.html(text);
+            })
+            .catch(err => {
+                $display.html("エラー: ファイルが見つかりません。(" + fileName + ")");
+            });
+    }
+
     $('.tab-btn').on('click', function() {
         $('.tab-btn').removeClass('active');
         $(this).addClass('active');
@@ -177,17 +186,22 @@ $(document).ready(function () {
         const type = $(this).data('type');
         const file = $(this).data('file');
 
-        if (type === 'html') {
-            $staticArea.hide();
+        $display.hide();
+        $iframe.hide();
+        $staticArea.hide();
+
+        if (type === 'txt') {
+            $display.show();
+            loadTxtFile(file);
+        } else if (type === 'html') {
             $iframe.attr('src', file).show();
         } else if (type === 'static') {
-            $iframe.hide();
             $staticArea.show();
         }
     });
 
-    // 初期状態では「特殊戦闘」のページを表示
-    $iframe.attr('src', 'special_battle.html');
+    // 初期読み込み（最初のタブがtxt形式のため）
+    loadTxtFile($('.tab-btn.active').data('file'));
 });
 </script>
 </body>
