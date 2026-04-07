@@ -5,6 +5,7 @@
     <title>Hunter Chance - ボブの秘密基地</title>
     
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
 
     <style>
         :root {
@@ -21,7 +22,6 @@
             overflow: hidden; font-family: sans-serif;
         }
 
-        /* 共通ヘッダー */
         header {
             background: rgba(0,0,0,0.95); height: 60px; display: flex; 
             justify-content: space-between; align-items: center; 
@@ -36,7 +36,6 @@
         }
         .nav-item-custom:hover { background: rgba(0, 212, 255, 0.2); border-color: #00d4ff; }
 
-        /* 上部タブエリア */
         .top-section {
             background: var(--bg-color); border-bottom: 2px solid var(--accent-color);
             padding: 10px 20px 0 20px; box-sizing: border-box; z-index: 100;
@@ -50,36 +49,41 @@
         }
         .tab-btn.active { background: var(--accent-color); color: #000; font-weight: bold; }
 
-        /* コンテンツ表示エリア */
         .main-content {
             height: calc(100% - 110px); overflow-y: auto; padding: 20px; box-sizing: border-box;
         }
 
-        #content-frame { width: 100%; height: 100%; border: none; background: transparent; }
-
-        /* テキスト表示エリア用スタイル */
         #text-content-display {
-            white-space: pre-wrap;
-            word-wrap: break-word;
-            line-height: 1.6;
+            white-space: pre-wrap; word-wrap: break-word; line-height: 1.6;
             font-family: "Meiryo", "MS PGothic", sans-serif;
         }
 
-        /* 早見表（静的テーブル）のスタイル */
-        .hayami-container {
-            max-width: 900px; margin: 0 auto; background: var(--card-bg); 
-            padding: 20px; border-radius: 8px; border: 1px solid var(--accent-color);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        #content-frame { width: 100%; height: 100%; border: none; background: transparent; }
+
+        /* 「今日のHC」用スタイル */
+        .tool-container {
+            max-width: 800px; margin: 0 auto; background: var(--card-bg);
+            padding: 25px; border-radius: 12px; border: 2px solid var(--accent-color);
         }
-        .hayami-table {
-            width: 100%; border-collapse: collapse; color: var(--text-color);
-            text-align: center; font-family: 'Courier New', monospace;
+        .tool-section { margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid #444; }
+        .tool-section:last-child { border-bottom: none; }
+        .tool-title { color: var(--accent-color); font-weight: bold; margin-bottom: 10px; display: block; }
+        
+        .calc-input {
+            width: 100%; max-width: 300px; padding: 10px; background: #111;
+            border: 1px solid var(--accent-color); color: white; border-radius: 4px;
         }
-        .hayami-table th { background: var(--accent-color); color: #000; padding: 12px; font-size: 0.9rem; }
-        .hayami-table td { border: 1px solid #444; padding: 10px; font-size: 1rem; }
-        .hayami-table tr:nth-child(even) { background: rgba(255,255,255,0.03); }
+        .result-box { margin-top: 15px; padding: 15px; background: rgba(0, 212, 255, 0.1); border-left: 4px solid var(--accent-color); }
+        .unit-list { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 10px; }
+        .unit-card { background: #1a1c1e; padding: 10px; border: 1px solid #333; border-radius: 4px; font-size: 0.9rem; }
+        .rank-number { color: gold; font-weight: bold; margin-right: 5px; }
+
+        /* 早見表スタイル */
+        .hayami-container { max-width: 900px; margin: 0 auto; background: var(--card-bg); padding: 20px; border-radius: 8px; border: 1px solid var(--accent-color); }
+        .hayami-table { width: 100%; border-collapse: collapse; color: var(--text-color); text-align: center; }
+        .hayami-table th { background: var(--accent-color); color: #000; padding: 10px; }
+        .hayami-table td { border: 1px solid #444; padding: 8px; }
         .day-cell { color: var(--accent-color); font-weight: bold; }
-        .table-caption { text-align: center; color: var(--accent-color); margin-bottom: 15px; font-size: 1.2rem; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -102,13 +106,42 @@
 
 <div class="top-section">
     <div class="tabs-container" id="tabs-container">
-        <button class="tab-btn active" data-type="txt" data-file="特殊戦闘（HCやスクランブルなど）.txt">特殊戦闘（HCやスクランブルなど）</button>
+        <button class="tab-btn active" data-type="today">今日のHC</button>
+        <button class="tab-btn" data-type="txt" data-file="特殊戦闘（HCやスクランブルなど）.txt">特殊戦闘</button>
         <button class="tab-btn" data-type="html" data-file="hunter_info.html">HCについて</button>
         <button class="tab-btn" data-type="static">HC加算値早見表</button>
     </div>
 </div>
 
 <div class="main-content">
+    <div id="today-tool" class="tool-container">
+        <div class="tool-section">
+            <span class="tool-title">① 今日の最初のHCを計算する</span>
+            <p style="font-size:0.85rem; color:#aaa;">前日の最終戦闘数を入力してください。</p>
+            <input type="number" id="prev-battle-count" class="calc-input" placeholder="例: 100000">
+            <div id="calc-result" class="result-box">入力待ち...</div>
+        </div>
+
+        <div class="tool-section">
+            <span class="tool-title">② 今日のデータ</span>
+            <div id="today-stats" style="font-size: 1.1rem;">読み込み中...</div>
+        </div>
+
+        <div class="tool-section">
+            <span class="tool-title">③ 当日のおすすめ機体 (No範囲内)</span>
+            <div id="unit-recommendations" class="unit-list">
+                <div>
+                    <div style="font-size: 0.85rem; color: #00d4ff; margin-bottom: 5px;">名声が高いベスト3</div>
+                    <div id="top-fame-units">解析中...</div>
+                </div>
+                <div>
+                    <div style="font-size: 0.85rem; color: #ffeb3b; margin-bottom: 5px;">ポイントが高いベスト3</div>
+                    <div id="top-point-units">解析中...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div id="text-content-display" style="display:block;"></div>
     
     <iframe id="content-frame" style="display:none;"></iframe>
@@ -117,8 +150,7 @@
         <div class="table-caption">HC加算値早見表（全暦対応版）</div>
         <table class="hayami-table">
             <thead>
-                <tr><th>暦</th><th>前回HCからの加算値</th><th>出現する敵の機体No</th></tr>
-            </thead>
+                <tr><th>暦</th><th>前回HCからの加算値</th><th>出現する敵の機体No</th></tr></thead>
             <tbody>
                 <tr><td class="day-cell">1日</td><td>153</td><td>1000 - 1999</td></tr>
                 <tr><td class="day-cell">2日</td><td>156</td><td>2000 - 2999</td></tr>
@@ -158,53 +190,92 @@
 
 <script>
 $(document).ready(function () {
-    const $iframe = $('#content-frame');
-    const $staticArea = $('#static-table-area');
     const $display = $('#text-content-display');
+    const $iframe = $('#content-frame');
+    const $static = $('#static-table-area');
+    const $today = $('#today-tool');
+
+    // 早見表から今日のデータを取得する関数
+    function getTodayData() {
+        const today = new Date().getDate();
+        const row = $('#hayami-source tbody tr').eq(today - 1);
+        return {
+            day: today,
+            addValue: parseInt(row.find('td').eq(1).text()),
+            noRange: row.find('td').eq(2).text()
+        };
+    }
+
+    // ① 計算ツールのロジック
+    $('#prev-battle-count').on('input', function() {
+        const prevCount = parseInt($(this).val());
+        if (isNaN(prevCount)) { $('#calc-result').text("数値を入力してください。"); return; }
+        
+        const data = getTodayData();
+        const nextHC = Math.floor((prevCount / data.addValue) + 1) * data.addValue;
+        $('#calc-result').html(`今日の最初のHCは <strong>${nextHC.toLocaleString()}</strong> 戦目です。`);
+    });
+
+    // ② 今日の統計表示
+    function updateTodayStats() {
+        const data = getTodayData();
+        $('#today-stats').html(`本日は ${data.day}日： 加算値 <strong>${data.addValue}</strong> / 出現No <strong>${data.noRange}</strong>`);
+        fetchUnitRecommendations(data.noRange);
+    }
+
+    // ③ ユニットデータの解析と表示
+    function fetchUnitRecommendations(rangeStr) {
+        const [min, max] = rangeStr.split(' - ').map(n => parseInt(n));
+        
+        // unit_26.3.24.csv を読み込む (GitHub上の最新ファイル名を想定)
+        Papa.parse("unit_26.3.24.csv", {
+            download: true, header: true, skipEmptyLines: true,
+            complete: function(results) {
+                const units = results.data.filter(u => {
+                    const no = parseInt(u["No"]);
+                    return no >= min && no <= max;
+                });
+
+                const sortAndDisplay = (data, key, targetId) => {
+                    const sorted = [...data].sort((a, b) => (parseInt(b[key].replace(/,/g, '')) || 0) - (parseInt(a[key].replace(/,/g, '')) || 0)).slice(0, 3);
+                    let html = '';
+                    sorted.forEach((u, i) => {
+                        html += `<div class="unit-card"><span class="rank-number">${i+1}.</span>${u["機体名"]}<br><span style="color:#888;font-size:0.8rem;">${key}: ${u[key]}</span></div>`;
+                    });
+                    $(targetId).html(html || "対象なし");
+                };
+
+                sortAndDisplay(units, "名声", "#top-fame-units");
+                sortAndDisplay(units, "ポイント", "#top-point-units");
+            }
+        });
+    }
 
     function loadTxtFile(fileName) {
         $display.html("読み込み中...");
-        fetch(fileName)
-            .then(response => response.arrayBuffer())
-            .then(buffer => {
-                let text = new TextDecoder('utf-8').decode(buffer);
-                if (text.includes('\uFFFD')) {
-                    text = new TextDecoder('shift-jis').decode(buffer);
-                }
-                // txt内のHTMLタグ（font等）を有効にするためhtml()で挿入
-                $display.html(text);
-            })
-            .catch(err => {
-                $display.html("エラー: ファイルが見つかりません。(" + fileName + ")");
-            });
+        fetch(fileName).then(res => res.arrayBuffer()).then(buffer => {
+            let text = new TextDecoder('utf-8').decode(buffer);
+            if (text.includes('\uFFFD')) text = new TextDecoder('shift-jis').decode(buffer);
+            $display.html(text);
+        });
     }
 
     $('.tab-btn').on('click', function() {
         $('.tab-btn').removeClass('active');
         $(this).addClass('active');
-
         const type = $(this).data('type');
-        const file = $(this).data('file');
 
-        $display.hide();
-        $iframe.hide();
-        $staticArea.hide();
+        $display.hide(); $iframe.hide(); $static.hide(); $today.hide();
 
-        if (type === 'txt') {
-            $display.show();
-            loadTxtFile(file);
-        } else if (type === 'html') {
-            $iframe.attr('src', file).show();
-        } else if (type === 'static') {
-            $staticArea.show();
-        }
+        if (type === 'today') { $today.show(); updateTodayStats(); }
+        else if (type === 'txt') { $display.show(); loadTxtFile($(this).data('file')); }
+        else if (type === 'html') { $iframe.attr('src', $(this).data('file')).show(); }
+        else if (type === 'static') { $static.show(); }
     });
 
-    // 初期読み込み（最初のタブがtxt形式のため）
-    loadTxtFile($('.tab-btn.active').data('file'));
+    // 初期表示：今日のHCタブ
+    updateTodayStats();
 });
 </script>
-<script data-goatcounter="https://bobs-base.goatcounter.com/count"
-        async src="//gc.zgo.at/count.js"></script>
 </body>
 </html>
