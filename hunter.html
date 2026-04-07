@@ -92,8 +92,15 @@
     <a href="index.html#main" style="text-decoration:none; font-weight:bold; font-size:1.1rem; color:var(--accent-color);">ボブの秘密基地</a>
     <nav style="display:flex; gap:10px; overflow-x:auto;">
         <a href="unit.html" class="nav-item-custom">Unit</a>
+        <a href="derivatives.html" class="nav-item-custom">Derivatives</a>
+        <a href="arms.html" class="nav-item-custom">Arms</a>
+        <a href="battle.html" class="nav-item-custom">Battle</a>
+        <a href="novels.html" class="nav-item-custom">Novels</a>
+        <a href="tactics.html" class="nav-item-custom">Tactics</a>
         <a href="hunter.html" class="nav-item-custom">Hunter</a>
         <a href="trivia.html" class="nav-item-custom">Trivia</a>
+        <a href="emoji.html" class="nav-item-custom">Emoji</a>
+        <a href="link.html" class="nav-item-custom">Link</a>
     </nav>
 </header>
 
@@ -216,48 +223,63 @@ $(document).ready(function () {
     }
 
     // ③ ユニットCSVの読み込みとソート
-    function loadAndRankUnits(min, max) {
+    function function loadAndRankUnits(min, max) {
         Papa.parse(CSV_FILE, {
             download: true,
             header: true,
             skipEmptyLines: true,
+            trimHeaders: true, 
             complete: function(results) {
-                // No範囲内でフィルタリング
+                const headers = results.meta.fields;
+                
+                // --- カラム名の特定ロジックを強化 ---
+                // 「名声」を含む列を探す
+                const fameKey = headers.find(h => h.includes("名声")) || "名声";
+                
+                // 「POINT」または「ポイント」を大文字小文字問わず探す
+                const pointKey = headers.find(h => {
+                    const upperH = h.toUpperCase();
+                    return upperH.includes("POINT") || upperH.includes("ポイント");
+                }) || "POINT"; 
+
+                // デバッグ用：どの列名として認識したかコンソールに出す（F12で見れます）
+                console.log("認識した列名:", { fame: fameKey, point: pointKey });
+
                 const filtered = results.data.filter(u => {
                     const no = parseInt(u["No"]);
                     return no >= min && no <= max;
                 });
 
                 if (filtered.length === 0) {
-                    $('#unit-error').text(`警告: ${CSV_FILE} 内に No ${min}～${max} の機体が見つかりません。`).show();
-                    $('#rank-fame, #rank-point').text("データなし");
+                    $('#unit-error').text(`範囲内の機体が見つかりません(No ${min}-${max})`);
                     return;
                 }
                 $('#unit-error').hide();
 
-                // ランキング描画
-                displayRank(filtered, "名声", "#rank-fame");
-                displayRank(filtered, "ポイント", "#rank-point");
+                displayRank(filtered, fameKey, "#rank-fame");
+                displayRank(filtered, pointKey, "#rank-point");
             },
-            error: function() {
-                $('#unit-error').text(`エラー: ${CSV_FILE} を読み込めませんでした。ファイル名を確認してください。`).show();
-                $('#rank-fame, #rank-point').text("読込失敗");
-            }
+            error: function() { $('#unit-error').text("CSV読込失敗"); }
         });
     }
 
     function displayRank(data, key, targetId) {
         const sorted = [...data].sort((a, b) => {
-            const valA = parseInt(a[key]?.toString().replace(/,/g, '')) || 0;
-            const valB = parseInt(b[key]?.toString().replace(/,/g, '')) || 0;
+            // 文字列からカンマを除去して数値に変換（例: "1,000,000" -> 1000000）
+            const valA = parseFloat(String(a[key] || "0").replace(/,/g, '')) || 0;
+            const valB = parseFloat(String(b[key] || "0").replace(/,/g, '')) || 0;
             return valB - valA;
         }).slice(0, 3);
 
         let html = '';
         sorted.forEach((u, i) => {
+            const val = u[key] || 0;
+            // 数値の場合は3桁区切りにする
+            const displayVal = isNaN(parseFloat(String(val).replace(/,/g, ''))) ? val : parseFloat(String(val).replace(/,/g, '')).toLocaleString();
+            
             html += `<div class="unit-card">
-                        <span class="rank-badge">${i+1}</span><strong>${u["機体名"] || "不明"}</strong>
-                        <span class="unit-val">${key}: ${u[key] || 0}</span>
+                        <span class="rank-badge">${i+1}</span><strong>${u["機体名"] || "No."+u["No"]}</strong>
+                        <span class="unit-val">${key}: ${displayVal}</span>
                      </div>`;
         });
         $(targetId).html(html);
