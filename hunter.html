@@ -100,8 +100,7 @@
         <a href="hunter.html" class="nav-item-custom">Hunter</a>
         <a href="trivia.html" class="nav-item-custom">Trivia</a>
         <a href="emoji.html" class="nav-item-custom">Emoji</a>
-        <a href="link.html" class="nav-item-custom">Link</a>
-    </nav>
+        <a href="link.html" class="nav-item-custom">Link</a>    </nav>
 </header>
 
 <div class="top-section">
@@ -223,7 +222,7 @@ $(document).ready(function () {
     }
 
     // ③ ユニットCSVの読み込みとソート
-    function function loadAndRankUnits(min, max) {
+function loadAndRankUnits(min, max) {
         Papa.parse(CSV_FILE, {
             download: true,
             header: true,
@@ -284,7 +283,6 @@ $(document).ready(function () {
         });
         $(targetId).html(html);
     }
-
     // タブ切り替え処理
     $('.tab-btn').on('click', function() {
         $('.tab-btn').removeClass('active');
