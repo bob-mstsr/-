@@ -19,9 +19,10 @@
         html, body {
             margin: 0; padding: 0; height: 100%;
             background-color: var(--bg-color); color: var(--text-color);
-            overflow: hidden; font-family: sans-serif;
+            overflow: hidden; font-family: "Meiryo", sans-serif;
         }
 
+        /* 共通ヘッダー */
         header {
             background: rgba(0,0,0,0.95); height: 60px; display: flex; 
             justify-content: space-between; align-items: center; 
@@ -36,9 +37,10 @@
         }
         .nav-item-custom:hover { background: rgba(0, 212, 255, 0.2); border-color: #00d4ff; }
 
+        /* タブエリア */
         .top-section {
             background: var(--bg-color); border-bottom: 2px solid var(--accent-color);
-            padding: 10px 20px 0 20px; box-sizing: border-box; z-index: 100;
+            padding: 10px 20px 0 20px; box-sizing: border-box;
         }
 
         .tabs-container { display: flex; gap: 5px; overflow-x: auto; white-space: nowrap; }
@@ -49,41 +51,39 @@
         }
         .tab-btn.active { background: var(--accent-color); color: #000; font-weight: bold; }
 
+        /* メインコンテンツ */
         .main-content {
             height: calc(100% - 110px); overflow-y: auto; padding: 20px; box-sizing: border-box;
         }
 
-        #text-content-display {
-            white-space: pre-wrap; word-wrap: break-word; line-height: 1.6;
-            font-family: "Meiryo", "MS PGothic", sans-serif;
-        }
-
-        #content-frame { width: 100%; height: 100%; border: none; background: transparent; }
-
-        /* 「今日のHC」用スタイル */
+        /* 今日のHC ツールデザイン */
         .tool-container {
-            max-width: 800px; margin: 0 auto; background: var(--card-bg);
-            padding: 25px; border-radius: 12px; border: 2px solid var(--accent-color);
+            max-width: 850px; margin: 0 auto; background: var(--card-bg);
+            padding: 25px; border-radius: 12px; border: 1px solid var(--accent-color);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
-        .tool-section { margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid #444; }
+        .tool-section { margin-bottom: 30px; padding-bottom: 15px; border-bottom: 1px solid #444; }
         .tool-section:last-child { border-bottom: none; }
-        .tool-title { color: var(--accent-color); font-weight: bold; margin-bottom: 10px; display: block; }
+        .tool-title { color: var(--accent-color); font-weight: bold; margin-bottom: 15px; display: block; font-size: 1.1rem; }
         
         .calc-input {
-            width: 100%; max-width: 300px; padding: 10px; background: #111;
-            border: 1px solid var(--accent-color); color: white; border-radius: 4px;
+            width: 100%; max-width: 350px; padding: 12px; background: #111;
+            border: 1px solid var(--accent-color); color: white; border-radius: 4px; font-size: 1rem;
         }
-        .result-box { margin-top: 15px; padding: 15px; background: rgba(0, 212, 255, 0.1); border-left: 4px solid var(--accent-color); }
-        .unit-list { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 10px; }
-        .unit-card { background: #1a1c1e; padding: 10px; border: 1px solid #333; border-radius: 4px; font-size: 0.9rem; }
-        .rank-number { color: gold; font-weight: bold; margin-right: 5px; }
+        .result-box { margin-top: 15px; padding: 15px; background: rgba(0, 212, 255, 0.1); border-left: 4px solid var(--accent-color); font-size: 1.1rem; }
+        
+        .unit-rank-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 10px; }
+        .unit-card { background: #1a1c1e; padding: 12px; border: 1px solid #444; border-radius: 6px; margin-bottom: 8px; }
+        .rank-badge { display: inline-block; width: 24px; height: 24px; background: var(--accent-color); color: #000; text-align: center; line-height: 24px; border-radius: 50%; font-weight: bold; margin-right: 10px; font-size: 0.8rem; }
+        .unit-val { display: block; color: #888; font-size: 0.85rem; margin-top: 5px; }
 
-        /* 早見表スタイル */
-        .hayami-container { max-width: 900px; margin: 0 auto; background: var(--card-bg); padding: 20px; border-radius: 8px; border: 1px solid var(--accent-color); }
-        .hayami-table { width: 100%; border-collapse: collapse; color: var(--text-color); text-align: center; }
+        /* その他スタイル */
+        #text-content-display { white-space: pre-wrap; line-height: 1.6; }
+        #content-frame { width: 100%; height: 100%; border: none; }
+        .hayami-container { max-width: 900px; margin: 0 auto; background: var(--card-bg); padding: 20px; border: 1px solid var(--accent-color); }
+        .hayami-table { width: 100%; border-collapse: collapse; text-align: center; }
         .hayami-table th { background: var(--accent-color); color: #000; padding: 10px; }
         .hayami-table td { border: 1px solid #444; padding: 8px; }
-        .day-cell { color: var(--accent-color); font-weight: bold; }
     </style>
 </head>
 <body>
@@ -92,20 +92,13 @@
     <a href="index.html#main" style="text-decoration:none; font-weight:bold; font-size:1.1rem; color:var(--accent-color);">ボブの秘密基地</a>
     <nav style="display:flex; gap:10px; overflow-x:auto;">
         <a href="unit.html" class="nav-item-custom">Unit</a>
-        <a href="derivatives.html" class="nav-item-custom">Derivatives</a>
-        <a href="arms.html" class="nav-item-custom">Arms</a>
-        <a href="battle.html" class="nav-item-custom">Battle</a>
-        <a href="novels.html" class="nav-item-custom">Novels</a>
-        <a href="tactics.html" class="nav-item-custom">Tactics</a>
         <a href="hunter.html" class="nav-item-custom">Hunter</a>
         <a href="trivia.html" class="nav-item-custom">Trivia</a>
-        <a href="emoji.html" class="nav-item-custom">Emoji</a>
-        <a href="link.html" class="nav-item-custom">Link</a>
     </nav>
 </header>
 
 <div class="top-section">
-    <div class="tabs-container" id="tabs-container">
+    <div class="tabs-container">
         <button class="tab-btn active" data-type="today">今日のHC</button>
         <button class="tab-btn" data-type="txt" data-file="特殊戦闘（HCやスクランブルなど）.txt">特殊戦闘</button>
         <button class="tab-btn" data-type="html" data-file="hunter_info.html">HCについて</button>
@@ -116,165 +109,187 @@
 <div class="main-content">
     <div id="today-tool" class="tool-container">
         <div class="tool-section">
-            <span class="tool-title">① 今日の最初のHCを計算する</span>
-            <p style="font-size:0.85rem; color:#aaa;">前日の最終戦闘数を入力してください。</p>
-            <input type="number" id="prev-battle-count" class="calc-input" placeholder="例: 100000">
-            <div id="calc-result" class="result-box">入力待ち...</div>
+            <span class="tool-title">① 今日の最初のHCを計算</span>
+            <input type="number" id="input-battle" class="calc-input" placeholder="前日の最終戦闘数を入力...">
+            <div id="calc-res" class="result-box">前日の数値を入力してください</div>
         </div>
 
         <div class="tool-section">
-            <span class="tool-title">② 今日のデータ</span>
-            <div id="today-stats" style="font-size: 1.1rem;">読み込み中...</div>
+            <span class="tool-title">② 今日の加算値・出現No</span>
+            <div id="today-info" style="font-size: 1.2rem;">取得中...</div>
         </div>
 
         <div class="tool-section">
-            <span class="tool-title">③ 当日のおすすめ機体 (No範囲内)</span>
-            <div id="unit-recommendations" class="unit-list">
+            <span class="tool-title">③ 当日のターゲット機体 (No範囲内ベスト3)</span>
+            <div id="unit-error" style="color: #ff5555; margin-bottom: 10px; display: none;"></div>
+            <div class="unit-rank-grid">
                 <div>
-                    <div style="font-size: 0.85rem; color: #00d4ff; margin-bottom: 5px;">名声が高いベスト3</div>
-                    <div id="top-fame-units">解析中...</div>
+                    <div style="color: #00d4ff; font-size: 0.9rem; border-bottom: 1px solid #00d4ff; margin-bottom: 10px; padding-bottom: 5px;">名声ランキング</div>
+                    <div id="rank-fame">解析中...</div>
                 </div>
                 <div>
-                    <div style="font-size: 0.85rem; color: #ffeb3b; margin-bottom: 5px;">ポイントが高いベスト3</div>
-                    <div id="top-point-units">解析中...</div>
+                    <div style="color: #ffeb3b; font-size: 0.9rem; border-bottom: 1px solid #ffeb3b; margin-bottom: 10px; padding-bottom: 5px;">ポイントランキング</div>
+                    <div id="rank-point">解析中...</div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div id="text-content-display" style="display:block;"></div>
-    
+    <div id="text-content-display" style="display:none;"></div>
     <iframe id="content-frame" style="display:none;"></iframe>
-
     <div id="static-table-area" class="hayami-container" style="display:none;">
-        <div class="table-caption">HC加算値早見表（全暦対応版）</div>
-        <table class="hayami-table">
-            <thead>
-                <tr><th>暦</th><th>前回HCからの加算値</th><th>出現する敵の機体No</th></tr></thead>
+        <table class="hayami-table" id="hayami-data">
+            <thead><tr><th>暦</th><th>加算値</th><th>出現No</th></tr></thead>
             <tbody>
-                <tr><td class="day-cell">1日</td><td>153</td><td>1000 - 1999</td></tr>
-                <tr><td class="day-cell">2日</td><td>156</td><td>2000 - 2999</td></tr>
-                <tr><td class="day-cell">3日</td><td>159</td><td>3000 - 3999</td></tr>
-                <tr><td class="day-cell">4日</td><td>162</td><td>4000 - 4999</td></tr>
-                <tr><td class="day-cell">5日</td><td>165</td><td>5000 - 5999</td></tr>
-                <tr><td class="day-cell">6日</td><td>168</td><td>6000 - 6999</td></tr>
-                <tr><td class="day-cell">7日</td><td>171</td><td>7000 - 7999</td></tr>
-                <tr><td class="day-cell">8日</td><td>174</td><td>8000 - 8999</td></tr>
-                <tr><td class="day-cell">9日</td><td>177</td><td>0 - 999</td></tr>
-                <tr><td class="day-cell">10日</td><td>180</td><td>0 - 999</td></tr>
-                <tr><td class="day-cell">11日</td><td>183</td><td>1000 - 1999</td></tr>
-                <tr><td class="day-cell">12日</td><td>186</td><td>2000 - 2999</td></tr>
-                <tr><td class="day-cell">13日</td><td>189</td><td>3000 - 3999</td></tr>
-                <tr><td class="day-cell">14日</td><td>192</td><td>4000 - 4999</td></tr>
-                <tr><td class="day-cell">15日</td><td>165</td><td>5000 - 5999</td></tr>
-                <tr><td class="day-cell">16日</td><td>168</td><td>6000 - 6999</td></tr>
-                <tr><td class="day-cell">17日</td><td>171</td><td>7000 - 7999</td></tr>
-                <tr><td class="day-cell">18日</td><td>174</td><td>8000 - 8999</td></tr>
-                <tr><td class="day-cell">19日</td><td>177</td><td>0 - 999</td></tr>
-                <tr><td class="day-cell">20日</td><td>180</td><td>0 - 999</td></tr>
-                <tr><td class="day-cell">21日</td><td>183</td><td>1000 - 1999</td></tr>
-                <tr><td class="day-cell">22日</td><td>186</td><td>2000 - 2999</td></tr>
-                <tr><td class="day-cell">23日</td><td>189</td><td>3000 - 3999</td></tr>
-                <tr><td class="day-cell">24日</td><td>192</td><td>4000 - 4999</td></tr>
-                <tr><td class="day-cell">25日</td><td>195</td><td>5000 - 5999</td></tr>
-                <tr><td class="day-cell">26日</td><td>198</td><td>6000 - 6999</td></tr>
-                <tr><td class="day-cell">27日</td><td>201</td><td>7000 - 7999</td></tr>
-                <tr><td class="day-cell">28日</td><td>204</td><td>8000 - 8999</td></tr>
-                <tr><td class="day-cell">29日</td><td>207</td><td>0 - 999</td></tr>
-                <tr><td class="day-cell">30日</td><td>210</td><td>0 - 999</td></tr>
-                <tr><td class="day-cell">31日</td><td>213</td><td>1000 - 1999</td></tr>
+                <tr><td>1日</td><td>153</td><td>1000 - 1999</td></tr>
+                <tr><td>2日</td><td>156</td><td>2000 - 2999</td></tr>
+                <tr><td>3日</td><td>159</td><td>3000 - 3999</td></tr>
+                <tr><td>4日</td><td>162</td><td>4000 - 4999</td></tr>
+                <tr><td>5日</td><td>165</td><td>5000 - 5999</td></tr>
+                <tr><td>6日</td><td>168</td><td>6000 - 6999</td></tr>
+                <tr><td>7日</td><td>171</td><td>7000 - 7999</td></tr>
+                <tr><td>8日</td><td>174</td><td>8000 - 8999</td></tr>
+                <tr><td>9日</td><td>177</td><td>0 - 999</td></tr>
+                <tr><td>10日</td><td>180</td><td>0 - 999</td></tr>
+                <tr><td>11日</td><td>183</td><td>1000 - 1999</td></tr>
+                <tr><td>12日</td><td>186</td><td>2000 - 2999</td></tr>
+                <tr><td>13日</td><td>189</td><td>3000 - 3999</td></tr>
+                <tr><td>14日</td><td>192</td><td>4000 - 4999</td></tr>
+                <tr><td>15日</td><td>165</td><td>5000 - 5999</td></tr>
+                <tr><td>16日</td><td>168</td><td>6000 - 6999</td></tr>
+                <tr><td>17日</td><td>171</td><td>7000 - 7999</td></tr>
+                <tr><td>18日</td><td>174</td><td>8000 - 8999</td></tr>
+                <tr><td>19日</td><td>177</td><td>0 - 999</td></tr>
+                <tr><td>20日</td><td>180</td><td>0 - 999</td></tr>
+                <tr><td>21日</td><td>183</td><td>1000 - 1999</td></tr>
+                <tr><td>22日</td><td>186</td><td>2000 - 2999</td></tr>
+                <tr><td>23日</td><td>189</td><td>3000 - 3999</td></tr>
+                <tr><td>24日</td><td>192</td><td>4000 - 4999</td></tr>
+                <tr><td>25日</td><td>195</td><td>5000 - 5999</td></tr>
+                <tr><td>26日</td><td>198</td><td>6000 - 6999</td></tr>
+                <tr><td>27日</td><td>201</td><td>7000 - 7999</td></tr>
+                <tr><td>28日</td><td>204</td><td>8000 - 8999</td></tr>
+                <tr><td>29日</td><td>207</td><td>0 - 999</td></tr>
+                <tr><td>30日</td><td>210</td><td>0 - 999</td></tr>
+                <tr><td>31日</td><td>213</td><td>1000 - 1999</td></tr>
             </tbody>
         </table>
     </div>
 </div>
 
 <script>
-$(document).ready(function () {
-    const $display = $('#text-content-display');
-    const $iframe = $('#content-frame');
-    const $static = $('#static-table-area');
-    const $today = $('#today-tool');
+/** * 【設定】
+ * ユニットデータが入っているCSVファイル名を正確に指定してください。
+ * (例: "unit.csv" や "unit_26.3.24.csv")
+ */
+const CSV_FILE = "unit_26.3.24.csv"; 
 
-    // 早見表から今日のデータを取得する関数
+$(document).ready(function () {
+    // 今日の情報をテーブルから取得
     function getTodayData() {
-        const today = new Date().getDate();
-        const row = $('#hayami-source tbody tr').eq(today - 1);
+        const d = new Date().getDate();
+        const row = $('#hayami-data tbody tr').eq(d - 1);
         return {
-            day: today,
-            addValue: parseInt(row.find('td').eq(1).text()),
-            noRange: row.find('td').eq(2).text()
+            day: d,
+            addVal: parseInt(row.find('td').eq(1).text()) || 0,
+            range: row.find('td').eq(2).text() || ""
         };
     }
 
-    // ① 計算ツールのロジック
-    $('#prev-battle-count').on('input', function() {
-        const prevCount = parseInt($(this).val());
-        if (isNaN(prevCount)) { $('#calc-result').text("数値を入力してください。"); return; }
-        
+    // ① 計算機の即時反映
+    $('#input-battle').on('input', function() {
+        const prev = parseInt($(this).val());
         const data = getTodayData();
-        const nextHC = Math.floor((prevCount / data.addValue) + 1) * data.addValue;
-        $('#calc-result').html(`今日の最初のHCは <strong>${nextHC.toLocaleString()}</strong> 戦目です。`);
+        if (isNaN(prev)) { $('#calc-res').text("数値を入力してください"); return; }
+        
+        const next = Math.floor((prev / data.addVal) + 1) * data.addVal;
+        $('#calc-res').html(`今日の最初のHCは <strong style="color:var(--accent-color);">${next.toLocaleString()}</strong> 戦目です`);
     });
 
-    // ② 今日の統計表示
-    function updateTodayStats() {
+    // ② 今日のデータ更新 & ③ ランキング解析
+    function refreshTodayTab() {
         const data = getTodayData();
-        $('#today-stats').html(`本日は ${data.day}日： 加算値 <strong>${data.addValue}</strong> / 出現No <strong>${data.noRange}</strong>`);
-        fetchUnitRecommendations(data.noRange);
+        $('#today-info').html(`本日は ${data.day}日： 加算値 <b style="color:var(--accent-color);">${data.addVal}</b> / 出現No <b style="color:var(--accent-color);">${data.range}</b>`);
+        
+        const [min, max] = data.range.split(' - ').map(s => parseInt(s.trim()));
+        loadAndRankUnits(min, max);
     }
 
-    // ③ ユニットデータの解析と表示
-    function fetchUnitRecommendations(rangeStr) {
-        const [min, max] = rangeStr.split(' - ').map(n => parseInt(n));
-        
-        // unit_26.3.24.csv を読み込む (GitHub上の最新ファイル名を想定)
-        Papa.parse("unit_26.3.24.csv", {
-            download: true, header: true, skipEmptyLines: true,
+    // ③ ユニットCSVの読み込みとソート
+    function loadAndRankUnits(min, max) {
+        Papa.parse(CSV_FILE, {
+            download: true,
+            header: true,
+            skipEmptyLines: true,
             complete: function(results) {
-                const units = results.data.filter(u => {
+                // No範囲内でフィルタリング
+                const filtered = results.data.filter(u => {
                     const no = parseInt(u["No"]);
                     return no >= min && no <= max;
                 });
 
-                const sortAndDisplay = (data, key, targetId) => {
-                    const sorted = [...data].sort((a, b) => (parseInt(b[key].replace(/,/g, '')) || 0) - (parseInt(a[key].replace(/,/g, '')) || 0)).slice(0, 3);
-                    let html = '';
-                    sorted.forEach((u, i) => {
-                        html += `<div class="unit-card"><span class="rank-number">${i+1}.</span>${u["機体名"]}<br><span style="color:#888;font-size:0.8rem;">${key}: ${u[key]}</span></div>`;
-                    });
-                    $(targetId).html(html || "対象なし");
-                };
+                if (filtered.length === 0) {
+                    $('#unit-error').text(`警告: ${CSV_FILE} 内に No ${min}～${max} の機体が見つかりません。`).show();
+                    $('#rank-fame, #rank-point').text("データなし");
+                    return;
+                }
+                $('#unit-error').hide();
 
-                sortAndDisplay(units, "名声", "#top-fame-units");
-                sortAndDisplay(units, "ポイント", "#top-point-units");
+                // ランキング描画
+                displayRank(filtered, "名声", "#rank-fame");
+                displayRank(filtered, "ポイント", "#rank-point");
+            },
+            error: function() {
+                $('#unit-error').text(`エラー: ${CSV_FILE} を読み込めませんでした。ファイル名を確認してください。`).show();
+                $('#rank-fame, #rank-point').text("読込失敗");
             }
         });
     }
 
-    function loadTxtFile(fileName) {
-        $display.html("読み込み中...");
-        fetch(fileName).then(res => res.arrayBuffer()).then(buffer => {
-            let text = new TextDecoder('utf-8').decode(buffer);
-            if (text.includes('\uFFFD')) text = new TextDecoder('shift-jis').decode(buffer);
-            $display.html(text);
+    function displayRank(data, key, targetId) {
+        const sorted = [...data].sort((a, b) => {
+            const valA = parseInt(a[key]?.toString().replace(/,/g, '')) || 0;
+            const valB = parseInt(b[key]?.toString().replace(/,/g, '')) || 0;
+            return valB - valA;
+        }).slice(0, 3);
+
+        let html = '';
+        sorted.forEach((u, i) => {
+            html += `<div class="unit-card">
+                        <span class="rank-badge">${i+1}</span><strong>${u["機体名"] || "不明"}</strong>
+                        <span class="unit-val">${key}: ${u[key] || 0}</span>
+                     </div>`;
         });
+        $(targetId).html(html);
     }
 
+    // タブ切り替え処理
     $('.tab-btn').on('click', function() {
         $('.tab-btn').removeClass('active');
         $(this).addClass('active');
         const type = $(this).data('type');
 
-        $display.hide(); $iframe.hide(); $static.hide(); $today.hide();
+        $('#today-tool, #text-content-display, #content-frame, #static-table-area').hide();
 
-        if (type === 'today') { $today.show(); updateTodayStats(); }
-        else if (type === 'txt') { $display.show(); loadTxtFile($(this).data('file')); }
-        else if (type === 'html') { $iframe.attr('src', $(this).data('file')).show(); }
-        else if (type === 'static') { $static.show(); }
+        if (type === 'today') {
+            $('#today-tool').show();
+            refreshTodayTab();
+        } else if (type === 'txt') {
+            $('#text-content-display').show().text("読み込み中...");
+            fetch($(this).data('file')).then(r => r.arrayBuffer()).then(buf => {
+                let txt = new TextDecoder('utf-8').decode(buf);
+                if (txt.includes('\uFFFD')) txt = new TextDecoder('shift-jis').decode(buf);
+                $('#text-content-display').html(txt);
+            });
+        } else if (type === 'html') {
+            $('#content-frame').attr('src', $(this).data('file')).show();
+        } else if (type === 'static') {
+            $('#static-table-area').show();
+        }
     });
 
-    // 初期表示：今日のHCタブ
-    updateTodayStats();
+    // 初期実行
+    refreshTodayTab();
 });
 </script>
 </body>
