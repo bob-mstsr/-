@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MSTactics Battle Chronicle | Cyber Battle Narrative</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;500;700&family=Noto+Sans+JP:wght@300;400;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        cyber: {
+                            bg: '#0a0c10',
+                            card: '#151921',
+                            accent: '#00f2ff', // Electric Blue
+                            danger: '#ff2e2e', // Fiery Red
+                            energy: '#39ff14', // Neon Green
+                            text: '#e2e8f0',
+                            muted: '#94a3b8'
+                        }
+                    },
+                    fontFamily: {
+                        display: ['Orbitron', 'sans-serif'],
+                        tech: ['Rajdhani', 'sans-serif'],
+                        body: ['Noto Sans JP', 'sans-serif']
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'glow': 'glow 2s ease-in-out infinite alternate',
+                    },
+                    keyframes: {
+                        glow: {
+                            '0%': { textShadow: '0 0 5px #00f2ff, 0 0 10px #00f2ff' },
+                            '100%': { textShadow: '0 0 20px #00f2ff, 0 0 30px #00f2ff' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #0a0c10;
+            background-image: 
+                radial-gradient(circle at 50% 0%, rgba(0, 242, 255, 0.05) 0%, transparent 50%),
+                linear-gradient(rgba(10, 12, 16, 0.8) 0%, rgba(10, 12, 16, 0.8) 100%),
+                url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2300f2ff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            color: #e2e8f0;
+            overflow-x: hidden;
+        }
+
+        .glass-header {
+            background: rgba(10, 12, 16, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(0, 242, 255, 0.2);
+            z-index: 1000;
+        }
+
+        .narrative-container {
+            position: relative;
+        }
+
+        .narrative-container::before {
+            content: '';
+            position: absolute;
+            left: -20px;
+            top: 0;
+            bottom: 0;
+            width: 1px;
+            background: linear-gradient(to bottom, transparent, rgba(0, 242, 255, 0.3), transparent);
+        }
+
+        .dialogue {
+            position: relative;
+            padding-left: 1.5rem;
+            border-left: 2px solid rgba(0, 242, 255, 0.5);
+            margin: 2rem 0;
+            font-style: italic;
+            color: #fff;
+        }
+
+        .accent-gradient-text {
+            background: linear-gradient(90deg, #00f2ff, #39ff14);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .scanline {
+            width: 100%;
+            height: 2px;
+            background: rgba(0, 242, 255, 0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 9999;
+            pointer-events: none;
+            animation: scanline 8s linear infinite;
+        }
+
+        @keyframes scanline {
+            0% { top: -10%; }
+            100% { top: 110%; }
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0a0c10;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1e293b;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #00f2ff;
+        }
+    </style>
+</head>
+<body class="font-body selection:bg-cyber-accent selection:text-black">
+
+    <div class="scanline"></div>
+
+    <!-- Fixed Header -->
+    <header class="glass-header fixed top-0 w-full py-4 px-6 flex justify-between items-center">
+        <div class="flex items-center gap-3">
+            <div class="w-2 h-8 bg-cyber-accent shadow-[0_0_10px_#00f2ff]"></div>
+            <h1 class="font-display text-xl tracking-tighter uppercase">
+                MS<span class="text-cyber-accent">Tactics</span> <span class="text-cyber-muted font-light">Battle Chronicle</span>
+            </h1>
+        </div>
+        <div class="hidden md:block font-tech text-cyber-accent text-sm tracking-widest uppercase opacity-70">
+            System Status: Narrative Link Active
+        </div>
+    </header>
+
+    <main class="pt-32 pb-24 px-6 md:px-12 max-w-3xl mx-auto">
+        
+        <!-- Intro Section -->
+        <header class="mb-16 text-center">
+            <div class="inline-block px-3 py-1 border border-cyber-accent text-cyber-accent font-tech text-xs tracking-widest uppercase mb-6 animate-pulse">
+                Record ID: 772-BTL-01
+            </div>
+            <h2 class="text-4xl md:text-6xl font-display font-black mb-8 leading-tight">
+                電脳の<span class="accent-gradient-text">激突</span>
+            </h2>
+            <div class="h-px w-24 bg-cyber-accent mx-auto mb-8"></div>
+        </header>
+
+        <article class="narrative-container space-y-10 text-lg leading-relaxed text-cyber-text font-light">
+            
+            <p class="first-letter:text-5xl first-letter:font-display first-letter:mr-3 first-letter:float-left first-letter:text-cyber-accent">
+                光り輝く電脳の戦場において、二つの巨大な勢力が激突しようとしていた。
+            </p>
+
+            <div class="bg-cyber-card p-6 border-l-4 border-cyber-energy rounded-r-lg my-12">
+                <p>
+                    最大人員を誇る秘密結社、そのリーダーであるオロコンが静かに命を下す。<br>
+                    <span class="font-tech text-cyber-energy text-xl uppercase tracking-wider">「全員、私の戦略を信じろ。粘り強く戦えば、道は必ず開ける」</span>
+                </p>
+            </div>
+
+            <p>対するは、最強の戦術集団、オガ研。リーダー、キュート・F・シャトナー率いる精鋭たちが牙を剥く。</p>
+
+            <h3 class="font-display text-2xl text-cyber-accent mt-16 mb-6 flex items-center gap-3">
+                <span class="w-8 h-px bg-cyber-accent"></span> 
+                PHASE 01: 緒戦の火蓋
+            </h3>
+
+            <p>緒戦を飾ったのは、熱血のベテラン、炎のナイトが駆るガンダムイージスナイトだった。立ちはだかるはオガ研の猛者、スレッタ・マーキュリーのガンダム・エアリアルだ。</p>
+
+            <blockquote class="dialogue">
+                「逃げたら一つ、進めば二つ！」
+            </blockquote>
+
+            <p>スレッタはエアリアルの機動性を最大限に活かし、移動を意識した鋭い一撃でビームサーベルを叩きつける。炎のナイトは即座にビームバリアを展開！</p>
+
+            <blockquote class="dialogue">
+                「甘いぞ、若葉！熟練の技を見せてやる！」
+            </blockquote>
+
+            <p>炎のナイトはあえて接近し、スパイクシールドを突き出す。相手を惑わし、足止めを狙う計算された一撃。しかし、スレッタはそれをシールドで防ぎ、一進一退の攻防が続く。</p>
+
+            <p>戦場の別方向では、トリッカーのボブが駆るΨキャリバーンが、アカハナのミーティア０１と対峙していた。</p>
+            
+            <blockquote class="dialogue">
+                「へっへっへ…狙いは悪くなかったな」
+            </blockquote>
+
+            <p>アカハナが移動を気にせず広範囲を薙ぎ払う攻撃を仕掛けるが、ボブは軽やかな機動でこれを回避する。</p>
+
+            <blockquote class="dialogue">
+                「一歩踏み出せば未来が変わるよ。良い方とは限らないけどね！」
+            </blockquote>
+
+            <p>ボブはバリアブルロッドライフルを構え、敵を惑わしながら連射を浴びせた。</p>
+
+            <h3 class="font-display text-2xl text-cyber-danger mt-16 mb-6 flex items-center gap-3">
+                <span class="w-8 h-px bg-cyber-danger"></span> 
+                PHASE 02: 決死の防衛
+            </h3>
+
+            <p>戦況が激化する中、秘密結社の守り手たるアルトリアが、サポーターたちを執拗に狙うオガ研の攻撃を阻む。これぞ秘密結社が誇るグループタクティクス、アタッカーディフェンスだ。</p>
+
+            <p>しかし、スレッタの猛攻は止まらない。<br>
+            「スピードなら、エアリアルも負けません！」<br>
+            高速戦闘に特化したスレッタの一撃が、アルトリアのラフトクランズのフィールドを貫いた。</p>
+
+            <p class="text-cyber-muted italic">「…負けました」</p>
+            
+            <p>アルトリアが戦線を離脱する。だが、その犠牲は無駄ではなかった。</p>
+
+            <blockquote class="dialogue border-cyber-danger text-cyber-danger">
+                「ふたりとも…消されちゃう…ってこと！？」
+            </blockquote>
+
+            <p>秘密結社期待のアタッカー、オズナがΨイカルガを駆って戦場へ突っ込む。<br>
+            「なんとかなれーッ！」<br>
+            オズナの叫びと共に放たれたソーデッドカノンが、ガトリングシールドを構えるアカハナを猛追した。</p>
+
+            <h3 class="font-display text-2xl text-cyber-muted mt-16 mb-6 flex items-center gap-3">
+                <span class="w-8 h-px bg-cyber-muted"></span> 
+                PHASE 03: 執念の交差
+            </h3>
+
+            <p>一方、炎のナイトは複数の敵を相手に孤軍奮闘していた。キュートの雪風改二による煙幕と撹乱幕の散布。さらにはアラン＝マクベインのフォースインパルスSpecIIが放つ追撃。</p>
+
+            <p>「エア、あの機体は！？」<br>
+            「友軍です！フェンリルナイツ所属の……」</p>
+
+            <p>激しい通信のやり取りの中、炎のナイトは幾度となく危機を回避し、スパイクシールドで敵の機動を奪おうと試みる。だが、アランの放ったレールガンがガンダムイージスナイトを捉えた。</p>
+
+            <p class="text-cyber-muted italic">「少しもらいすぎたかな……エア、撤退するぞ！」</p>
+
+            <p>不屈のベテラン、退場。しかし、秘密結社の面々の執念はここからさらに加速する。</p>
+
+            <p class="text-3xl font-display text-cyber-accent text-center py-8">「泣いちゃった！！！」</p>
+
+            <p>オズナの一撃が、ついにアカハナのミーティア０１を沈めた。勢いに乗るオズナは、戦場を縦横無尽に駆け巡る。</p>
+
+            <p>守るべき者を守り抜く。秘密結社の絆が試される時だ。戦場に響くのは、ボブの明るい声。</p>
+
+            <blockquote class="dialogue">
+                「笑えば何とかなるよ。現実は変わらないけどね！」
+            </blockquote>
+
+            <p>ボブは残弾が尽きても止まらなかった。武器が使えないなら、機動力で敵を攪乱し続ける。イヴリンのゼロリベリオンが放つ精密な射撃を、紙一重の回避でやり過ごす。</p>
+
+            <h3 class="font-display text-2xl text-cyber-energy mt-16 mb-6 flex items-center gap-3">
+                <span class="w-8 h-px bg-cyber-energy"></span> 
+                FINAL PHASE: 終局への叫び
+            </h3>
+
+            <p>戦いは佳境へ。古参のいぶし銀、ライナセロスが駆るガンダムエルオーブースターが黄金のオーラを纏い、キュートと激突する。</p>
+
+            <p>「これ以上やらせるか！」<br>
+            アランがフォースインパルスで援護を試みるが、ライナセロスの執念のスラストビーム・キャノンがキュートの装甲を削っていく。</p>
+
+            <p>そして、オズナのΨイカルガが。</p>
+            <p class="text-xl font-bold text-cyber-accent">「当たったんだァ！！」</p>
+            
+            <p>渾身のソーデッドカノンが、イヴリンのゼロリベリオンを、スレッタのエアリアルを、次々と撃沈せしめた。</p>
+
+            <p class="text-cyber-muted italic">「ごめんなさい、ミオリネさん……約束……守れませんでした……」</p>
+            
+            <p>スレッタの散り際の通信に、オズナが再び絶叫する。</p>
+            <p class="text-2xl font-display text-cyber-danger text-center">「泣いちゃった！！！」</p>
+
+            <p>敵の残存戦力はアラン＝マクベインのみ。武器を使い果たし、手負いのボブ、ライナセロス、オズナ、そしてリーダーのオロコンがアランを包囲する。</p>
+
+            <p>「耐えてくれ、フォースインパルス！」<br>
+            アランはコアスプレンダーの機能を活かし、執念で生き残りを図る。だが、秘密結社の包囲網は盤石だった。</p>
+
+            <div class="bg-gradient-to-r from-cyber-bg to-cyber-card p-8 border border-cyber-accent/30 rounded-lg shadow-[0_0_30px_rgba(0,242,255,0.1)]">
+                <p class="mb-6">最後の一撃は、リーダーのオロコンが駆るニュー・ラッセ・ブレン。</p>
+                <blockquote class="text-2xl font-tech text-cyber-accent mb-6 leading-tight">
+                    「認めたくないものだな。自分自身の、毛並みの乱れゆえの過ちというものを」
+                </blockquote>
+                <p>リーダー自らが最前線に立ち、機体の全出力を叩きつける。</p>
+            </div>
+
+            <p>「しまった！」<br>
+            アランの叫びも虚しく、フォースインパルスの装甲が砕け散った。</p>
+            
+            <p class="italic text-cyber-muted">「木の実の都合で決めた作戦なんて、明日の風で吹き飛んじゃうわ」</p>
+
+            <div class="py-12 flex flex-col items-center">
+                <div class="w-full h-px bg-gradient-to-r from-transparent via-cyber-accent to-transparent mb-8"></div>
+                <p class="text-center">爆炎が収まった後に立っていたのは、ボロボロになりながらも互いを支え合う秘密結社の面々だった。<br>リーダー立案の戦略を信じ、全員が粘り強く、一歩も引かずに戦い抜いた。</p>
+            </div>
+
+            <p class="text-xl font-tech tracking-widest text-cyber-accent text-center">「勝ったんだ……本当に……」</p>
+
+            <p>誰かの呟きが通信を流れる。<br>
+            秘密結社。最大人員の勢力を率いるリーダー、オロコンのカリスマ性が、最強軍団を打ち破る奇跡を成し遂げた瞬間だった。<br>
+            戦場に勝利の凱歌が響き渡った。</p>
+
+        </article>
+
+        <!-- Status Footer Component -->
+        <div class="mt-32 p-8 border border-white/10 rounded-2xl bg-white/5 backdrop-blur-sm">
+            <div class="flex flex-wrap justify-between items-center gap-6">
+                <div>
+                    <h4 class="font-display text-sm text-cyber-accent uppercase tracking-widest mb-1">Combat Archive</h4>
+                    <p class="text-xs text-cyber-muted">Status: Archive Locked / Encryption Active</p>
+                </div>
+                <div class="flex gap-4">
+                    <div class="w-12 h-1 bg-cyber-energy/50"></div>
+                    <div class="w-12 h-1 bg-cyber-accent/50"></div>
+                    <div class="w-12 h-1 bg-cyber-danger/50"></div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        // Subtle interaction: Parallax-ish glow following cursor (optional/subtle)
+        document.addEventListener('mousemove', (e) => {
+            const x = (e.clientX / window.innerWidth) * 100;
+            const y = (e.clientY / window.innerHeight) * 100;
+            document.body.style.backgroundPosition = `${x}% ${y}%`;
+        });
+
+        // Reveal animations on scroll
+        const observerOptions = {
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('opacity-100');
+                    entry.target.classList.remove('translate-y-10');
+                    entry.target.classList.remove('opacity-0');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('h3, blockquote, .bg-cyber-card').forEach(el => {
+            el.classList.add('transition-all', 'duration-1000', 'opacity-0', 'translate-y-10');
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>

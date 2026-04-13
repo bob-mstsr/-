@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>鋼鉄の絆、逆転の咆哮 〜秘密結社対オガ研〜</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&family=Noto+Sans+JP:wght@300;400;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'space-black': '#05070a',
+                        'space-gray': '#1a1d23',
+                        'mech-blue': '#00d2ff',
+                        'mech-green': '#39ff14',
+                        'mech-orange': '#ffae00',
+                        'neon-red': '#ff3131',
+                        'glass': 'rgba(255, 255, 255, 0.03)',
+                    },
+                    fontFamily: {
+                        sans: ['Noto Sans JP', 'Inter', 'sans-serif'],
+                        display: ['Orbitron', 'sans-serif'],
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'scanline': 'scanline 8s linear infinite',
+                    },
+                    keyframes: {
+                        scanline: {
+                            '0%': { transform: 'translateY(-100%)' },
+                            '100%': { transform: 'translateY(1000%)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #05070a;
+            color: #e2e8f0;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        .glass-panel {
+            background: rgba(26, 29, 35, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
+        }
+
+        .glow-blue { box-shadow: 0 0 20px rgba(0, 210, 255, 0.2); }
+        .glow-green { box-shadow: 0 0 20px rgba(57, 255, 20, 0.2); }
+
+        .scanline-effect::before {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            z-index: 2;
+            background-size: 100% 2px, 3px 100%;
+            pointer-events: none;
+        }
+
+        .chapter-title {
+            position: relative;
+            display: inline-block;
+            padding-bottom: 0.5rem;
+        }
+
+        .chapter-title::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(to right, #00d2ff, transparent);
+        }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #05070a; }
+        ::-webkit-scrollbar-thumb { background: #1a1d23; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #334155; }
+
+        .battle-log-row:hover {
+            background: rgba(0, 210, 255, 0.05);
+        }
+    </style>
+</head>
+<body class="font-sans antialiased">
+
+    <!-- Background Decoration -->
+    <div class="fixed inset-0 pointer-events-none z-[-1] opacity-20">
+        <div class="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_50%_50%,#1e293b,transparent)]"></div>
+        <div class="absolute top-[20%] left-[10%] w-96 h-96 bg-mech-blue/10 rounded-full blur-[100px] animate-pulse-slow"></div>
+        <div class="absolute bottom-[20%] right-[10%] w-96 h-96 bg-mech-orange/10 rounded-full blur-[100px] animate-pulse-slow"></div>
+    </div>
+
+    <!-- Header -->
+    <header class="relative h-screen flex items-center justify-center overflow-hidden border-b border-white/10">
+        <div class="absolute inset-0 z-0 overflow-hidden">
+            <div class="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-transparent to-space-black z-10"></div>
+            <div class="absolute top-0 left-0 w-full h-px bg-mech-blue/50 animate-scanline z-20"></div>
+        </div>
+        
+        <div class="relative z-20 text-center px-4 max-w-5xl">
+            <div class="mb-4 flex justify-center items-center gap-4">
+                <span class="px-3 py-1 bg-neon-red/20 text-neon-red border border-neon-red/50 text-xs font-display tracking-widest uppercase rounded">Combat Archive</span>
+                <span class="px-3 py-1 bg-mech-blue/20 text-mech-blue border border-mech-blue/50 text-xs font-display tracking-widest uppercase rounded">MST Virtual Space</span>
+            </div>
+            <h1 class="text-5xl md:text-8xl font-black font-display tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white via-white to-gray-500 leading-tight mb-6">
+                鋼鉄の絆、<br><span class="text-mech-blue">逆転の咆哮</span>
+            </h1>
+            <p class="text-xl md:text-2xl font-light text-gray-400 tracking-widest uppercase font-display mb-12">
+                〜秘密結社対オガ研、頂上決戦〜
+            </p>
+            <div class="flex flex-col md:flex-row items-center justify-center gap-6">
+                <a href="#novel-content" class="px-8 py-4 bg-mech-blue text-space-black font-bold uppercase tracking-widest transition-all hover:bg-white hover:scale-105 active:scale-95 glow-blue">
+                    Begin Reading
+                </a>
+                <a href="#battle-log" class="px-8 py-4 border border-white/20 text-white font-bold uppercase tracking-widest transition-all hover:bg-white/10">
+                    Mission Data
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-screen-xl mx-auto px-4 py-20">
+        
+        <!-- Novel Content Area -->
+        <section id="novel-content" class="relative max-w-3xl mx-auto mb-32">
+            <div class="flex items-center gap-4 mb-16 opacity-50">
+                <div class="h-px flex-grow bg-gradient-to-r from-transparent to-white/20"></div>
+                <span class="font-display text-sm tracking-[0.5em] uppercase">The Chronicle</span>
+                <div class="h-px flex-grow bg-gradient-to-l from-transparent to-white/20"></div>
+            </div>
+
+            <!-- Chapter 1 -->
+            <article class="mb-24 group">
+                <div class="mb-8">
+                    <span class="text-mech-blue font-display text-sm tracking-widest mb-2 block">PHASE 01</span>
+                    <h2 class="text-3xl md:text-4xl font-bold chapter-title mb-6 leading-tight">嵐の前の静寂、そして開戦</h2>
+                </div>
+                <div class="space-y-6 text-lg md:text-xl leading-relaxed text-gray-300 font-light">
+                    <p>かつてない緊張が『MST』の仮想空間を支配していた。空を埋め尽くすのは、ゲーム内最大勢力「秘密結社」の機体群。それに対峙するのは、最強と謳われるエリート集団「オガ研」。</p>
+                    <p>戦場の中央、「秘密結社」のリーダー・オロ〇ミンが駆る『Ψハルファスベーゼ』の前に、美しくも死を予感させる一機の機体が舞い降りた。ランク1位、怪物と呼ばれるプレイヤー・八千代。その駆る『Ψガンダムローズ』が黄金の輝きを放つ。</p>
+                    <p>「仕事ですから」――八千代の短い通信と共に、運命の幕が切って落とされた。</p>
+                </div>
+            </article>
+
+            <!-- Chapter 2 -->
+            <article class="mb-24 group">
+                <div class="mb-8">
+                    <span class="text-neon-red font-display text-sm tracking-widest mb-2 block">PHASE 02</span>
+                    <h2 class="text-3xl md:text-4xl font-bold chapter-title mb-6 leading-tight text-white">絶望の「ローゼス・ハリケーン」</h2>
+                </div>
+                <div class="space-y-6 text-lg md:text-xl leading-relaxed text-gray-300 font-light">
+                    <p>第2ターン、戦場は八千代によって完全に掌握された。彼女の『Ψガンダムローズ』が黄金のオーラに包まれ、無数の「ローゼス・ビット」が解き放たれる。それは死の嵐――「★ローゼス・ハリケーン」。</p>
+                    <p>卓越した操縦技術を持つオロ〇ミンですら、その全方位攻撃を回避し切ることはできなかった。凄まじい衝撃と共に『Ψハルファスベーゼ』の装甲が切り刻まれ、HPは一気に半分以下まで低下。「秘密結社」に絶望の影が差した。</p>
+                </div>
+            </article>
+
+            <!-- Chapter 3 -->
+            <article class="mb-24 group">
+                <div class="mb-8">
+                    <span class="text-mech-orange font-display text-sm tracking-widest mb-2 block">PHASE 03</span>
+                    <h2 class="text-3xl md:text-4xl font-bold chapter-title mb-6 leading-tight">運命のオーバーヒート</h2>
+                </div>
+                <div class="space-y-6 text-lg md:text-xl leading-relaxed text-gray-300 font-light">
+                    <p>しかし、第3ターンで予期せぬ事態が発生する。八千代の機体の冷却系に異常が発生、オーバーヒートを起こしたのだ。黄金のオーラが霧散し、『ガンダムローズ』の機動性が著しく低下する。</p>
+                    <p>この好機を逃さず、古参のライナセロスが駆る『ゴールドフレーム天ミナC』が動く。ミラージュコロイドによって姿を消し、死角から執拗な牽制を仕掛ける。ENを削り取られた八千代は、防戦一方へと追い込まれていった。</p>
+                </div>
+            </article>
+
+            <!-- Chapter 4 -->
+            <article class="mb-24 group">
+                <div class="mb-8">
+                    <span class="text-mech-green font-display text-sm tracking-widest mb-2 block">PHASE 04</span>
+                    <h2 class="text-3xl md:text-4xl font-bold chapter-title mb-6 leading-tight">燃え上がる反撃の火</h2>
+                </div>
+                <div class="space-y-6 text-lg md:text-xl leading-relaxed text-gray-300 font-light">
+                    <p>中盤、戦局は混迷を極めた。「オガ研」の猛者アラン＝マクベインが『ガンダムバルバタウロス』で戦線を切り裂き、満身創痍のオロ〇ミンに肉薄する。</p>
+                    <p>だが、撃破寸前でオロ〇ミンは不敵に微笑んだ。「ナッツの都合で決めた作戦、明日の風で吹き飛ぶが良い！」</p>
+                    <p>極大のエネルギー波「★バーニングファイア」が放たれ、プリコネの巨大機『ジガンスクード』を貫き、爆砕させた。この一撃が「秘密結社」の士気を爆発的に燃え上がらせた。</p>
+                    <p>別宙域ではシュールな応酬が続く。ボブの『Ψガリルナガン』が放つ「アキシオン・アッシャー」がイヴリンを翻弄し、猫のような口元をしたオズナが『Ψジュア＝ム専用ラフトクランズ』で跳ね回りながら、「空が見たい」と呟きつつ敵を弾き飛ばしていく。</p>
+                </div>
+            </article>
+
+            <!-- Chapter 5 -->
+            <article class="mb-24 group">
+                <div class="mb-8">
+                    <span class="text-white font-display text-sm tracking-widest mb-2 block">PHASE 05</span>
+                    <h2 class="text-3xl md:text-4xl font-bold chapter-title mb-6 leading-tight">炎のナイト、無双の刻</h2>
+                </div>
+                <div class="space-y-6 text-lg md:text-xl leading-relaxed text-gray-300 font-light">
+                    <p>クライマックスを飾ったのは、「炎のナイト」の無双劇だった。相棒AIエアとの完璧なシンクロ。駆る『ヒュッケバイン30th』が、ベテランの知識と情熱によって限界を超えた性能を発揮する。</p>
+                    <p>ナイトはまず、手負いの八千代にトドメの一撃を見舞い、最強の脅威を排除。その勢いのまま、ブラックホール・キャノンの照準をアランへ固定。バルバタウロスの猛攻を耐え抜き、至近距離からの零距離射撃でこれを粉砕した。</p>
+                    <p>続くアカハナ、スレッタといったエリートたちも、ナイトの圧倒的な火力とエアの正確なナビゲーションの前に次々と塵に還っていった。</p>
+                </div>
+            </article>
+
+            <!-- Chapter 6 -->
+            <article class="mb-16 group">
+                <div class="mb-8">
+                    <span class="text-mech-blue font-display text-sm tracking-widest mb-2 block">FINAL PHASE</span>
+                    <h2 class="text-3xl md:text-4xl font-bold chapter-title mb-6 leading-tight">結末：鋼鉄の絆</h2>
+                </div>
+                <div class="space-y-6 text-lg md:text-xl leading-relaxed text-gray-300 font-light">
+                    <p>戦場に静寂が戻った。大破寸前の機体の中で、オロ〇ミンは通信パネルに映る仲間たちの顔を見て微笑んだ。個の力で勝る「オガ研」に対し、最大級の結束で立ち向かった「秘密結社」の勝利。</p>
+                    <p>傷ついた機体同士が肩を貸し合い、帰還の途につく。それはゲームという枠を超えた、真なる「鋼鉄の絆」の証明であった。仮想宇宙の隅々にまで、勝者を讃える歓声が響き渡った。</p>
+                </div>
+            </article>
+        </section>
+
+        <!-- Bento Grid for Stats & Data -->
+        <section class="grid grid-cols-1 md:grid-cols-12 gap-6 mb-32">
+            
+            <!-- Organizations -->
+            <div class="md:col-span-8 glass-panel p-8 rounded-2xl">
+                <h3 class="font-display text-2xl mb-6 text-white border-b border-white/10 pb-4">Faction Intel</h3>
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div class="space-y-4">
+                        <div class="flex items-center gap-3">
+                            <div class="w-2 h-8 bg-mech-blue"></div>
+                            <h4 class="text-xl font-bold text-mech-blue uppercase">秘密結社</h4>
+                        </div>
+                        <p class="text-sm text-gray-400 leading-relaxed">MST内最大勢力。オロ〇ミンが率いる。圧倒的な物量と結束力を武器とし、ランク上位者を多数抱える。</p>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="flex items-center gap-3 text-right justify-end md:justify-start">
+                            <div class="w-2 h-8 bg-neon-red"></div>
+                            <h4 class="text-xl font-bold text-neon-red uppercase">オガ研</h4>
+                        </div>
+                        <p class="text-sm text-gray-400 leading-relaxed">最強と謳われるエリートクラン。少数精鋭ながら、全ステータスがトップクラスのプレイヤーで構成される。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Total Result -->
+            <div class="md:col-span-4 glass-panel p-8 rounded-2xl flex flex-col justify-center items-center text-center bg-mech-blue/5">
+                <span class="font-display text-sm tracking-[0.3em] uppercase mb-4 text-mech-blue">Mission Status</span>
+                <div class="text-6xl font-black font-display text-white mb-2">WIN</div>
+                <div class="text-mech-blue font-bold tracking-widest">SECRET SOCIETY</div>
+                <div class="mt-6 text-xs text-gray-500 font-mono">ENCRYPTED DATA // TURN 124 CLEAR</div>
+            </div>
+
+            <!-- Mecha Details -->
+            <div class="md:col-span-12 glass-panel p-8 rounded-2xl">
+                <h3 class="font-display text-2xl mb-8 text-white text-center">Mecha Registry</h3>
+                <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                    <!-- Mecha Cards (Condensed) -->
+                    <div class="bg-white/5 p-4 rounded-xl border border-white/5 hover:border-mech-blue transition-colors">
+                        <div class="text-[10px] text-gray-500 font-mono mb-1">Ψガンダムローズ</div>
+                        <div class="text-sm font-bold text-neon-red">八千代</div>
+                        <div class="mt-2 text-[10px] bg-neon-red/10 text-neon-red inline-block px-1">TYPE DA</div>
+                    </div>
+                    <div class="bg-white/5 p-4 rounded-xl border border-white/5 hover:border-mech-blue transition-colors">
+                        <div class="text-[10px] text-gray-500 font-mono mb-1">Ψハルファスベーゼ</div>
+                        <div class="text-sm font-bold text-mech-blue">オロ〇ミン</div>
+                        <div class="mt-2 text-[10px] bg-mech-blue/10 text-mech-blue inline-block px-1">TYPE AA</div>
+                    </div>
+                    <div class="bg-white/5 p-4 rounded-xl border border-white/5 hover:border-mech-blue transition-colors">
+                        <div class="text-[10px] text-gray-500 font-mono mb-1">ヒュッケバイン30th</div>
+                        <div class="text-sm font-bold text-mech-blue">炎のナイト</div>
+                        <div class="mt-2 text-[10px] bg-mech-blue/10 text-mech-blue inline-block px-1">TYPE AA</div>
+                    </div>
+                    <div class="bg-white/5 p-4 rounded-xl border border-white/5 hover:border-mech-blue transition-colors">
+                        <div class="text-[10px] text-gray-500 font-mono mb-1">バルバタウロス</div>
+                        <div class="text-sm font-bold text-neon-red">アラン</div>
+                        <div class="mt-2 text-[10px] bg-neon-red/10 text-neon-red inline-block px-1">TYPE SA</div>
+                    </div>
+                    <div class="bg-white/5 p-4 rounded-xl border border-white/5 hover:border-mech-blue transition-colors">
+                        <div class="text-[10px] text-gray-500 font-mono mb-1">天ミナC</div>
+                        <div class="text-sm font-bold text-mech-blue">ライナセロス</div>
+                        <div class="mt-2 text-[10px] bg-mech-blue/10 text-mech-blue inline-block px-1">TYPE SD</div>
+                    </div>
+                    <div class="bg-white/5 p-4 rounded-xl border border-white/5 hover:border-mech-blue transition-colors">
+                        <div class="text-[10px] text-gray-500 font-mono mb-1">ジガンスクード</div>
+                        <div class="text-sm font-bold text-neon-red">プリコネ</div>
+                        <div class="mt-2 text-[10px] bg-neon-red/10 text-neon-red inline-block px-1">TYPE SA</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Battle Log Table -->
+        <section id="battle-log" class="glass-panel rounded-2xl overflow-hidden mb-20">
+            <div class="p-8 border-b border-white/10 flex justify-between items-center bg-white/5">
+                <div>
+                    <h3 class="font-display text-2xl text-white">Battle Log Analysis</h3>
+                    <p class="text-xs text-gray-500 font-mono mt-1">REAL-TIME DATA ACQUISITION... DONE.</p>
+                </div>
+                <div class="hidden md:flex gap-2">
+                    <span class="w-2 h-2 rounded-full bg-mech-blue animate-pulse"></span>
+                    <span class="w-2 h-2 rounded-full bg-mech-green animate-pulse"></span>
+                    <span class="w-2 h-2 rounded-full bg-mech-orange animate-pulse"></span>
+                </div>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-white/5 text-[10px] uppercase tracking-widest text-gray-400 font-mono">
+                            <th class="p-4 border-b border-white/10">Turn</th>
+                            <th class="p-4 border-b border-white/10">Action</th>
+                            <th class="p-4 border-b border-white/10">Target</th>
+                            <th class="p-4 border-b border-white/10 text-right">Impact</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-sm font-mono text-gray-400">
+                        <tr class="battle-log-row transition-colors">
+                            <td class="p-4 border-b border-white/5">001</td>
+                            <td class="p-4 border-b border-white/5">★ローゼス・ハリケーン</td>
+                            <td class="p-4 border-b border-white/5">ライナセロス</td>
+                            <td class="p-4 border-b border-white/5 text-right text-neon-red">54 DMG</td>
+                        </tr>
+                        <tr class="battle-log-row transition-colors bg-white/2">
+                            <td class="p-4 border-b border-white/5">002</td>
+                            <td class="p-4 border-b border-white/5">★ローゼス・ハリケーン</td>
+                            <td class="p-4 border-b border-white/5 text-mech-blue">オロ〇ミン</td>
+                            <td class="p-4 border-b border-white/5 text-right text-neon-red font-bold">444 DMG</td>
+                        </tr>
+                        <tr class="battle-log-row transition-colors">
+                            <td class="p-4 border-b border-white/5">003</td>
+                            <td class="p-4 border-b border-white/5 text-mech-orange italic">SYSTEM OVERHEAT</td>
+                            <td class="p-4 border-b border-white/5">八千代</td>
+                            <td class="p-4 border-b border-white/5 text-right">SPD DOWN</td>
+                        </tr>
+                        <tr class="battle-log-row transition-colors">
+                            <td class="p-4 border-b border-white/5">014</td>
+                            <td class="p-4 border-b border-white/5">★バーニングファイア</td>
+                            <td class="p-4 border-b border-white/5">プリコネ</td>
+                            <td class="p-4 border-b border-white/5 text-right text-mech-blue font-bold">562 DMG [DEFEATED]</td>
+                        </tr>
+                        <tr class="battle-log-row transition-colors bg-white/2">
+                            <td class="p-4 border-b border-white/5">018</td>
+                            <td class="p-4 border-b border-white/5">Precision Strike</td>
+                            <td class="p-4 border-b border-white/5">八千代</td>
+                            <td class="p-4 border-b border-white/5 text-right text-mech-blue">72 DMG [DEFEATED]</td>
+                        </tr>
+                        <tr class="battle-log-row transition-colors">
+                            <td class="p-4 border-b border-white/5">027</td>
+                            <td class="p-4 border-b border-white/5">★バーニングファイア</td>
+                            <td class="p-4 border-b border-white/5">アラン</td>
+                            <td class="p-4 border-b border-white/5 text-right text-mech-blue">506 DMG [DEFEATED]</td>
+                        </tr>
+                        <tr class="battle-log-row transition-colors bg-white/2">
+                            <td class="p-4 border-b border-white/5">048</td>
+                            <td class="p-4 border-b border-white/5 text-mech-blue">炎のナイト Assault</td>
+                            <td class="p-4 border-b border-white/5">アラン</td>
+                            <td class="p-4 border-b border-white/5 text-right text-mech-blue">77 DMG [DEFEATED]</td>
+                        </tr>
+                        <tr class="battle-log-row transition-colors">
+                            <td class="p-4 border-b border-white/5">122</td>
+                            <td class="p-4 border-b border-white/5 text-mech-blue">Black Hole Cannon</td>
+                            <td class="p-4 border-b border-white/5">アカハナ</td>
+                            <td class="p-4 border-b border-white/5 text-right text-mech-blue font-bold">241 DMG [DEFEATED]</td>
+                        </tr>
+                        <tr class="battle-log-row transition-colors bg-mech-blue/10">
+                            <td class="p-4 border-b border-white/5 font-bold">124</td>
+                            <td class="p-4 border-b border-white/5 text-white font-bold">FINAL CRITICAL HIT</td>
+                            <td class="p-4 border-b border-white/5">スレッタ</td>
+                            <td class="p-4 border-b border-white/5 text-right text-mech-blue font-black">154 DMG [MISSION CLEAR]</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Characters Profile Carousel-like grid -->
+        <section class="mb-32">
+            <h3 class="font-display text-2xl text-white mb-10 text-center uppercase tracking-widest">Pilot Profiles</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                
+                <!-- Oro-min -->
+                <div class="glass-panel p-6 rounded-2xl relative group overflow-hidden border-mech-blue/30">
+                    <div class="absolute top-0 right-0 p-4 font-display text-4xl text-white/5 font-black">R6</div>
+                    <div class="mb-4">
+                        <span class="text-[10px] text-mech-blue font-mono">LEADER / SECRET SOCIETY</span>
+                        <h4 class="text-xl font-bold text-white">オロ〇ミン</h4>
+                    </div>
+                    <p class="text-xs text-gray-400 mb-4 line-clamp-3">卓越した操縦技術（8000超）とカリスマ性。高いコミュニケーション能力で組織を束ねる絶対的リーダー。</p>
+                    <div class="flex items-center gap-2">
+                        <div class="h-1 flex-grow bg-white/10 rounded-full overflow-hidden">
+                            <div class="h-full bg-mech-blue" style="width: 85%"></div>
+                        </div>
+                        <span class="text-[10px] font-mono">RANK 06</span>
+                    </div>
+                </div>
+
+                <!-- Night of Flame -->
+                <div class="glass-panel p-6 rounded-2xl relative group overflow-hidden border-mech-orange/30">
+                    <div class="absolute top-0 right-0 p-4 font-display text-4xl text-white/5 font-black">R36</div>
+                    <div class="mb-4">
+                        <span class="text-[10px] text-mech-orange font-mono">VETERAN / PASSION</span>
+                        <h4 class="text-xl font-bold text-white">炎のナイト</h4>
+                    </div>
+                    <p class="text-xs text-gray-400 mb-4 line-clamp-3">豊富な知識とポジティブな性格。相棒AIエアと共に極限の戦果を叩き出す老練の戦士。</p>
+                    <div class="flex items-center gap-2">
+                        <div class="h-1 flex-grow bg-white/10 rounded-full overflow-hidden">
+                            <div class="h-full bg-mech-orange" style="width: 70%"></div>
+                        </div>
+                        <span class="text-[10px] font-mono">RANK 36</span>
+                    </div>
+                </div>
+
+                <!-- Yachiyo -->
+                <div class="glass-panel p-6 rounded-2xl relative group overflow-hidden border-neon-red/30">
+                    <div class="absolute top-0 right-0 p-4 font-display text-4xl text-white/5 font-black">R1</div>
+                    <div class="mb-4">
+                        <span class="text-[10px] text-neon-red font-mono">ACE / MERCENARY</span>
+                        <h4 class="text-xl font-bold text-white">八千代.</h4>
+                    </div>
+                    <p class="text-xs text-gray-400 mb-4 line-clamp-3">全ステータス10000超えの化け物。傭兵として戦場を渡り歩く、MST最強の象徴。</p>
+                    <div class="flex items-center gap-2">
+                        <div class="h-1 flex-grow bg-white/10 rounded-full overflow-hidden">
+                            <div class="h-full bg-neon-red" style="width: 100%"></div>
+                        </div>
+                        <span class="text-[10px] font-mono">RANK 01</span>
+                    </div>
+                </div>
+
+                <!-- Alan -->
+                <div class="glass-panel p-6 rounded-2xl relative group overflow-hidden border-neon-red/30">
+                    <div class="absolute top-0 right-0 p-4 font-display text-4xl text-white/5 font-black">R11</div>
+                    <div class="mb-4">
+                        <span class="text-[10px] text-neon-red font-mono">STRIKER / OGA KEN</span>
+                        <h4 class="text-xl font-bold text-white">アラン</h4>
+                    </div>
+                    <p class="text-xs text-gray-400 mb-4 line-clamp-3">現在最も勢いのあるプレイヤー。操縦技術6000を超え、苛烈な攻めで敵を圧倒する。</p>
+                    <div class="flex items-center gap-2">
+                        <div class="h-1 flex-grow bg-white/10 rounded-full overflow-hidden">
+                            <div class="h-full bg-neon-red" style="width: 78%"></div>
+                        </div>
+                        <span class="text-[10px] font-mono">RANK 11</span>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+    </main>
+
+    <!-- Scroll Progress Indicator -->
+    <div class="fixed bottom-0 left-0 h-1 bg-mech-blue z-50 transition-all duration-300" id="scroll-progress"></div>
+
+    <script>
+        // Smooth transition for scroll progress
+        window.onscroll = function() {
+            let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            let scrolled = (winScroll / height) * 100;
+            document.getElementById("scroll-progress").style.width = scrolled + "%";
+        };
+
+        // Subtle animation triggers for sections
+        const observerOptions = {
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('opacity-100');
+                    entry.target.classList.remove('opacity-0', 'translate-y-10');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('article, section > div').forEach(el => {
+            el.classList.add('transition-all', 'duration-1000', 'opacity-0', 'translate-y-10');
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>
