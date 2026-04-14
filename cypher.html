@@ -2,6 +2,7 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Secret Society CYPHER - ボブの秘密基地</title>
     
     <style>
@@ -10,13 +11,12 @@
             --accent-color: #00d4ff;
             --text-color: #e0e0e0;
             --card-bg: #1a1c1e;
-            /* キャラクターカラー */
-            --color-oromin: #00d4ff;   /* 電脳ブルー */
-            --color-knight: #ff4d4d;   /* 炎のレッド */
-            --color-bob: #ffeb3b;      /* トリックイエロー */
-            --color-ozuna: #a200ff;    /* 暴走パープル */
-            --color-rhino: #ffc107;    /* 黄金のアンバー */
-            --color-all: #ffffff;      /* 共鳴ホワイト */
+            --color-oromin: #00d4ff;
+            --color-knight: #ff4d4d;
+            --color-bob: #ffeb3b;
+            --color-ozuna: #a200ff;
+            --color-rhino: #ffc107;
+            --color-all: #ffffff;
         }
 
         body {
@@ -29,64 +29,62 @@
 
         /* ヘッダー */
         header {
-            width: 100%; background: rgba(0,0,0,0.9); height: 60px;
+            width: 100%; background: rgba(0,0,0,0.95); height: 60px;
             display: flex; justify-content: space-between; align-items: center;
             position: sticky; top: 0; z-index: 1000;
-            border-bottom: 2px solid var(--accent-color); padding: 0 20px; box-sizing: border-box;
+            border-bottom: 2px solid var(--accent-color); padding: 0 15px; box-sizing: border-box;
         }
-        .nav-item { color: #888; text-decoration: none; font-size: 0.9rem; margin-left: 15px; }
-        .nav-item:hover { color: var(--accent-color); }
+        .header-title { text-decoration: none; color: var(--accent-color); font-weight: bold; }
+        .nav-item { color: #888; text-decoration: none; font-size: 0.85rem; margin-left: 10px; }
 
-        /* プレイヤーエリア */
+        /* プレイヤーエリア（スマホで隠れないよう調整） */
         .player-section {
-            width: 100%; max-width: 600px; padding: 40px 20px;
+            width: 100%; max-width: 600px; padding: 20px 15px;
             text-align: center; position: sticky; top: 60px;
-            background: var(--bg-color); z-index: 900;
+            background: var(--bg-color); z-index: 900; box-sizing: border-box;
         }
-        h1 { font-size: 1.8rem; margin-bottom: 20px; letter-spacing: 2px; color: var(--accent-color); text-shadow: 0 0 10px rgba(0,212,255,0.5); }
-        audio { width: 100%; filter: invert(1); opacity: 0.8; }
+        h1 { font-size: 1.4rem; margin: 0 0 15px 0; letter-spacing: 2px; color: var(--accent-color); }
+        audio { width: 100%; height: 45px; }
 
         /* 歌詞エリア */
         .lyrics-container {
-            width: 100%; max-width: 700px; padding: 0 20px 100px 20px; box-sizing: border-box;
+            width: 100%; max-width: 700px; padding: 20px 15px 100px 15px; box-sizing: border-box;
         }
 
         .verse {
-            margin-bottom: 50px; padding: 25px; border-radius: 10px;
+            margin-bottom: 35px; padding: 20px; border-radius: 10px;
             background: var(--card-bg); border-left: 5px solid transparent;
-            transition: 0.3s;
         }
-        .verse:hover { transform: translateX(10px); background: #25282c; }
 
-        .character-name { font-weight: bold; font-size: 1.2rem; margin-bottom: 15px; display: block; }
-        .lyrics-text { line-height: 2; font-size: 1.05rem; white-space: pre-wrap; }
+        .character-name { font-weight: bold; font-size: 1.1rem; margin-bottom: 10px; display: block; }
+        .lyrics-text { line-height: 1.8; font-size: 1rem; white-space: pre-wrap; }
 
-        /* キャラごとのスタイル */
+        /* キャラごとのカラー */
         .v-oromin { border-color: var(--color-oromin); }
         .v-oromin .character-name { color: var(--color-oromin); }
-        
         .v-knight { border-color: var(--color-knight); }
         .v-knight .character-name { color: var(--color-knight); }
-
         .v-bob { border-color: var(--color-bob); }
         .v-bob .character-name { color: var(--color-bob); }
-
         .v-ozuna { border-color: var(--color-ozuna); }
         .v-ozuna .character-name { color: var(--color-ozuna); }
-
         .v-rhino { border-color: var(--color-rhino); }
         .v-rhino .character-name { color: var(--color-rhino); }
+        .v-all { border-color: var(--color-all); border-left: none; border-top: 3px solid var(--color-all); text-align: center; }
+        .v-all .character-name { color: var(--color-all); }
 
-        .v-all { border-color: var(--color-all); background: linear-gradient(to right, #1a1c1e, #333); }
-        .v-all .character-name { color: var(--color-all); text-align: center; }
-        .v-all .lyrics-text { text-align: center; font-weight: bold; }
-
+        /* スマホ用微調整 */
+        @media (max-width: 480px) {
+            h1 { font-size: 1.1rem; }
+            .lyrics-text { font-size: 0.9rem; }
+            .verse { padding: 15px; }
+        }
     </style>
 </head>
 <body>
 
 <header>
-    <a href="index.html" style="text-decoration:none; color:var(--accent-color); font-weight:bold;">ボブの秘密基地</a>
+    <a href="index.html" class="header-title">ボブの秘密基地</a>
     <nav>
         <a href="hunter.html" class="nav-item">Hunter</a>
         <a href="novels.html" class="nav-item">Novels</a>
@@ -94,7 +92,7 @@
 </header>
 
 <div class="player-section">
-    <h1>Secret Society CYPHER vs オガ研</h1>
+    <h1>Secret Society CYPHER</h1>
     <audio controls>
         <source src="Secret Society CYPHER.mp3" type="audio/mpeg">
         お使いのブラウザはオーディオ再生に対応していません。
@@ -163,7 +161,7 @@ Secret Societyで頂点へ到達</div>
 Secret Societyで完成する奇跡</div>
     </div>
 
-    <div class="verse v-all">
+     <div class="verse v-all">
         <span class="character-name">▼ALL</span>
         <div class="lyrics-text">勝利の証明、この共鳴
 6人で構成、崩れぬ同盟
