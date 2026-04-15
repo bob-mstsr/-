@@ -127,14 +127,20 @@
         }
 
         .card-img { 
-            height: 100px; 
-            background: #333; 
+            height: 120px; /* GIFが見えやすいよう少し高さを出すのがおすすめ */
+            background: #000; /* 背景を黒にすると映像が引き締まります */
             display: flex; 
             align-items: center; 
             justify-content: center; 
+            overflow: hidden; /* 枠からはみ出た画像を隠す */
             font-size: 2.5rem;
             border-bottom: 1px solid #444;
         }
+        .card-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* 枠いっぱいに表示。比率が違う場合は端がカットされます */    
+}
 
         .card-content { padding: 15px; }
         .card-title { margin: 0 0 5px 0; color: var(--accent-color); font-size: 1.1rem; }
@@ -168,80 +174,106 @@
         <div class="container">
             <div class="grid">
                  <a href="unit.html" class="card">
-                    <div class="card-img">🤖</div>
+                    <div class="card-img">
+        <img src="unit.gif" alt="Unit Database" class="gif-icon">
+    </div>
                     <div class="card-content">
                         <h3 class="card-title">Unit Database</h3>
                         <p class="card-desc">機体ステータス・特殊能力データ</p>
                     </div>
                  </a>
                  <a href="derivatives.html" class="card">
-                    <div class="card-img">🧪</div>
+                    <div class="card-img">
+        <img src="derivatives.gif" alt="Derivative Table" class="gif-icon">
+    </div>
                     <div class="card-content">
                         <h3 class="card-title">Derivative Table</h3>
-                       <p class="card-desc">機体開発・派生表<br>※オロさん提供　圧倒的感謝！</p>
+                       <p class="card-desc">機体開発・派生表<br>※オロさん提供 圧倒的感謝！</p>
                    </div>
                 </a>
                 <a href="arms.html" class="card">
-                    <div class="card-img">💣</div>
+                    <div class="card-img">
+        <img src="arms.gif" alt="Arms depot" class="gif-icon">
+    </div>
                     <div class="card-content">
                         <h3 class="card-title">Arms depot</h3>
                         <p class="card-desc">武器・装備データと武器庫システム</p>
                     </div>
                 </a>
                 <a href="javascript:void(0)" class="card under-const">
-                    <div class="card-img">⚔️</div>
+                               <div class="card-img">
+        <img src="battle.gif" alt="Battle Data" class="gif-icon">
+    </div>
                     <div class="card-content">
                         <h3 class="card-title">Battle Data (工事中)</h3>
                         <p class="card-desc">戦闘記録・大会結果</p>
                     </div>
                 </a>
                 <a href="novels.html" class="card">
-                    <div class="card-img">📖</div>
+                    <div class="card-img">
+        <img src="novels.gif" alt="Novels" class="gif-icon">
+    </div>
                     <div class="card-content">
                         <h3 class="card-title">Novels</h3>
                         <p class="card-desc">戦闘記録の小説アーカイブ</p>
                     </div>
                 </a>
                 <a href="tactics.html" class="card">
-                    <div class="card-img">🚩</div>
+                    <div class="card-img">
+        <img src="tactics.gif" alt="Tactics" class="gif-icon">
+    </div>
                     <div class="card-content">
                         <h3 class="card-title">Tactics</h3>
                         <p class="card-desc">個人・団体戦術の基礎知識</p>
                     </div>
                 </a>
-                <a href="hunter.html" class="card">
-                    <div class="card-img">🏹</div>
-                    <div class="card-content">
-                        <h3 class="card-title">Hunter Chance</h3>
-                        <p class="card-desc">システム攻略情報</p>
-                    </div>
-                </a>
-                <a href="trivia.html" class="card">
-                    <div class="card-img">🔍</div>
-                    <div class="card-content">
-                        <h3 class="card-title">Trivia</h3>
-                        <p class="card-desc">スキル・地形豆知識</p>
-                    </div>
-                </a>
-                <a href="emoji.html" class="card">
-                    <div class="card-img">😆</div>
-                    <div class="card-content">
-                        <h3 class="card-title">Emoji</h3>
-                        <p class="card-desc">html絵文字タグ一覧</p>
-                    </div>
-                </a>
-                <a href="javascript:void(0)" class="card under-const">
-                    <div class="card-img">⭕</div>
-                    <div class="card-content">
-                        <h3 class="card-title">Link (工事中)</h3>
-                        <p class="card-desc">外部リンク集</p>
-                   </div>
-                </a>
-             <a href="secret.html" id="secret-card" class="card" style="display: none; opacity: 0; transform: translateY(20px); transition: opacity 2s ease, transform 2s ease;">
-    <div class="card-img">🕶️</div>
+               <a href="hunter.html" class="card">
+    <div class="card-img">
+        <img src="hunter.gif" alt="Hunter Chance" class="gif-icon">
+    </div>
+    <div class="card-content">
+        <h3 class="card-title">Hunter Chance</h3>
+        <p class="card-desc">システム攻略情報</p>
+    </div>
+</a>
+
+<a href="trivia.html" class="card">
+    <div class="card-img">
+        <img src="trivia.gif" alt="Trivia" class="gif-icon">
+    </div>
+    <div class="card-content">
+        <h3 class="card-title">Trivia</h3>
+        <p class="card-desc">スキル・地形豆知識</p>
+    </div>
+</a>
+
+<a href="emoji.html" class="card">
+    <div class="card-img">
+        <img src="emoji.gif" alt="Emoji" class="gif-icon">
+    </div>    
+    <div class="card-content">
+        <h3 class="card-title">Emoji</h3>
+        <p class="card-desc">html絵文字タグ一覧</p>
+    </div>
+</a>
+
+<a href="javascript:void(0)" class="card under-const">
+    <div class="card-img">
+        <img src="link.gif" alt="Link" class="gif-icon">
+    </div>
+    <div class="card-content">
+        <h3 class="card-title">Link (工事中)</h3>
+        <p class="card-desc">外部リンク集</p>
+   </div>
+</a>
+
+<a href="secret.html" id="secret-card" class="card" style="display: none; opacity: 0; transform: translateY(20px); transition: opacity 2s ease, transform 2s ease;">
+    <div class="card-img">
+        <img src="secret.gif" alt="Secret Room" class="gif-icon">
+    </div>
     <div class="card-content">
         <h3 class="card-title">Secret Room</h3>
-        <p class="card-desc"style="color: #00ff00; font-family: monospace;">>迚ｩ鄂ｮ縺ｧ縺吮飭...侵入成功&gt;&gt;&gt;ACCESS GRANTED</p>
+        <p class="card-desc" style="color: #00ff00; font-family: monospace;">>迚ｩ鄂ｮ縺ｧ縺吮飭...侵入成功&gt;&gt;&gt;ACCESS GRANTED</p>
     </div>
 </a>
             </div>

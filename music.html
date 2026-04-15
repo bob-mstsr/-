@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ボブのミュージックルーム 🎵</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@700;900&display=swap');
+
+        :root {
+            --bg-color: #fffef5; 
+            --text-color: #555;
+            --accent-pink: #ff85a1;
+            --accent-blue: #74c0fc;
+            --card-bg: #ffffff;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Zen Maru Gothic', sans-serif;
+            background-color: var(--bg-color);
+            background-image: 
+                radial-gradient(circle, #ffdee9 2px, transparent 2px),
+                radial-gradient(circle, #e0f2fe 2px, transparent 2px);
+            background-size: 40px 40px;
+            background-position: 0 0, 20px 20px;
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .header-section { text-align: center; margin-bottom: 40px; }
+        .bubble {
+            background: #fff; border: 3px solid var(--text-color);
+            padding: 10px 20px; border-radius: 50px; position: relative;
+            display: inline-block; font-weight: 900;
+        }
+        .bubble::after {
+            content: ''; position: absolute; bottom: -15px; left: 50%;
+            border-width: 15px 15px 0; border-style: solid;
+            border-color: var(--text-color) transparent; margin-left: -15px;
+        }
+
+        h1 { font-size: 2.5rem; margin-top: 20px; color: var(--text-color); text-shadow: 2px 2px 0 #fff; }
+
+        /* テーブルのデザイン */
+        .music-table-container {
+            width: 100%; max-width: 800px;
+            background: var(--card-bg);
+            border-radius: 20px;
+            box-shadow: 0 10px 0 #eee;
+            overflow: hidden;
+            border: 3px solid #eee;
+        }
+
+        table {
+            width: 100%; border-collapse: collapse; text-align: left;
+        }
+
+        thead { background-color: var(--accent-blue); color: #fff; }
+        th { padding: 15px; font-size: 1.1rem; }
+
+        td { padding: 15px; border-bottom: 2px dashed #eee; line-height: 1.6; }
+        tr:last-child td { border-bottom: none; }
+
+        /* 曲名リンクのスタイル */
+        .song-link {
+            color: var(--accent-pink);
+            text-decoration: none;
+            font-weight: 900;
+            display: flex;
+            align-items: center;
+            transition: 0.2s;
+        }
+        .song-link:hover { transform: scale(1.05); color: var(--accent-blue); }
+        .song-link::before { content: '💿'; margin-right: 8px; }
+
+        .back-home {
+            margin-top: 50px; text-decoration: none; color: #aaa; font-weight: bold;
+            padding: 10px 20px; border: 3px dashed #ddd; border-radius: 20px; transition: 0.3s;
+        }
+        .back-home:hover { color: var(--accent-pink); border-color: var(--accent-pink); background: #fff; }
+
+        @media (max-width: 600px) {
+            h1 { font-size: 1.8rem; }
+            th, td { padding: 10px; font-size: 0.9rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header-section">
+        <div class="bubble">お耳汚しにどうぞ！</div>
+        <h1>ボブの音楽室</h1>
+    </div>
+
+    <div class="music-table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th style="width: 40%;">曲名</th>
+                    <th>曲の説明</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <a href="cypher.html" class="song-link">Secret Society CYPHER</a>
+                    </td>
+                    <td>26.4月に行われた秘密結社vsオガ研の交流戦をテーマに、秘密結社のメンバーたちがマイクリレー！</td>
+                </tr>
+                </tbody>
+        </table>
+    </div>
+
+    <a href="secret.html" class="back-home">楽屋へもどる</a>
+
+</body>
+</html>
