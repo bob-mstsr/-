@@ -136,30 +136,59 @@ $(document).ready(function () {
     function initUnitTable() {
         const csvFile = "unit_26.3.24.csv";
         Papa.parse(csvFile, {
-            download: true, header: true, skipEmptyLines: true, encoding: "UTF-8",
+            download: true,
+            header: true,
+            skipEmptyLines: true,
+            encoding: "UTF-8",
             complete: function (results) {
                 const headers = results.meta.fields;
+                
+                // 1. ヘッダーの生成
                 let tableHtml = '<thead><tr>';
                 headers.forEach(h => tableHtml += `<th>${h.trim()}</th>`);
                 tableHtml += '</tr></thead><tbody id="tableBody"></tbody>';
                 $('#unitTable').html(tableHtml);
 
+                const tableBody = $('#tableBody');
+
+                // 2. データの生成（No列にフォーム連携リンクを追加）
                 results.data.forEach(row => {
-                    let tr = '<tr>';
-                    headers.forEach(h => tr += `<td>${row[h] ?? row[h.trim()] ?? ''}</td>`);
-                    tr += '</tr>';
-                    $('#tableBody').append(tr);
+                    let rowHtml = '<tr>';
+                    headers.forEach((h, index) => {
+                        let cellValue = row[h] ? row[h].trim() : "";
+
+                        // 1列目（No列）の場合、リンク化する
+                        if (index === 0) {
+                            const noVal = cellValue; 
+                            const nameVal = row["機体名"] || "";
+                            
+                            // --- 設定エリア ---
+                            const formBaseUrl = "https://docs.google.com/forms/d/e/1FAIpQLSc1qt_Bgvh8kwdOUtjc5qPOKl1cGoBn0jVaHW1E5oBMCIonfQ/viewform";
+                            const entryIdNo = "entry.701929867";
+                            const entryIdName = "entry.501950524";
+                            // ----------------
+                            
+                            const formUrl = `${formBaseUrl}?${entryIdNo}=${encodeURIComponent(noVal)}&${entryIdName}=${encodeURIComponent(nameVal)}&usp=pp_url`;
+                            cellValue = `<a href="${formUrl}" target="_blank" class="no-link">${noVal}</a>`;
+                        }
+                        rowHtml += `<td>${cellValue}</td>`;
+                    });
+                    rowHtml += '</tr>';
+                    tableBody.append(rowHtml);
                 });
 
+                // 3. DataTablesの初期化（scrollXをtrueにする）
                 table = $('#unitTable').DataTable({
                     dom: 'lfrtip',
                     lengthMenu: [[20, 50, 100, -1], [20, 50, 100, "全表示"]],
-                    pageLength: 50, scrollX: false, autoWidth: false,
+                    pageLength: 50,
+                    scrollX: true, // 横スクロールを有効化
+                    autoWidth: false,
                     language: { url: "https://cdn.datatables.net/plug-ins/1.13.6/i18n/ja.json" },
                     initComplete: function() {
                         $('.dataTables_length').detach().appendTo('#lenMenu');
                         $('.dataTables_filter').detach().appendTo('#customFilter');
-                        syncScrollbars(); // スクロールバーの同期設定
+                        syncScrollbars();
                     }
                 });
             }
