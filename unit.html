@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unit Database - ボブの秘密基地</title>
+    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
+
+    <style>
+        :root {
+            --bg-color: #1a1c1e;
+            --accent-color: #00d4ff;
+            --text-color: #e0e0e0;
+            --card-bg: #25282c;
+            --border-color: #444;
+        }
+
+        body { font-family: sans-serif; margin: 0; background: var(--bg-color); color: var(--text-color); height: 100vh; display: flex; flex-direction: column; }
+
+        /* ヘッダー */
+        header {
+            background: rgba(0,0,0,0.95); height: 60px; display: flex; 
+            justify-content: space-between; align-items: center; 
+            z-index: 1000; border-bottom: 2px solid var(--accent-color); 
+            padding: 0 15px; flex-shrink: 0;
+        }
+        .logo-link { text-decoration: none; font-weight: bold; font-size: 1.1rem; color: var(--accent-color); }
+        .nav-links { display: flex; gap: 10px; overflow-x: auto; white-space: nowrap; }
+        .nav-item-custom { color: #e0e0e0; text-decoration: none; font-size: 0.85rem; padding: 6px 10px; border-radius: 4px; border: 1px solid transparent; }
+        .nav-item-custom:hover { background: rgba(0, 212, 255, 0.2); border-color: var(--accent-color); }
+
+        /* 検索エリア */
+        .toolbar {
+            display: flex; flex-wrap: wrap; align-items: center; gap: 20px;
+            padding: 10px 15px; background: #222; border-bottom: 1px solid var(--accent-color);
+            font-size: 13px; flex-shrink: 0;
+        }
+        .toolbar input { background: #333; color: white; border: 1px solid var(--accent-color); padding: 4px 8px; border-radius: 4px; }
+        .range-input { width: 70px; }
+
+        /* 上部スクロールバー用コンテナ */
+        .top-scrollbar-wrapper {
+            width: 100%; overflow-x: auto; background: #222; flex-shrink: 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .top-scrollbar-content { height: 1px; }
+
+        /* テーブルエリア */
+        .table-wrapper { 
+            flex-grow: 1; 
+            overflow: auto; /* ここでスクロールを管理 */
+            background: var(--card-bg);
+            position: relative;
+        }
+        
+        #unitTable { width: 100% !important; font-size: 12px; border-collapse: separate; border-spacing: 0; }
+        #unitTable th, #unitTable td { 
+            white-space: nowrap; padding: 8px 12px; 
+            border-bottom: 1px solid var(--border-color); border-right: 1px solid var(--border-color);
+            background-color: var(--card-bg);
+            color: var(--text-color);
+        }
+
+        /* 縦固定（ヘッダー項目名） */
+        #unitTable thead th { 
+            position: sticky; top: 0; z-index: 100; 
+            background-color: #333 !important; color: var(--accent-color); 
+        }
+
+        /* 横固定（1列目: No, 2列目: 機体名） */
+        #unitTable th:nth-child(1), #unitTable td:nth-child(1) { position: sticky; left: 0; z-index: 10; border-right: 2px solid var(--accent-color); }
+        #unitTable th:nth-child(2), #unitTable td:nth-child(2) { position: sticky; left: 55px; z-index: 10; border-right: 2px solid var(--accent-color); }
+        
+        /* 角の固定用 */
+        #unitTable thead th:nth-child(1) { z-index: 110; left: 0; }
+        #unitTable thead th:nth-child(2) { z-index: 110; left: 55px; }
+
+        /* Noリンクのデザイン（青くならないように） */
+        .no-link {
+            color: var(--text-color); /* 通常の文字色と同じに */
+            text-decoration: underline; /* リンクとわかるように下線だけ引く */
+            font-weight: bold;
+        }
+        .no-link:hover {
+            color: var(--accent-color);
+        }
+
+        /* スクロールバーのカスタマイズ */
+        .table-wrapper::-webkit-scrollbar, .top-scrollbar-wrapper::-webkit-scrollbar { height: 12px; width: 12px; }
+        .table-wrapper::-webkit-scrollbar-thumb, .top-scrollbar-wrapper::-webkit-scrollbar-thumb { background: var(--accent-color); border-radius: 10px; }
+        .table-wrapper::-webkit-scrollbar-track, .top-scrollbar-wrapper::-webkit-scrollbar-track { background: #222; }
+
+/* フォーム誘導メッセージのスタイル */
+        .form-notice {
+            color: var(--accent-color);
+            font-weight: bold;
+            margin-left: auto; /* 右端に寄せる */
+            padding: 5px 10px;
+            border: 1px dashed var(--accent-color);
+            border-radius: 4px;
+            background: rgba(0, 212, 255, 0.05);
+            animation: blink 2s infinite; /* 少し点滅させて気づきやすくする */
+        }
+
+        @keyframes blink {
+            0% { opacity: 1; }
+            50% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+
+        /* 画面が狭いときはメッセージを下に送る */
+        @media (max-width: 800px) {
+            .form-notice {
+                margin-left: 0;
+                width: 100%;
+                text-align: center;
+                font-size: 11px;
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+<header>
+    <a href="index.html#main" class="logo-link">ボブの秘密基地</a>
+    <nav class="nav-links">
+        <a href="unit.html" class="nav-item-custom">Unit</a>
+        <a href="derivatives.html" class="nav-item-custom">Derivatives</a>
+        <a href="arms.html" class="nav-item-custom">Arms</a>
+        <a href="battle.html" class="nav-item-custom">Battle</a>
+        <a href="novels.html" class="nav-item-custom">Novels</a>
+        <a href="tactics.html" class="nav-item-custom">Tactics</a>
+        <a href="hunter.html" class="nav-item-custom">Hunter</a>
+        <a href="trivia.html" class="nav-item-custom">Trivia</a>
+        <a href="emoji.html" class="nav-item-custom">Emoji</a>
+        <a href="link.html" class="nav-item-custom">Link</a>
+    </nav>
+</header>
+
+<div class="toolbar">
+    <div id="lenMenu"></div>
+    <div id="customFilter"></div>
+    <div>
+        <strong>No範囲:</strong>
+        <input type="number" id="min" class="range-input" placeholder="Min"> ～ 
+        <input type="number" id="max" class="range-input" placeholder="Max">
+    </div>
+    <div class="form-notice">
+        情報提供頂ける方は、機体NoをクリックしてGoogleフォームからお願いします！
+    </div>
+</div>
+<div class="top-scrollbar-wrapper" id="topScroll">
+    <div class="top-scrollbar-content" id="topScrollContent"></div>
+</div>
+
+<div class="table-wrapper" id="mainScroll">
+    <table id="unitTable" class="display nowrap"></table>
+</div>
+
+<script>
+$(document).ready(function () {
+    let table = null;
+
+    // No範囲検索ロジック
+    $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
+        let min = parseInt($('#min').val(), 10);
+        let max = parseInt($('#max').val(), 10);
+        let noValue = parseFloat(data[0]) || 0; 
+        return (isNaN(min) && isNaN(max)) || (isNaN(min) && noValue <= max) || (min <= noValue && isNaN(max)) || (min <= noValue && noValue <= max);
+    });
+
+    function initUnitTable() {
+        const csvFile = "unit_26.3.24.csv";
+        Papa.parse(csvFile, {
+            download: true, header: true, skipEmptyLines: true, encoding: "UTF-8",
+            complete: function (results) {
+                const headers = results.meta.fields;
+                let tableHtml = '<thead><tr>';
+                headers.forEach(h => tableHtml += `<th>${h.trim()}</th>`);
+                tableHtml += '</tr></thead><tbody id="tableBody"></tbody>';
+                $('#unitTable').html(tableHtml);
+
+                const tableBody = $('#tableBody');
+                results.data.forEach(row => {
+                    let rowHtml = '<tr>';
+                    headers.forEach((h, index) => {
+                        let cellValue = row[h] ? row[h].trim() : "";
+
+                        // 1列目（No列）をリンク化する
+                        if (index === 0) {
+                            const noVal = cellValue; 
+                            const nameVal = row["機体名"] || "";
+                            
+                            // Googleフォーム設定
+                            const formBaseUrl = "https://docs.google.com/forms/d/e/1FAIpQLSc1qt_Bgvh8kwdOUtjc5qPOKl1cGoBn0jVaHW1E5oBMCIonfQ/viewform";
+                            const entryIdNo = "entry.701929867";  // 事前に取得したID
+                            const entryIdName = "entry.501950524"; // 事前に取得したID
+                            
+                            const formUrl = `${formBaseUrl}?${entryIdNo}=${encodeURIComponent(noVal)}&${entryIdName}=${encodeURIComponent(nameVal)}&usp=pp_url`;
+                            cellValue = `<a href="${formUrl}" target="_blank" class="no-link">${noVal}</a>`;
+                        }
+                        rowHtml += `<td>${cellValue}</td>`;
+                    });
+                    rowHtml += '</tr>';
+                    tableBody.append(rowHtml);
+                });
+
+                // DataTablesの初期化
+                table = $('#unitTable').DataTable({
+                    dom: 'lfrtip',
+                    lengthMenu: [[20, 50, 100, -1], [20, 50, 100, "全表示"]],
+                    pageLength: 50, 
+                    scrollX: false, // 独自のCSSスクロールを活かすためfalse
+                    autoWidth: false,
+                    language: { url: "https://cdn.datatables.net/plug-ins/1.13.6/i18n/ja.json" },
+                    initComplete: function() {
+                        $('.dataTables_length').detach().appendTo('#lenMenu');
+                        $('.dataTables_filter').detach().appendTo('#customFilter');
+                        syncScrollbars();
+                    }
+                });
+            }
+        });
+    }
+
+    function syncScrollbars() {
+        const topScroll = $('#topScroll');
+        const mainScroll = $('#mainScroll');
+        const table = $('#unitTable');
+
+        // テーブルの真の幅を上部スクロールバーに反映
+        $('#topScrollContent').width(table.get(0).scrollWidth);
+
+        topScroll.on('scroll', function() {
+            mainScroll.scrollLeft(topScroll.scrollLeft());
+        });
+        mainScroll.on('scroll', function() {
+            topScroll.scrollLeft(mainScroll.scrollLeft());
+        });
+    }
+
+    $('#min, #max').on('keyup change', function() { if (table) table.draw(); });
+    initUnitTable();
+});
+</script>
+</body>
+</html>
