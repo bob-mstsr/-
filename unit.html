@@ -203,9 +203,9 @@ function initUnitTable() {
                                 // 1列目（No）だけリンクにする
                                 if (index === 0 && type === 'display' && val !== "") {
                                     const nameVal = row["機体名"] || "";
-                                    const formBaseUrl = "https://docs.google.com/forms/d/e/あなたのフォームID/viewform";
-                                    const entryIdNo = "entry.100";
-                                    const entryIdName = "entry.200";
+                                    const formBaseUrl = "https://docs.google.com/forms/d/e/1FAIpQLSc1qt_Bgvh8kwdOUtjc5qPOKl1cGoBn0jVaHW1E5oBMCIonfQ/viewform";
+                                    const entryIdNo = "entry.701929867";
+                                    const entryIdName = "entry.501950524";
                                     const formUrl = `${formBaseUrl}?${entryIdNo}=${encodeURIComponent(val)}&${entryIdName}=${encodeURIComponent(nameVal)}&usp=pp_url`;
                                     return `<a href="${formUrl}" target="_blank" class="no-link">${val}</a>`;
                                 }
