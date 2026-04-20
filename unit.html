@@ -213,6 +213,8 @@ $(document).ready(function () {
                 // DataTablesの初期化
                 table = $('#unitTable').DataTable({
                     dom: 'lfrtip',
+　　　　　　　　　　deferRender: true, // ★これを追加！画面に見える分だけHTMLを作る設定
+　　　　　　　　　　scroller: true,    // 大量データを扱う時の補助（オプション）
                     lengthMenu: [[20, 50, 100, -1], [20, 50, 100, "全表示"]],
                     pageLength: 50, 
                     scrollX: false, // 独自のCSSスクロールを活かすためfalse
