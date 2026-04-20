@@ -185,47 +185,36 @@ $(document).ready(function () {
                 // 1. ヘッダーの生成
                 let tableHtml = '<thead><tr>';
                 headers.forEach(h => tableHtml += `<th>${h.trim()}</th>`);
-                tableHtml += '</tr></thead><tbody id="tableBody"></tbody>';
+                tableHtml += '</tr></thead><tbody></tbody>';
                 $('#unitTable').html(tableHtml);
 
-                // 2. データの生成（超高速化版）
-                // 1行ずつ追加すると遅いので、全てのHTMLを1つの大きな文字列にしてから一度に流し込みます
-                let allRowsHtml = '';
-                data.forEach(row => {
-                    let rowHtml = '<tr>';
-                    headers.forEach((h, index) => {
-                        let cellValue = row[h] ? String(row[h]).trim() : "";
-
-                        // 1列目（No列）をリンク化する
-                        if (index === 0) {
-                            const noVal = cellValue; 
-                            const nameVal = row["機体名"] || "";
-                            
-                            // --- 設定エリア：ご自身のIDに書き換えてください ---
-                            const formBaseUrl = "https://docs.google.com/forms/d/e/1FAIpQLSc1qt_Bgvh8kwdOUtjc5qPOKl1cGoBn0jVaHW1E5oBMCIonfQ/viewform";
-                            const entryIdNo = "entry.701929867";  // No用のID
-                            const entryIdName = "entry.501950524"; // 機体名用のID
-                            // ----------------
-                            
-                            const formUrl = `${formBaseUrl}?${entryIdNo}=${encodeURIComponent(noVal)}&${entryIdName}=${encodeURIComponent(nameVal)}&usp=pp_url`;
-                            cellValue = `<a href="${formUrl}" target="_blank" class="no-link">${noVal}</a>`;
-                        }
-                        rowHtml += `<td>${cellValue}</td>`;
-                    });
-                    rowHtml += '</tr>';
-                    allRowsHtml += rowHtml; // 文字列として連結
-                });
-                
-                // ここで一気にHTMLを流し込む（これが一番速いです）
-                $('#tableBody').html(allRowsHtml);
-
-                // 3. DataTablesの初期化
+                // 2. DataTablesの初期化（ここが高速化のキモです）
                 table = $('#unitTable').DataTable({
+                    data: data, // データを直接渡す
+                    columns: headers.map((h, index) => {
+                        return {
+                            data: h,
+                            render: function(cellData, type, row) {
+                                let val = cellData ? String(cellData).trim() : "";
+                                // 1列目（No）だけリンクにする
+                                if (index === 0) {
+                                    const nameVal = row["機体名"] || "";
+                                    // フォーム設定（ご自身のものに書き換えてください）
+                                    const formBaseUrl = "https://docs.google.com/forms/d/e/あなたのフォームID/viewform";
+                                    const entryIdNo = "entry.100";
+                                    const entryIdName = "entry.200";
+                                    const formUrl = `${formBaseUrl}?${entryIdNo}=${encodeURIComponent(val)}&${entryIdName}=${encodeURIComponent(nameVal)}&usp=pp_url`;
+                                    return `<a href="${formUrl}" target="_blank" class="no-link">${val}</a>`;
+                                }
+                                return val;
+                            }
+                        };
+                    }),
+                    deferRender: true,   // ★これがないと軽くなりません
+                    pageLength: 50,      // 1ページ50件に絞る
                     dom: 'lfrtip',
                     lengthMenu: [[20, 50, 100], [20, 50, 100]], 
-                    pageLength: 50,
-                    deferRender: true, // 表示に必要な分だけ作る
-                    scrollX: false,    // 独自スクロールを優先
+                    scrollX: false,      // 独自スクロールを優先
                     autoWidth: false,
                     language: { url: "https://cdn.datatables.net/plug-ins/1.13.6/i18n/ja.json" },
                     initComplete: function() {
@@ -235,8 +224,6 @@ $(document).ready(function () {
                     }
                 });
             }
-        });
-    }
 
     function syncScrollbars() {
         const topScroll = $('#topScroll');
