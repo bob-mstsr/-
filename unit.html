@@ -174,32 +174,35 @@ $(document).ready(function () {
         return (isNaN(min) && isNaN(max)) || (isNaN(min) && noValue <= max) || (min <= noValue && isNaN(max)) || (min <= noValue && noValue <= max);
     });
 
-    function initUnitTable() {
+function initUnitTable() {
         const csvFile = "unit_26.3.24.csv";
         Papa.parse(csvFile, {
             download: true, header: true, skipEmptyLines: true, encoding: "UTF-8",
             complete: function (results) {
                 const headers = results.meta.fields;
                 const data = results.data;
-                
+
                 // 1. ヘッダーの生成
                 let tableHtml = '<thead><tr>';
-                headers.forEach(h => tableHtml += `<th>${h.trim()}</th>`);
+                headers.forEach(h => {
+                    tableHtml += `<th>${h.replace(/\n/g, '<br>').trim()}</th>`;
+                });
                 tableHtml += '</tr></thead><tbody></tbody>';
                 $('#unitTable').html(tableHtml);
 
-                // 2. DataTablesの初期化（ここが高速化のキモです）
+                // 2. DataTablesの初期化
                 table = $('#unitTable').DataTable({
-                    data: data, // データを直接渡す
+                    data: data,
                     columns: headers.map((h, index) => {
                         return {
-                            data: h,
+                            data: h, // ここで改行を含むヘッダー名を正しく扱えるように修正
+                            defaultContent: "", // データが空の場合のクラッシュ防止
                             render: function(cellData, type, row) {
-                                let val = cellData ? String(cellData).trim() : "";
+                                let val = (cellData !== undefined && cellData !== null) ? String(cellData).trim() : "";
+                                
                                 // 1列目（No）だけリンクにする
-                                if (index === 0) {
+                                if (index === 0 && type === 'display' && val !== "") {
                                     const nameVal = row["機体名"] || "";
-                                    // フォーム設定（ご自身のものに書き換えてください）
                                     const formBaseUrl = "https://docs.google.com/forms/d/e/あなたのフォームID/viewform";
                                     const entryIdNo = "entry.100";
                                     const entryIdName = "entry.200";
@@ -210,11 +213,11 @@ $(document).ready(function () {
                             }
                         };
                     }),
-                    deferRender: true,   // ★これがないと軽くなりません
-                    pageLength: 50,      // 1ページ50件に絞る
+                    deferRender: true,   // ★スマホ高速化の必須設定
+                    pageLength: 50,      // 描画を50件に制限して負荷激減
                     dom: 'lfrtip',
                     lengthMenu: [[20, 50, 100], [20, 50, 100]], 
-                    scrollX: false,      // 独自スクロールを優先
+                    scrollX: false,      
                     autoWidth: false,
                     language: { url: "https://cdn.datatables.net/plug-ins/1.13.6/i18n/ja.json" },
                     initComplete: function() {
@@ -224,6 +227,8 @@ $(document).ready(function () {
                     }
                 });
             }
+        });
+    }
 
     function syncScrollbars() {
         const topScroll = $('#topScroll');
