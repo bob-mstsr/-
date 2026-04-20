@@ -167,9 +167,9 @@ $(document).ready(function () {
                             const nameVal = row["機体名"] || "";
                             
                             // Googleフォーム設定
-                            const formBaseUrl = "https://docs.google.com/forms/d/e/あなたのフォームID/viewform";
-                            const entryIdNo = "entry.100";  // 事前に取得したID
-                            const entryIdName = "entry.200"; // 事前に取得したID
+                            const formBaseUrl = "https://docs.google.com/forms/d/e/1FAIpQLSc1qt_Bgvh8kwdOUtjc5qPOKl1cGoBn0jVaHW1E5oBMCIonfQ/viewform";
+                            const entryIdNo = "entry.701929867";  // 事前に取得したID
+                            const entryIdName = "entry.501950524"; // 事前に取得したID
                             
                             const formUrl = `${formBaseUrl}?${entryIdNo}=${encodeURIComponent(noVal)}&${entryIdName}=${encodeURIComponent(nameVal)}&usp=pp_url`;
                             cellValue = `<a href="${formUrl}" target="_blank" class="no-link">${noVal}</a>`;
