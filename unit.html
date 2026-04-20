@@ -47,12 +47,12 @@
             width: 100%; overflow-x: auto; background: #222; flex-shrink: 0;
             border-bottom: 1px solid var(--border-color);
         }
-        .top-scrollbar-content { height: 1px; } /* 中身は1pxの高さで、幅だけテーブルに合わせる */
+        .top-scrollbar-content { height: 1px; }
 
-        /* テーブルエリア（ここ自体をスクロールさせる） */
+        /* テーブルエリア */
         .table-wrapper { 
             flex-grow: 1; 
-            overflow: auto; /* 縦横両方のスクロールをここで管理 */
+            overflow: auto; /* ここでスクロールを管理 */
             background: var(--card-bg);
             position: relative;
         }
@@ -62,6 +62,7 @@
             white-space: nowrap; padding: 8px 12px; 
             border-bottom: 1px solid var(--border-color); border-right: 1px solid var(--border-color);
             background-color: var(--card-bg);
+            color: var(--text-color);
         }
 
         /* 縦固定（ヘッダー項目名） */
@@ -78,7 +79,17 @@
         #unitTable thead th:nth-child(1) { z-index: 110; left: 0; }
         #unitTable thead th:nth-child(2) { z-index: 110; left: 55px; }
 
-        /* スクロールバーのカスタマイズ（常に見えやすく） */
+        /* Noリンクのデザイン（青くならないように） */
+        .no-link {
+            color: var(--text-color); /* 通常の文字色と同じに */
+            text-decoration: underline; /* リンクとわかるように下線だけ引く */
+            font-weight: bold;
+        }
+        .no-link:hover {
+            color: var(--accent-color);
+        }
+
+        /* スクロールバーのカスタマイズ */
         .table-wrapper::-webkit-scrollbar, .top-scrollbar-wrapper::-webkit-scrollbar { height: 12px; width: 12px; }
         .table-wrapper::-webkit-scrollbar-thumb, .top-scrollbar-wrapper::-webkit-scrollbar-thumb { background: var(--accent-color); border-radius: 10px; }
         .table-wrapper::-webkit-scrollbar-track, .top-scrollbar-wrapper::-webkit-scrollbar-track { background: #222; }
@@ -125,7 +136,7 @@
 $(document).ready(function () {
     let table = null;
 
-    // No範囲検索
+    // No範囲検索ロジック
     $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
         let min = parseInt($('#min').val(), 10);
         let max = parseInt($('#max').val(), 10);
@@ -136,37 +147,29 @@ $(document).ready(function () {
     function initUnitTable() {
         const csvFile = "unit_26.3.24.csv";
         Papa.parse(csvFile, {
-            download: true,
-            header: true,
-            skipEmptyLines: true,
-            encoding: "UTF-8",
+            download: true, header: true, skipEmptyLines: true, encoding: "UTF-8",
             complete: function (results) {
                 const headers = results.meta.fields;
-                
-                // 1. ヘッダーの生成
                 let tableHtml = '<thead><tr>';
                 headers.forEach(h => tableHtml += `<th>${h.trim()}</th>`);
                 tableHtml += '</tr></thead><tbody id="tableBody"></tbody>';
                 $('#unitTable').html(tableHtml);
 
                 const tableBody = $('#tableBody');
-
-                // 2. データの生成（No列にフォーム連携リンクを追加）
                 results.data.forEach(row => {
                     let rowHtml = '<tr>';
                     headers.forEach((h, index) => {
                         let cellValue = row[h] ? row[h].trim() : "";
 
-                        // 1列目（No列）の場合、リンク化する
+                        // 1列目（No列）をリンク化する
                         if (index === 0) {
                             const noVal = cellValue; 
                             const nameVal = row["機体名"] || "";
                             
-                            // --- 設定エリア ---
-                            const formBaseUrl = "https://docs.google.com/forms/d/e/1FAIpQLSc1qt_Bgvh8kwdOUtjc5qPOKl1cGoBn0jVaHW1E5oBMCIonfQ/viewform";
-                            const entryIdNo = "entry.701929867";
-                            const entryIdName = "entry.501950524";
-                            // ----------------
+                            // Googleフォーム設定
+                            const formBaseUrl = "https://docs.google.com/forms/d/e/あなたのフォームID/viewform";
+                            const entryIdNo = "entry.100";  // 事前に取得したID
+                            const entryIdName = "entry.200"; // 事前に取得したID
                             
                             const formUrl = `${formBaseUrl}?${entryIdNo}=${encodeURIComponent(noVal)}&${entryIdName}=${encodeURIComponent(nameVal)}&usp=pp_url`;
                             cellValue = `<a href="${formUrl}" target="_blank" class="no-link">${noVal}</a>`;
@@ -177,12 +180,12 @@ $(document).ready(function () {
                     tableBody.append(rowHtml);
                 });
 
-                // 3. DataTablesの初期化（scrollXをtrueにする）
+                // DataTablesの初期化
                 table = $('#unitTable').DataTable({
                     dom: 'lfrtip',
                     lengthMenu: [[20, 50, 100, -1], [20, 50, 100, "全表示"]],
-                    pageLength: 50,
-                    scrollX: true, // 横スクロールを有効化
+                    pageLength: 50, 
+                    scrollX: false, // 独自のCSSスクロールを活かすためfalse
                     autoWidth: false,
                     language: { url: "https://cdn.datatables.net/plug-ins/1.13.6/i18n/ja.json" },
                     initComplete: function() {
@@ -195,14 +198,13 @@ $(document).ready(function () {
         });
     }
 
-    // 上下のスクロールバーを同期させる
     function syncScrollbars() {
         const topScroll = $('#topScroll');
         const mainScroll = $('#mainScroll');
         const table = $('#unitTable');
 
-        // 上部スクロールバーの中身の幅をテーブルの幅に合わせる
-        $('#topScrollContent').width(table.width());
+        // テーブルの真の幅を上部スクロールバーに反映
+        $('#topScrollContent').width(table.get(0).scrollWidth);
 
         topScroll.on('scroll', function() {
             mainScroll.scrollLeft(topScroll.scrollLeft());
@@ -216,7 +218,5 @@ $(document).ready(function () {
     initUnitTable();
 });
 </script>
-<script data-goatcounter="https://bobs-base.goatcounter.com/count"
-        async src="//gc.zgo.at/count.js"></script>
 </body>
 </html>
