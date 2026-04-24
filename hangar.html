@@ -38,31 +38,32 @@
         .main-content { flex: 1; overflow: hidden; background: #000; }
         table.dataTable { font-size: 0.85em; background-color: #000 !important; }
         table.dataTable thead th { background: #222 !important; color: var(--accent-color) !important; border-bottom: 1px solid var(--accent-color) !important; }
-        
-        /* 固定列の文字を黒にするための設定（背景をあえて少し明るめにして視認性を確保） */
-        .DTFC_LeftBodyLiner td, 
-        .DTFC_LeftBodyWrapper td { 
-            color: #000 !important; /* 文字を黒に */
-            font-weight: bold;
-            background-color: #ccc !important; /* 背景をグレーにして黒文字を見やすく */
-            border-right: 1px solid #999 !important;
+        table.dataTable tbody td { border-bottom: 1px solid #222; background-color: #000 !important; color: #ccc; }
+
+        /* 固定列のデザイン調整：背景黒・文字色をアクセントカラーや白に */
+        .DTFC_LeftBodyLiner td { 
+            background-color: #111 !important; /* 少しだけ明るい黒 */
+            color: #fff !important; /* 基本は白文字 */
+            border-right: 1px solid var(--border-color) !important;
         }
         
-        /* BAY番号専用のスタイル */
-        .bay-cell { font-family: monospace; color: #000 !important; }
+        /* BAY番号と機体名リンクを強調 */
+        .bay-cell { color: var(--accent-color) !important; font-weight: bold; font-family: monospace; }
+        .no-link { color: var(--accent-color) !important; text-decoration: underline; font-weight: bold; }
+        /* 機体名の列（5列目）を白く強調 */
+        .DTFC_LeftBodyLiner td:nth-child(5) { color: #fff !important; font-weight: bold; }
 
-        .no-link { color: #004fb3 !important; text-decoration: underline; font-weight: bold; }
-
-        .memo-input { background: #fff; border: 1px solid #999; color: #000; width: 140px; font-size: 0.9em; padding: 2px; }
-        .deploy-input { background: #fff; border: 1px solid #000; color: #000; width: 60px; text-align: center; }
+        /* 入力UI（以前の黒地スタイルに戻す） */
+        .memo-input { background: #111; border: 1px solid #444; color: #fff; width: 150px; font-size: 0.9em; padding: 2px; }
+        .deploy-input { background: #000; border: 1px solid var(--accent-color); color: #fff; width: 60px; text-align: center; }
         .action-btn { cursor: pointer; padding: 3px 10px; border-radius: 3px; border: none; font-weight: bold; font-size: 0.8em; }
-        .reg-btn { background: #0084ff; color: #fff; }
-        .del-btn { background: #d32f2f; color: #fff; }
+        .reg-btn { background: var(--accent-color); color: #000; }
+        .del-btn { background: #552222; color: #ff8888; }
 
         /* スクロールバー */
-        .dataTables_scrollBody::-webkit-scrollbar { width: 14px; height: 14px; }
-        .dataTables_scrollBody::-webkit-scrollbar-track { background: #111; }
-        .dataTables_scrollBody::-webkit-scrollbar-thumb { background: var(--accent-color); border-radius: 7px; border: 3px solid #111; }
+        .dataTables_scrollBody::-webkit-scrollbar { width: 16px; height: 16px; }
+        .dataTables_scrollBody::-webkit-scrollbar-track { background: #000; }
+        .dataTables_scrollBody::-webkit-scrollbar-thumb { background: var(--accent-color); border-radius: 8px; border: 3px solid #000; }
 
         #overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 9999; display: flex; justify-content: center; align-items: center; color: var(--accent-color); }
     </style>
@@ -145,7 +146,7 @@
 
         const pilotUnits = cloudData.filter(d => d.memberName === activePilot);
 
-        // BAYを15まで増やす
+        // BAYを15まで表示
         for (let i = 1; i <= 15; i++) {
             const reg = pilotUnits.find(u => String(u.slotIndex) === String(i));
             const unit = reg ? masterData.find(m => String(m.No) === String(reg.unitNo)) : null;
@@ -184,7 +185,7 @@
             scrollX: true,
             paging: false,
             info: false,
-            fixedColumns: { left: 5 },
+            fixedColumns: { left: 5 }, // BAY, ACTION, MEMO, No, 機体名まで固定
             dom: 'rti',
             ordering: false
         });
