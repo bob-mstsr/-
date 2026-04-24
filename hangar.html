@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>Hangar - ボブの秘密基地</title>
+    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
+
+    <style>
+        /* tactics.html から完全に継承した変数と共通スタイル */
+        :root {
+            --bg-color: #1a1c1e;
+            --accent-color: #00d4ff;
+            --text-color: #e0e0e0;
+            --card-bg: #25282c;
+            --border-color: #444;
+            --header-total-height: 165px;
+        }
+
+        html, body {
+            margin: 0; padding: 0; height: 100%;
+            background-color: var(--bg-color); color: var(--text-color);
+            overflow: hidden; font-family: sans-serif;
+        }
+
+        /* tactics.html の共通ヘッダー構造 */
+        .top-section {
+            height: var(--header-total-height);
+            background: var(--bg-color);
+            border-bottom: 2px solid var(--accent-color);
+            padding: 10px 20px; box-sizing: border-box;
+            position: relative; z-index: 100;
+        }
+
+        .header-flex { display: flex; justify-content: space-between; align-items: center; }
+        header h1 { margin: 5px 0; font-size: 1.5em; }
+        header h1 a { color: var(--accent-color); text-decoration: none; }
+
+        /* ナビゲーションリンク (tactics.htmlと完全一致) */
+        nav a {
+            color: var(--text-color);
+            text-decoration: none;
+            margin-left: 15px;
+            font-size: 0.9em;
+            padding: 5px 10px;
+            border: 1px solid transparent;
+            transition: 0.2s;
+        }
+        nav a:hover { border: 1px solid var(--accent-color); color: var(--accent-color); }
+        nav a.active { color: var(--accent-color); font-weight: bold; }
+
+        /* 検索ボックスエリア (外見を維持し、配備済み機体のフィルタとして機能) */
+        .search-container { margin: 10px 0; display: flex; align-items: center; gap: 10px; }
+        #search-box {
+            background: #333; border: 1px solid var(--border-color);
+            color: white; padding: 8px; border-radius: 4px; flex-grow: 1; outline: none;
+        }
+        #search-box:focus { border-color: var(--accent-color); }
+
+        /* タブエリア (tactics.htmlと完全一致) */
+        .tab-wrapper {
+            display: flex; gap: 5px; overflow-x: auto; padding-bottom: 5px;
+            scrollbar-width: thin;
+        }
+        .tab-wrapper::-webkit-scrollbar { height: 4px; }
+        .tab-wrapper::-webkit-scrollbar-thumb { background: var(--accent-color); }
+
+        .tab-btn {
+            background: #333; color: #aaa; border: none; padding: 8px 16px;
+            cursor: pointer; border-radius: 4px 4px 0 0; white-space: nowrap;
+            font-weight: bold; transition: 0.2s;
+        }
+        .tab-btn.active { background: var(--accent-color); color: #000; }
+
+        /* メインコンテンツエリア */
+        .main-content {
+            height: calc(100vh - var(--header-total-height));
+            overflow-y: auto; padding: 20px; box-sizing: border-box;
+        }
+
+        /* --- ハンガーデッキ固有のスタイル --- */
+        .hangar-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px; max-width: 1400px; margin: 0 auto;
+        }
+
+        .bay-card {
+            background: var(--card-bg); border: 1px solid var(--border-color);
+            border-radius: 8px; padding: 15px; position: relative;
+            display: flex; flex-direction: column; min-height: 180px;
+        }
+        .bay-card.active-unit { border-left: 4px solid var(--accent-color); }
+        .bay-label { font-size: 0.7em; color: #777; margin-bottom: 8px; font-family: monospace; }
+        
+        .unit-name { font-size: 1.1em; font-weight: bold; color: var(--accent-color); margin-bottom: 10px; }
+        .spec-list { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; font-size: 0.85em; }
+        .spec-item { display: flex; justify-content: space-between; border-bottom: 1px solid #333; }
+        .spec-label { color: #888; }
+        .spec-val { color: #fff; font-weight: bold; }
+
+        /* DEPLOY（配備）フォーム */
+        .deploy-form { display: flex; flex-direction: column; gap: 10px; align-items: center; padding: 20px 0; }
+        .no-input { 
+            background: #000; border: 1px solid var(--accent-color); color: var(--accent-color);
+            font-size: 1.2em; width: 100px; text-align: center; padding: 5px; border-radius: 4px;
+        }
+        .deploy-btn { 
+            background: var(--accent-color); color: #000; border: none; 
+            padding: 8px 20px; font-weight: bold; cursor: pointer; border-radius: 4px;
+        }
+
+        /* RESERVE（予備役）ボタン */
+        .reserve-btn {
+            margin-top: auto; background: transparent; border: 1px solid #552222;
+            color: #ff6666; font-size: 0.75em; padding: 6px; cursor: pointer; border-radius: 4px;
+        }
+        .reserve-btn:hover { background: #331111; }
+
+        /* ローディングオーバーレイ */
+        #overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85); display: flex; justify-content: center;
+            align-items: center; z-index: 2000; flex-direction: column;
+        }
+        .loader-bar { width: 200px; height: 2px; background: var(--accent-color); animation: scan 1.5s infinite; }
+        @keyframes scan { 0% { opacity: 0; } 50% { opacity: 1; } 100% { opacity: 0; } }
+    </style>
+</head>
+<body>
+
+<div id="overlay">
+    <div class="loader-bar"></div>
+    <p style="color:var(--accent-color); font-size:0.8em; letter-spacing:3px; margin-top:10px;">SYSTEM SYNCING...</p>
+</div>
+
+<div class="top-section">
+    <div class="header-flex">
+        <header>
+            <h1><a href="index.html">ボブの秘密基地</a></h1>
+        </header>
+        <nav>
+            <a href="unit.html">Unit</a>
+            <a href="derivatives.html">Derivatives</a>
+            <a href="tactics.html">Tactics</a>
+            <a href="trivia.html">Trivia</a>
+            <a href="hangar.html" class="active">Hangar</a>
+        </nav>
+    </div>
+
+    <div class="search-container">
+        <input type="text" id="search-box" placeholder="配備済みの機体名またはNoで絞り込み..." oninput="filterHangar()">
+    </div>
+
+    <div class="tab-wrapper" id="memberTabs">
+        </div>
+</div>
+
+<div class="main-content">
+    <div class="hangar-grid" id="hangarGrid">
+        </div>
+</div>
+
+<script>
+    const GAS_URL = "https://script.google.com/macros/s/AKfycbxbNqD5XbkQFOEcRXvL5XQY5J4B1Woq2T1v033J-3qm-OaX9cpFG4Pol1RyRd_tkQG-_g/exec";
+    const CSV_URL = "unit_26.3.24.csv";
+    const PILOTS = ["オロ〇ミン", "ライナセロス", "カイジン", "炎のナイト", "Net", "なぎさ", "オズナ", "アルトリア", "ボブ", "ナメレス", "Yggdrasill"];
+    
+    let masterData = [];
+    let currentData = [];
+    let activePilot = PILOTS[0];
+
+    $(document).ready(async function() {
+        initTabs();
+        await loadCSV();
+        await fetchCloudData();
+        $("#overlay").fadeOut();
+    });
+
+    function initTabs() {
+        const $tw = $('#memberTabs');
+        PILOTS.forEach(p => {
+            $('<button class="tab-btn"></button>')
+                .text(p)
+                .toggleClass('active', p === activePilot)
+                .on('click', function() {
+                    activePilot = p;
+                    $('.tab-btn').removeClass('active');
+                    $(this).addClass('active');
+                    renderHangar();
+                }).appendTo($tw);
+        });
+    }
+
+    function loadCSV() {
+        return new Promise(res => {
+            Papa.parse(CSV_URL, {
+                download: true, header: true, skipEmptyLines: true, encoding: "UTF-8",
+                complete: (results) => { masterData = results.data; res(); }
+            });
+        });
+    }
+
+    async function fetchCloudData() {
+        return new Promise(res => {
+            $.getJSON(GAS_URL, data => { currentData = data; renderHangar(); res(); })
+             .fail(() => { alert("通信エラー: スプレッドシートにアクセスできません。"); res(); });
+        });
+    }
+
+    function renderHangar() {
+        const $grid = $('#hangarGrid').empty();
+        const pilotUnits = currentData.filter(d => d.memberName === activePilot);
+
+        for (let i = 1; i <= 10; i++) {
+            const reg = pilotUnits.find(u => Number(u.slotIndex) === i);
+            const unit = reg ? masterData.find(m => String(m.No) === String(reg.unitNo)) : null;
+
+            const $card = $('<div class="bay-card"></div>');
+            $card.append(`<div class="bay-label">BAY-${String(i).padStart(2, '0')}</div>`);
+
+            if (unit) {
+                $card.addClass('active-unit').append(`
+                    <div class="unit-name">${unit.機体名}</div>
+                    <div class="spec-list">
+                        <div class="spec-item"><span class="spec-label">NO.</span><span class="spec-val">${unit.No}</span></div>
+                        <div class="spec-item"><span class="spec-label">HP</span><span class="spec-val">${unit.HP}</span></div>
+                        <div class="spec-item"><span class="spec-label">ARMOR</span><span class="spec-val">${unit.装甲}</span></div>
+                        <div class="spec-item"><span class="spec-label">MOBILITY</span><span class="spec-val">${unit.運動}</span></div>
+                    </div>
+                    <button class="reserve-btn" onclick="updateSlot(${i}, '')">RETURN TO RESERVE (除外)</button>
+                `);
+            } else {
+                $card.append(`
+                    <div class="deploy-form">
+                        <input type="number" class="no-input" id="in-${i}" placeholder="NO.">
+                        <button class="deploy-btn" onclick="handleDeploy(${i})">DEPLOY (配備)</button>
+                    </div>
+                `);
+            }
+            $grid.append($card);
+        }
+    }
+
+    async function handleDeploy(slot) {
+        const no = $(`#in-${slot}`).val();
+        if (!no || !masterData.some(m => String(m.No) === String(no))) {
+            alert("エラー: 有効な機体Noを入力してください。");
+            return;
+        }
+        await updateSlot(slot, no);
+    }
+
+    async function updateSlot(slot, no) {
+        $("#overlay").fadeIn();
+        const payload = { memberName: activePilot, slotIndex: slot, unitNo: no };
+        await $.post(GAS_URL, JSON.stringify(payload));
+        await fetchCloudData();
+        $("#overlay").fadeOut();
+    }
+
+    // 検索窓によるフィルタリング機能
+    function filterHangar() {
+        const term = $('#search-box').val().toLowerCase();
+        $('.bay-card').each(function() {
+            const text = $(this).text().toLowerCase();
+            $(this).toggle(text.indexOf(term) > -1);
+        });
+    }
+</script>
+</body>
+</html>
