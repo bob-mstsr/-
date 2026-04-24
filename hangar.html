@@ -2,6 +2,7 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hangar - ボブの秘密基地</title>
     
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -16,65 +17,58 @@
             --bg-color: #1a1c1e;
             --accent-color: #00d4ff;
             --text-color: #e0e0e0;
-            --header-total-height: 165px;
+            --card-bg: #25282c;
+            --border-color: #444;
         }
 
-        html, body {
-            margin: 0; padding: 0; height: 100%;
-            background-color: var(--bg-color); color: var(--text-color);
-            overflow: hidden; font-family: sans-serif;
-        }
+        body { font-family: sans-serif; margin: 0; background: var(--bg-color); color: var(--text-color); height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
 
-        /* ① スクロールバーを太く強制設定 */
-        ::-webkit-scrollbar { width: 16px !important; height: 16px !important; }
-        ::-webkit-scrollbar-track { background: #000 !important; }
-        ::-webkit-scrollbar-thumb { 
-            background: var(--accent-color) !important; 
-            border-radius: 8px !important;
-            border: 3px solid #000 !important;
-        }
-
-        /* 共通ヘッダー */
-        .top-section {
-            height: var(--header-total-height);
-            background: var(--bg-color);
-            border-bottom: 2px solid var(--accent-color);
-            padding: 10px 20px; box-sizing: border-box;
-            position: relative; z-index: 1000;
-        }
+        /* ヘッダー：unit.htmlに合わせる */
+        header { background: rgba(0,0,0,0.9); padding: 10px 20px; border-bottom: 2px solid var(--accent-color); }
         .header-flex { display: flex; justify-content: space-between; align-items: center; }
-        header h1 a { color: var(--accent-color); text-decoration: none; font-size: 1.5em; font-weight: bold; }
-        nav a { color: var(--text-color); text-decoration: none; margin-left: 15px; font-size: 0.9em; padding: 5px 10px; transition: 0.2s; }
-        nav a.active { color: var(--accent-color); font-weight: bold; border-bottom: 2px solid var(--accent-color); }
+        header h1 { margin: 0; font-size: 1.5em; }
+        header h1 a { color: var(--accent-color); text-decoration: none; }
+        nav a { color: var(--text-color); text-decoration: none; margin-left: 15px; font-size: 0.9em; }
+        nav a.active { color: var(--accent-color); font-weight: bold; }
 
-        .search-container { margin: 10px 0; }
-        #search-box { background: #333; border: 1px solid #444; color: white; padding: 8px; width: 100%; border-radius: 4px; outline: none; }
-
-        .tab-wrapper { display: flex; gap: 5px; overflow-x: auto; }
-        .tab-btn { background: #333; color: #aaa; border: none; padding: 8px 16px; cursor: pointer; border-radius: 4px 4px 0 0; }
+        /* タブと検索エリア */
+        .control-panel { padding: 10px 20px; background: #222; }
+        .tab-wrapper { display: flex; gap: 5px; overflow-x: auto; margin-bottom: 10px; padding-bottom: 5px; }
+        .tab-btn { background: #333; color: #aaa; border: none; padding: 8px 15px; cursor: pointer; border-radius: 4px; white-space: nowrap; }
         .tab-btn.active { background: var(--accent-color); color: #000; font-weight: bold; }
+        #search-box { width: 100%; background: #111; border: 1px solid var(--border-color); color: #fff; padding: 8px; box-sizing: border-box; }
 
-        .main-content { height: calc(100vh - var(--header-total-height)); background: #111; }
-        
-        /* テーブルスタイルと固定列 */
-        table.dataTable { background: #000; margin: 0 !important; }
-        table.dataTable thead th { background: #222 !important; color: var(--accent-color) !important; }
-        .DTFC_LeftBodyLiner { background-color: #111 !important; overflow-y: hidden !important; }
-        
-        /* ② Noクリック時のリンクスタイル */
-        .no-link { color: var(--accent-color); text-decoration: underline; cursor: pointer; }
+        /* テーブルエリア */
+        .main-content { flex: 1; overflow: hidden; background: #000; }
+        table.dataTable { font-size: 0.85em; }
+        table.dataTable thead th { background: #222 !important; color: var(--accent-color) !important; border-bottom: 1px solid var(--accent-color) !important; }
+        table.dataTable tbody td { border-bottom: 1px solid #222; }
 
-        .memo-input { background: #222; border: 1px solid #444; color: #fff; width: 140px; padding: 4px; border-radius: 3px; }
-        .action-btn { cursor: pointer; padding: 4px 8px; border: none; font-weight: bold; border-radius: 3px; }
+        /* ② リンクスタイル */
+        .no-link { color: var(--accent-color); text-decoration: underline; font-weight: bold; }
+
+        /* 入力UI */
+        .memo-input { background: #111; border: 1px solid #444; color: #fff; width: 150px; font-size: 0.9em; padding: 2px; }
+        .deploy-input { background: #000; border: 1px solid var(--accent-color); color: #fff; width: 60px; text-align: center; }
+        .action-btn { cursor: pointer; padding: 3px 10px; border-radius: 3px; border: none; font-weight: bold; font-size: 0.8em; }
         .reg-btn { background: var(--accent-color); color: #000; }
-        .del-btn { background: #442222; color: #ff6666; }
+        .del-btn { background: #552222; color: #ff8888; }
+
+        /* スクロールバー強制適用 */
+        .dataTables_scrollBody::-webkit-scrollbar { width: 14px; height: 14px; }
+        .dataTables_scrollBody::-webkit-scrollbar-track { background: #111; }
+        .dataTables_scrollBody::-webkit-scrollbar-thumb { background: var(--accent-color); border-radius: 7px; border: 3px solid #111; }
+
+        #overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 9999; display: flex; justify-content: center; align-items: center; color: var(--accent-color); }
     </style>
 </head>
 <body>
 
-<div class="top-section">
+<div id="overlay">SYNCING SYSTEM...</div>
+
+<header>
     <div class="header-flex">
-        <header><h1><a href="index.html">ボブの秘密基地</a></h1></header>
+        <h1><a href="index.html">ボブの秘密基地</a></h1>
         <nav>
             <a href="unit.html">Unit</a>
             <a href="derivatives.html">Derivatives</a>
@@ -83,13 +77,16 @@
             <a href="hangar.html" class="active">Hangar</a>
         </nav>
     </div>
-    <div class="search-container"><input type="text" id="search-box" placeholder="配備済み機体を絞り込み..."></div>
+</header>
+
+<div class="control-panel">
     <div class="tab-wrapper" id="memberTabs"></div>
+    <input type="text" id="search-box" placeholder="機体名や武装で検索...">
 </div>
 
 <div class="main-content">
     <table id="hangarTable" class="display nowrap" style="width:100%">
-        <thead><tr id="tableHeader"></tr></thead>
+        <thead id="tableHeader"></thead>
         <tbody id="tableBody"></tbody>
     </table>
 </div>
@@ -97,7 +94,6 @@
 <script>
     const GAS_URL = "https://script.google.com/macros/s/AKfycbxbNqD5XbkQFOEcRXvL5XQY5J4B1Woq2T1v033J-3qm-OaX9cpFG4Pol1RyRd_tkQG-_g/exec";
     const CSV_URL = "unit_26.3.24.csv";
-    const FORM_BASE = "https://docs.google.com/forms/d/e/1FAIpQLSdpAAnW7SndN-zX02Y4y708V3f2Yf085lEIdC9qXyEms-B3mw/viewform?entry.1843469830="; // 機体No用entry
     const PILOTS = ["オロ〇ミン", "ライナセロス", "カイジン", "炎のナイト", "Net", "なぎさ", "オズナ", "アルトリア", "ボブ", "ナメレス", "Yggdrasill"];
     
     let masterData = [];
@@ -109,6 +105,7 @@
         initTabs();
         await loadCSV();
         await fetchCloudData();
+        $("#overlay").fadeOut();
     });
 
     function initTabs() {
@@ -124,68 +121,85 @@
 
     async function loadCSV() {
         return new Promise(res => {
-            Papa.parse(CSV_URL, { download: true, header: true, complete: (r) => { masterData = r.data; res(); } });
+            Papa.parse(CSV_URL, { download: true, header: true, skipEmptyLines: true, complete: (r) => { masterData = r.data; res(); } });
         });
     }
 
     async function fetchCloudData() {
-        try { cloudData = await $.getJSON(GAS_URL); renderTable(); } catch(e) {}
+        try { cloudData = await $.getJSON(GAS_URL); renderTable(); } catch(e) { console.error(e); }
     }
 
     function renderTable() {
         if (table) { table.destroy(); $('#tableHeader, #tableBody').empty(); }
 
-        // ① ヘッダー設定（BAY, 操作, メモ, No, 機体名...）
-        const headers = ["BAY", "ACTION", "PILOT'S MEMO", ...Object.keys(masterData[0])];
-        headers.forEach(h => $('#tableHeader').append(`<th>${h}</th>`));
+        // ヘッダー生成
+        const baseKeys = Object.keys(masterData[0]);
+        const headers = ["BAY", "ACTION", "PILOT MEMO", ...baseKeys];
+        const $theadTr = $('<tr></tr>');
+        headers.forEach(h => $theadTr.append(`<th>${h}</th>`));
+        $('#tableHeader').append($theadTr);
 
         const pilotUnits = cloudData.filter(d => d.memberName === activePilot);
 
+        // データ行生成
         for (let i = 1; i <= 10; i++) {
-            const reg = pilotUnits.find(u => Number(u.slotIndex) === i);
+            const reg = pilotUnits.find(u => String(u.slotIndex) === String(i));
             const unit = reg ? masterData.find(m => String(m.No) === String(reg.unitNo)) : null;
             const $tr = $('<tr></tr>');
 
-            $tr.append(`<td>BAY-${String(i).padStart(2,'0')}</td>`);
+            $tr.append(`<td>BAY-${i}</td>`);
             
             if (unit) {
-                // ② フォーム連携付きNo
-                const formUrl = `${FORM_BASE}${unit.No}&entry.1593361494=${encodeURIComponent(unit.機体名)}`;
-                $tr.append(`<td><button class="action-btn del-btn" onclick="updateSlot(${i}, '', '')">除外</button></td>`);
-                $tr.append(`<td><input type="text" class="memo-input" id="memo-${i}" value="${reg.note || ''}" onchange="handleUpdate(${i})"></td>`);
+                $tr.append(`<td><button class="action-btn del-btn" onclick="updateSlot(${i}, '', '')">REMOVE</button></td>`);
+                $tr.append(`<td><input type="text" class="memo-input" id="memo-${i}" value="${reg.note || ''}" onchange="handleSave(${i})"></td>`);
                 
-                // 全項目展開、No列はリンク化
-                Object.entries(unit).forEach(([key, val]) => {
-                    if (key === "No") $tr.append(`<td><a class="no-link" href="${formUrl}" target="_blank">${val}</a></td>`);
-                    else $tr.append(`<td>${val || ''}</td>`);
+                // ② unit.htmlと全く同じリンク生成ロジックを適用
+                baseKeys.forEach((key, idx) => {
+                    let val = unit[key] || "";
+                    if (key === "No" && val !== "") {
+                        const nameVal = unit["機体名"] || "";
+                        const formBaseUrl = "https://docs.google.com/forms/d/e/1FAIpQLSc1qt_Bgvh8kwdOUtjc5qPOKl1cGoBn0jVaHW1E5oBMCIonfQ/viewform";
+                        const entryIdNo = "entry.701929867";
+                        const entryIdName = "entry.501950524";
+                        const formUrl = `${formBaseUrl}?${entryIdNo}=${encodeURIComponent(val)}&${entryIdName}=${encodeURIComponent(nameVal)}&usp=pp_url`;
+                        $tr.append(`<td><a href="${formUrl}" target="_blank" class="no-link">${val}</a></td>`);
+                    } else {
+                        $tr.append(`<td>${val}</td>`);
+                    }
                 });
             } else {
-                $tr.append(`<td><button class="action-btn reg-btn" onclick="handleUpdate(${i})">配備</button></td>`);
+                $tr.append(`<td><button class="action-btn reg-btn" onclick="handleSave(${i})">DEPLOY</button></td>`);
                 $tr.append(`<td><input type="text" class="memo-input" id="memo-${i}" placeholder="..."></td>`);
-                $tr.append(`<td><input type="number" class="deploy-input" id="in-${i}" style="width:60px"></td>`);
-                for(let j=1; j < Object.keys(masterData[0]).length; j++) $tr.append('<td></td>');
+                $tr.append(`<td><input type="number" class="deploy-input" id="in-${i}" placeholder="No."></td>`);
+                for(let j=1; j < baseKeys.length; j++) $tr.append('<td></td>');
             }
             $('#tableBody').append($tr);
         }
 
-        // ① DataTables初期化：機体名まで（左から5列分）を固定
         table = $('#hangarTable').DataTable({
-            scrollY: "calc(100vh - 210px)", scrollX: true, paging: false, info: false,
+            scrollY: "calc(100vh - 230px)",
+            scrollX: true,
+            paging: false,
+            info: false,
             fixedColumns: { left: 5 }, // BAY, ACTION, MEMO, No, 機体名まで固定
-            dom: 'rti', ordering: false
+            dom: 'rti',
+            ordering: false
         });
+
         $('#search-box').on('input', function() { table.search(this.value).draw(); });
     }
 
-    async function handleUpdate(slot) {
-        const no = $(`#in-${slot}`).val() || cloudData.find(d => d.memberName === activePilot && Number(d.slotIndex) === slot)?.unitNo;
+    async function handleSave(slot) {
+        const no = $(`#in-${slot}`).val() || cloudData.find(d => d.memberName === activePilot && String(d.slotIndex) === String(slot))?.unitNo;
         const note = $(`#memo-${slot}`).val();
         if (no) await updateSlot(slot, no, note);
     }
 
     async function updateSlot(slot, no, note) {
-        await $.post(GAS_URL, JSON.stringify({ memberName: activePilot, slotIndex: slot, unitNo: no, note: note }));
+        $("#overlay").show();
+        await $.post(GAS_URL, JSON.stringify({ memberName: activePilot, slotIndex: String(slot), unitNo: no, note: note }));
         await fetchCloudData();
+        $("#overlay").hide();
     }
 </script>
 </body>
