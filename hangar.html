@@ -73,16 +73,20 @@
 <div id="overlay">SYNCING SYSTEM...</div>
 
 <header>
-    <div class="header-flex">
-        <h1><a href="index.html">ボブの秘密基地</a></h1>
-        <nav>
-            <a href="unit.html">Unit</a>
-            <a href="derivatives.html">Derivatives</a>
-            <a href="tactics.html">Tactics</a>
-            <a href="trivia.html">Trivia</a>
-            <a href="hangar.html" class="active">Hangar</a>
-        </nav>
-    </div>
+    <a href="index.html#main" class="logo-link">ボブの秘密基地</a>
+    <nav class="nav-links">
+        <a href="unit.html" class="nav-item-custom">Unit</a>
+        <a href="derivatives.html" class="nav-item-custom">Derivatives</a>
+        <a href="arms.html" class="nav-item-custom">Arms</a>
+        <a href="hangar.html" class="nav-item-custom">Hangar</a>
+        <a href="battle.html" class="nav-item-custom">Battle</a>
+        <a href="novels.html" class="nav-item-custom">Novels</a>
+        <a href="tactics.html" class="nav-item-custom">Tactics</a>
+        <a href="hunter.html" class="nav-item-custom">Hunter</a>
+        <a href="trivia.html" class="nav-item-custom">Trivia</a>
+        <a href="emoji.html" class="nav-item-custom">Emoji</a>
+        <a href="link.html" class="nav-item-custom">Link</a>
+    </nav>
 </header>
 
 <div class="control-panel">
@@ -155,7 +159,7 @@
             $tr.append(`<td class="bay-cell">BAY-${String(i).padStart(2, '0')}</td>`);
             
             if (unit) {
-                $tr.append(`<td><button class="action-btn del-btn" onclick="updateSlot(${i}, '', '')">REMOVE</button></td>`);
+                $tr.append(`<td><button class="action-btn del-btn" onclick="updateSlot(${i}, '', '')">予備役</button></td>`);
                 $tr.append(`<td><input type="text" class="memo-input" id="memo-${i}" value="${reg.note || ''}" onchange="handleSave(${i})"></td>`);
                 
                 baseKeys.forEach((key) => {
@@ -172,7 +176,7 @@
                     }
                 });
             } else {
-                $tr.append(`<td><button class="action-btn reg-btn" onclick="handleSave(${i})">DEPLOY</button></td>`);
+                $tr.append(`<td><button class="action-btn reg-btn" onclick="handleSave(${i})">配備</button></td>`);
                 $tr.append(`<td><input type="text" class="memo-input" id="memo-${i}" placeholder="..."></td>`);
                 $tr.append(`<td><input type="number" class="deploy-input" id="in-${i}" placeholder="No."></td>`);
                 for(let j=1; j < baseKeys.length; j++) $tr.append('<td></td>');
