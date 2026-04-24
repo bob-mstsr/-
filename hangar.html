@@ -22,12 +22,10 @@
 
         body { font-family: sans-serif; margin: 0; background: var(--bg-color); color: var(--text-color); height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
 
-        header { background: rgba(0,0,0,0.9); padding: 10px 20px; border-bottom: 2px solid var(--accent-color); }
-        .header-flex { display: flex; justify-content: space-between; align-items: center; }
-        header h1 { margin: 0; font-size: 1.5em; }
-        header h1 a { color: var(--accent-color); text-decoration: none; }
-        nav a { color: var(--text-color); text-decoration: none; margin-left: 15px; font-size: 0.9em; }
-        nav a.active { color: var(--accent-color); font-weight: bold; }
+        header { background: rgba(0,0,0,0.95); height: 60px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; border-bottom: 2px solid var(--accent-color); padding: 0 15px; box-sizing: border-box; }
+        .nav-item-custom { color: #e0e0e0; text-decoration: none; font-size: 0.85rem; padding: 6px 10px; border-radius: 4px; border: 1px solid transparent; transition: 0.2s; }
+        .nav-item-custom:hover { background: rgba(0, 212, 255, 0.2); border-color: #00d4ff; }
+        nav::-webkit-scrollbar { display: none; }
 
         .control-panel { padding: 10px 20px; background: #222; }
         .tab-wrapper { display: flex; gap: 5px; overflow-x: auto; margin-bottom: 10px; padding-bottom: 5px; }
@@ -73,8 +71,8 @@
 <div id="overlay">SYNCING SYSTEM...</div>
 
 <header>
-    <a href="index.html#main" class="logo-link">ボブの秘密基地</a>
-    <nav class="nav-links">
+    <a href="index.html#main" style="text-decoration:none; font-weight:bold; font-size:1.1rem; color:var(--accent-color); white-space:nowrap; margin-right:15px;">ボブの秘密基地</a>
+    <nav style="display:flex; gap:10px; overflow-x:auto; white-space:nowrap; -webkit-overflow-scrolling:touch; padding:5px 0;">
         <a href="unit.html" class="nav-item-custom">Unit</a>
         <a href="derivatives.html" class="nav-item-custom">Derivatives</a>
         <a href="arms.html" class="nav-item-custom">Arms</a>
