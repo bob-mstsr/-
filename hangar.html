@@ -17,13 +17,11 @@
             --bg-color: #1a1c1e;
             --accent-color: #00d4ff;
             --text-color: #e0e0e0;
-            --card-bg: #25282c;
             --border-color: #444;
         }
 
         body { font-family: sans-serif; margin: 0; background: var(--bg-color); color: var(--text-color); height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
 
-        /* ヘッダー：unit.htmlに合わせる */
         header { background: rgba(0,0,0,0.9); padding: 10px 20px; border-bottom: 2px solid var(--accent-color); }
         .header-flex { display: flex; justify-content: space-between; align-items: center; }
         header h1 { margin: 0; font-size: 1.5em; }
@@ -31,30 +29,37 @@
         nav a { color: var(--text-color); text-decoration: none; margin-left: 15px; font-size: 0.9em; }
         nav a.active { color: var(--accent-color); font-weight: bold; }
 
-        /* タブと検索エリア */
         .control-panel { padding: 10px 20px; background: #222; }
         .tab-wrapper { display: flex; gap: 5px; overflow-x: auto; margin-bottom: 10px; padding-bottom: 5px; }
         .tab-btn { background: #333; color: #aaa; border: none; padding: 8px 15px; cursor: pointer; border-radius: 4px; white-space: nowrap; }
         .tab-btn.active { background: var(--accent-color); color: #000; font-weight: bold; }
         #search-box { width: 100%; background: #111; border: 1px solid var(--border-color); color: #fff; padding: 8px; box-sizing: border-box; }
 
-        /* テーブルエリア */
         .main-content { flex: 1; overflow: hidden; background: #000; }
-        table.dataTable { font-size: 0.85em; }
+        table.dataTable { font-size: 0.85em; background-color: #000 !important; }
         table.dataTable thead th { background: #222 !important; color: var(--accent-color) !important; border-bottom: 1px solid var(--accent-color) !important; }
-        table.dataTable tbody td { border-bottom: 1px solid #222; }
+        
+        /* 固定列の文字を黒にするための設定（背景をあえて少し明るめにして視認性を確保） */
+        .DTFC_LeftBodyLiner td, 
+        .DTFC_LeftBodyWrapper td { 
+            color: #000 !important; /* 文字を黒に */
+            font-weight: bold;
+            background-color: #ccc !important; /* 背景をグレーにして黒文字を見やすく */
+            border-right: 1px solid #999 !important;
+        }
+        
+        /* BAY番号専用のスタイル */
+        .bay-cell { font-family: monospace; color: #000 !important; }
 
-        /* ② リンクスタイル */
-        .no-link { color: var(--accent-color); text-decoration: underline; font-weight: bold; }
+        .no-link { color: #004fb3 !important; text-decoration: underline; font-weight: bold; }
 
-        /* 入力UI */
-        .memo-input { background: #111; border: 1px solid #444; color: #fff; width: 150px; font-size: 0.9em; padding: 2px; }
-        .deploy-input { background: #000; border: 1px solid var(--accent-color); color: #fff; width: 60px; text-align: center; }
+        .memo-input { background: #fff; border: 1px solid #999; color: #000; width: 140px; font-size: 0.9em; padding: 2px; }
+        .deploy-input { background: #fff; border: 1px solid #000; color: #000; width: 60px; text-align: center; }
         .action-btn { cursor: pointer; padding: 3px 10px; border-radius: 3px; border: none; font-weight: bold; font-size: 0.8em; }
-        .reg-btn { background: var(--accent-color); color: #000; }
-        .del-btn { background: #552222; color: #ff8888; }
+        .reg-btn { background: #0084ff; color: #fff; }
+        .del-btn { background: #d32f2f; color: #fff; }
 
-        /* スクロールバー強制適用 */
+        /* スクロールバー */
         .dataTables_scrollBody::-webkit-scrollbar { width: 14px; height: 14px; }
         .dataTables_scrollBody::-webkit-scrollbar-track { background: #111; }
         .dataTables_scrollBody::-webkit-scrollbar-thumb { background: var(--accent-color); border-radius: 7px; border: 3px solid #111; }
@@ -132,7 +137,6 @@
     function renderTable() {
         if (table) { table.destroy(); $('#tableHeader, #tableBody').empty(); }
 
-        // ヘッダー生成
         const baseKeys = Object.keys(masterData[0]);
         const headers = ["BAY", "ACTION", "PILOT MEMO", ...baseKeys];
         const $theadTr = $('<tr></tr>');
@@ -141,20 +145,19 @@
 
         const pilotUnits = cloudData.filter(d => d.memberName === activePilot);
 
-        // データ行生成
-        for (let i = 1; i <= 10; i++) {
+        // BAYを15まで増やす
+        for (let i = 1; i <= 15; i++) {
             const reg = pilotUnits.find(u => String(u.slotIndex) === String(i));
             const unit = reg ? masterData.find(m => String(m.No) === String(reg.unitNo)) : null;
             const $tr = $('<tr></tr>');
 
-            $tr.append(`<td>BAY-${i}</td>`);
+            $tr.append(`<td class="bay-cell">BAY-${String(i).padStart(2, '0')}</td>`);
             
             if (unit) {
                 $tr.append(`<td><button class="action-btn del-btn" onclick="updateSlot(${i}, '', '')">REMOVE</button></td>`);
                 $tr.append(`<td><input type="text" class="memo-input" id="memo-${i}" value="${reg.note || ''}" onchange="handleSave(${i})"></td>`);
                 
-                // ② unit.htmlと全く同じリンク生成ロジックを適用
-                baseKeys.forEach((key, idx) => {
+                baseKeys.forEach((key) => {
                     let val = unit[key] || "";
                     if (key === "No" && val !== "") {
                         const nameVal = unit["機体名"] || "";
@@ -181,11 +184,10 @@
             scrollX: true,
             paging: false,
             info: false,
-            fixedColumns: { left: 5 }, // BAY, ACTION, MEMO, No, 機体名まで固定
+            fixedColumns: { left: 5 },
             dom: 'rti',
             ordering: false
         });
-
         $('#search-box').on('input', function() { table.search(this.value).draw(); });
     }
 
