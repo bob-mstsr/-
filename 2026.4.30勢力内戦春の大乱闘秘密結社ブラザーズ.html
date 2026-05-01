@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MSTactics Battle Chronicle | Spring Brawl Brothers</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Noto+Sans+JP:wght@300;400;700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'space-black': '#0a0c10',
+                        'deep-slate': '#161b22',
+                        'electric-blue': '#00d2ff',
+                        'neon-accent': '#39ff14',
+                        'heat-orange': '#ff4d00',
+                        'luminous-white': '#e6edf3',
+                    },
+                    fontFamily: {
+                        display: ['Orbitron', 'Rajdhani', 'sans-serif'],
+                        body: ['Noto Sans JP', 'sans-serif'],
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'glow': 'glow 2s ease-in-out infinite alternate',
+                    },
+                    keyframes: {
+                        glow: {
+                            'from': { textShadow: '0 0 5px #fff, 0 0 10px #fff, 0 0 15px #00d2ff' },
+                            'to': { textShadow: '0 0 10px #fff, 0 0 20px #00d2ff, 0 0 30px #00d2ff' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #0a0c10;
+            background-image: 
+                radial-gradient(circle at 50% 0%, rgba(0, 210, 255, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 0% 100%, rgba(255, 77, 0, 0.03) 0%, transparent 40%);
+            background-attachment: fixed;
+            color: #e6edf3;
+            overflow-x: hidden;
+        }
+
+        .glass-header {
+            background: rgba(10, 12, 16, 0.8);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(0, 210, 255, 0.2);
+        }
+
+        .content-card {
+            background: rgba(22, 27, 34, 0.4);
+            border-left: 2px solid rgba(0, 210, 255, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .content-card:hover {
+            border-left: 2px solid #00d2ff;
+            background: rgba(22, 27, 34, 0.6);
+        }
+
+        .narrative-p {
+            line-height: 2;
+            letter-spacing: 0.02em;
+        }
+
+        .dialogue-box {
+            position: relative;
+            padding-left: 1.5rem;
+            margin: 2.5rem 0;
+            font-style: italic;
+            color: #00d2ff;
+            border-left: 4px solid #ff4d00;
+        }
+
+        .scanline {
+            width: 100%;
+            height: 2px;
+            background: rgba(0, 210, 255, 0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 50;
+            pointer-events: none;
+            animation: move-scanline 8s linear infinite;
+        }
+
+        @keyframes move-scanline {
+            0% { transform: translateY(-100vh); }
+            100% { transform: translateY(100vh); }
+        }
+
+        .glitch-hover:hover {
+            animation: glitch 0.3s cubic-bezier(.25,.46,.45,.94) both infinite;
+        }
+
+        @keyframes glitch {
+            0% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(-2px, -2px); }
+            60% { transform: translate(2px, 2px); }
+            80% { transform: translate(2px, -2px); }
+            100% { transform: translate(0); }
+        }
+    </style>
+</head>
+<body class="font-body selection:bg-electric-blue selection:text-space-black">
+
+    <div class="scanline"></div>
+
+    <header class="glass-header fixed top-0 w-full z-40 px-6 py-4 flex justify-between items-center">
+        <div class="flex items-center space-x-3">
+            <div class="w-2 h-8 bg-heat-orange animate-pulse"></div>
+            <h1 class="font-display text-xl md:text-2xl font-bold tracking-tighter uppercase">
+                MS<span class="text-electric-blue">Tactics</span> <span class="text-xs font-medium text-slate-500 hidden sm:inline">// Special Exhibition</span>
+            </h1>
+        </div>
+        <div class="text-[10px] font-display text-slate-500 tracking-[0.2em] uppercase hidden md:block">
+            Battle Analysis Stream: <span class="text-neon-accent animate-pulse">Live</span>
+        </div>
+    </header>
+
+    <main class="relative pt-32 pb-24 px-6 max-w-3xl mx-auto">
+        
+        <section class="mb-20 text-center">
+            <div class="inline-block px-3 py-1 border border-heat-orange text-heat-orange text-[10px] font-display mb-4 uppercase tracking-widest">
+                Event ID: 001-SPRING-BRAWL
+            </div>
+            <h2 class="text-4xl md:text-6xl font-display font-black mb-6 tracking-tight leading-none bg-gradient-to-b from-white to-slate-500 bg-clip-text text-transparent">
+                春の大乱闘！<br>秘密結社ブラザーズ
+            </h2>
+            <div class="h-1 w-24 bg-electric-blue mx-auto mb-8"></div>
+        </section>
+
+        <div class="py-12 flex flex-col items-center">
+            <div class="dialogue-box max-w-md w-full border-neon-accent text-neon-accent">
+                <p class="font-display text-xl uppercase font-bold tracking-wide italic">
+                    「さぁ始まりました！鋼鉄のモビルスーツ軍団 vs 気合の入ったコスプレイヤーたち！サイズ差なんて気にするな！物理法則は窓から投げ捨てろ！レディィィ・ゴー！！」
+                </p>
+            </div>
+        </div>
+
+        <article class="space-y-12">
+            
+            <section class="space-y-8">
+                <h3 class="font-display text-heat-orange text-sm tracking-[0.3em] flex items-center space-x-4">
+                    <span>PHASE 01</span>
+                    <span class="h-px flex-grow bg-slate-800"></span>
+                    <span class="text-xs text-slate-500 uppercase">First Blood</span>
+                </h3>
+                
+                <div class="content-card p-8 rounded-tr-3xl">
+                    <p class="narrative-p text-lg leading-relaxed">
+                        第1ターン。戦場に可憐に降り立ったのは『Fate』遠坂凛のコスプレ姿に身を包んだアルトリア。しかし、その目の前には全高数十メートルのΨコルレル（オズナ）が！ 
+                    </p>
+                    <p class="narrative-p mt-8">
+                        逃げ場なし！ 無慈悲な巨大ビームナイフが、わずか150cm程度の美少女キャラを一閃！
+                    </p>
+                </div>
+
+                <div class="dialogue-box">
+                    <p class="text-lg">「…負けました(´°̥̥̥̥̥̥̥̥ω°̥̥̥̥̥̥̥̥｀)」</p>
+                </div>
+
+                <div class="dialogue-box border-slate-500 text-slate-400">
+                    <p class="text-lg">「泣いちゃった！！！‪」</p>
+                </div>
+            </section>
+
+            <section class="space-y-8">
+                <h3 class="font-display text-electric-blue text-sm tracking-[0.3em] flex items-center space-x-4">
+                    <span>PHASE 02</span>
+                    <span class="h-px flex-grow bg-slate-800"></span>
+                    <span class="text-xs text-slate-500 uppercase">Golden Pressure</span>
+                </h3>
+                
+                <p class="narrative-p">
+                    続くはSAOのシノン姿のボブ。改造された狙撃銃で応戦するも、相手は黄金のフェニックスガンダムを駆るオロ〇ミン大尉！ 「今の私はクワトロ・バジーナだ」と言わんばかりの威圧感が、小さな狙撃手を圧倒する。
+                </p>
+
+                <div class="dialogue-box">
+                    <p class="text-lg">「今日の都合で魂を売った人々の決定などは、明日にも崩れるものさ」</p>
+                </div>
+
+                <p class="narrative-p">
+                    バーニングファイアが火を噴き、ボブは「敵じゃない！」という必死の（嘘の）命乞いも虚しく蒸発した。
+                </p>
+            </section>
+
+            <section class="space-y-8 bg-deep-slate/30 p-8 border-y border-slate-800">
+                <h3 class="font-display text-neon-accent text-sm tracking-[0.3em] flex items-center space-x-4">
+                    <span>PHASE 03</span>
+                    <span class="h-px flex-grow bg-slate-800"></span>
+                    <span class="text-xs text-slate-500 uppercase">Cat Logic</span>
+                </h3>
+
+                <p class="narrative-p">
+                    猫耳フードを揺らしながら「メッタメタのギッタギタにしてやるにゃす！」と突撃するかみねこ（タオカカコス）。しかし、鋼鉄の巨人の前では猫耳もただの標的。案の定、オズナのカウンターを食らい、空の彼方へ吹き飛ばされる！
+                </p>
+
+                <div class="dialogue-box">
+                    <p class="text-lg">「視界が、真っ白に……。」</p>
+                </div>
+
+                <div class="dialogue-box border-slate-500 text-slate-400">
+                    <p class="text-lg">「また泣かせちゃった！ 泣いちゃった！！！‪」</p>
+                </div>
+            </section>
+
+            <section class="space-y-8">
+                <h3 class="font-display text-white text-sm tracking-[0.3em] flex items-center space-x-4">
+                    <span>FINAL PHASE</span>
+                    <span class="h-px flex-grow bg-slate-800"></span>
+                    <span class="text-xs text-slate-500 uppercase">Galactic Scale</span>
+                </h3>
+
+                <p class="narrative-p">
+                    全滅寸前の人間チームに、最後の希望が降臨する。全長10,000km、地球よりデカい人間系機体「ダイバスター」だ！ 乗り込むのは軍師、炎のナイト。
+                </p>
+
+                <p class="narrative-p">
+                    惑星サイズの巨体を前に、マルクのガンダムが放つガンダムハンマーも、まるで宇宙の塵程度のダメージしか与えられない。だが、そこへ黄金の火の鳥が舞い降りる！
+                </p>
+
+                <div class="text-center py-10">
+                    <h4 class="font-display text-4xl md:text-5xl font-black italic tracking-tighter text-white animate-glow glitch-hover cursor-default">
+                        「見えた！ 落ちろォォッ！！」
+                    </h4>
+                </div>
+
+                <p class="narrative-p">
+                    オロ〇ミンの最大出力バーニングファイアが、10,000kmの巨体を焼き尽くす。爆辞と共に、大乱闘に終止符が打たれた。
+                </p>
+            </section>
+
+            <section class="mt-20 p-10 border-2 border-electric-blue rounded-lg bg-deep-slate/50">
+                <p class="narrative-p text-xl font-bold text-center text-electric-blue mb-4 uppercase tracking-widest">
+                    After Party
+                </p>
+                <p class="narrative-p text-center mb-8">
+                    勝者となった主催者オロ〇ミンのもとに、MVPに渡すべく用意していた豪華賞品が手元に戻ってきた。一人勝ちしてしまった寂しさに、彼は戦場で膝を突いた。
+                </p>
+                <div class="text-center bg-space-black p-6 rounded border border-slate-700">
+                    <p class="font-display text-2xl text-white mb-4 italic">「すみません・・またやっちまいましたorz」</p>
+                    <p class="font-display text-4xl font-black text-heat-orange animate-pulse">バーニング・・</p>
+                </div>
+            </section>
+
+        </article>
+
+        <div class="mt-24 flex justify-center space-x-2">
+            <span class="w-1.5 h-1.5 bg-electric-blue rounded-full animate-bounce"></span>
+            <span class="w-1.5 h-1.5 bg-electric-blue rounded-full animate-bounce" style="animation-delay: 0.2s"></span>
+            <span class="w-1.5 h-1.5 bg-electric-blue rounded-full animate-bounce" style="animation-delay: 0.4s"></span>
+        </div>
+        
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const sections = document.querySelectorAll('section');
+            const observerOptions = { threshold: 0.1 };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('opacity-100', 'translate-y-0');
+                        entry.target.classList.remove('opacity-0', 'translate-y-10');
+                    }
+                });
+            }, observerOptions);
+
+            sections.forEach(section => {
+                section.classList.add('transition-all', 'duration-1000', 'opacity-0', 'translate-y-10');
+                observer.observe(section);
+            });
+        });
+    </script>
+</body>
+</html>
