@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secret Society CYPHER - ボブの秘密基地</title>
+    
+    <style>
+        :root {
+            --bg-color: #0d0e10;
+            --accent-color: #00d4ff;
+            --text-color: #e0e0e0;
+            --card-bg: #1a1c1e;
+            --color-oromin: #00d4ff;
+            --color-knight: #ff4d4d;
+            --color-bob: #ffeb3b;
+            --color-ozuna: #a200ff;
+            --color-rhino: #ffc107;
+            --color-all: #ffffff;
+        }
+
+        body {
+            margin: 0; padding: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: "Meiryo", "Hiragino Kaku Gothic ProN", sans-serif;
+            display: flex; flex-direction: column; align-items: center;
+        }
+
+        header {
+            width: 100%; background: rgba(0,0,0,0.95); height: 60px;
+            display: flex; justify-content: space-between; align-items: center;
+            position: sticky; top: 0; z-index: 1000;
+            border-bottom: 2px solid var(--accent-color); padding: 0 15px; box-sizing: border-box;
+        }
+        .header-title { text-decoration: none; color: var(--accent-color); font-weight: bold; }
+        .nav-item { color: #888; text-decoration: none; font-size: 0.85rem; margin-left: 10px; }
+
+        .player-section {
+            width: 100%; max-width: 600px; padding: 20px 15px;
+            text-align: center; position: sticky; top: 60px;
+            background: var(--bg-color); z-index: 900; box-sizing: border-box;
+        }
+        h1 { font-size: 1.4rem; margin: 0 0 15px 0; letter-spacing: 2px; color: var(--accent-color); }
+        audio { width: 100%; height: 45px; }
+
+        .lyrics-container {
+            width: 100%; max-width: 700px; padding: 20px 15px 100px 15px; box-sizing: border-box;
+        }
+
+        .verse {
+            margin-bottom: 35px; padding: 20px; border-radius: 10px;
+            background: var(--card-bg); border-left: 5px solid transparent;
+        }
+
+        .character-name { font-weight: bold; font-size: 1.1rem; margin-bottom: 10px; display: block; }
+        .lyrics-text { line-height: 1.8; font-size: 1rem; white-space: pre-wrap; }
+
+        .v-oromin { border-color: var(--color-oromin); }
+        .v-oromin .character-name { color: var(--color-oromin); }
+        .v-knight { border-color: var(--color-knight); }
+        .v-knight .character-name { color: var(--color-knight); }
+        .v-bob { border-color: var(--color-bob); }
+        .v-bob .character-name { color: var(--color-bob); }
+        .v-ozuna { border-color: var(--color-ozuna); }
+        .v-ozuna .character-name { color: var(--color-ozuna); }
+        .v-rhino { border-color: var(--color-rhino); }
+        .v-rhino .character-name { color: var(--color-rhino); }
+        .v-all { border-color: var(--color-all); border-left: none; border-top: 3px solid var(--color-all); text-align: center; }
+        .v-all .character-name { color: var(--color-all); }
+
+        @media (max-width: 480px) {
+            h1 { font-size: 1.1rem; }
+            .lyrics-text { font-size: 0.9rem; }
+            .verse { padding: 15px; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <a href="index.html" class="header-title">ボブの秘密基地</a>
+    <nav>
+        <a href="hunter.html" class="nav-item">Hunter</a>
+        <a href="novels.html" class="nav-item">Novels</a>
+    </nav>
+</header>
+
+<div class="player-section">
+    <h1>春の大乱闘！秘密結社ブラザーズ</h1>
+    <audio controls>
+        <source src="sumabura.mp3" type="audio/mpeg">
+        お使いのブラウザはオーディオ再生に対応していません。
+    </audio>
+</div>
+
+<div class="lyrics-container">
+
+    <div class="verse v-all">
+        <div class="lyrics-text">秘密結社！GO！ 投げ捨てろォォッ！！</div>
+    </div>
+
+    <div class="verse v-ozuna">
+        <span class="character-name">▼オズナ/アルトリア</span>
+        <div class="lyrics-text">戦場（フィールド）に舞い降りた 可憐な赤い影
+アルトリア 気高き魔術師の装いで
+だが目の前には 全高数十メートルの絶望
+オズナ 放つビームナイフが 夢を切り裂く！
+(「負けました…」「泣いちゃった！！！」)</div>
+    </div>
+
+    <div class="verse v-bob">
+        <span class="character-name">▼ボブ / オロミン</span>
+        <div class="lyrics-text">狙い定めた 氷の狙撃手（スナイパー）
+ボブ その銃口に 命を懸けろ
+だが黄金の翼 フェニックスが空を舞う
+オロミン クワトロの圧力が 魂を震わせる！ 
+(「敵じゃない！」「バーニングファイア！！」)</div>
+    </div>
+
+    <div class="verse v-all">
+        <span class="character-name">▼CHORUS</span>
+        <div class="lyrics-text">猫耳揺らして かみねこ が駆ける
+メッタメタのギッタギタに 夢を掴め！
+たとえ視界が 真っ白に染まろうとも
+また泣かされたって 立ち上がれブラザーズ！</div>
+    </div>
+
+    <div class="verse v-oromin">
+        <span class="character-name">▼オロミン / 炎のナイト</span>
+        <div class="lyrics-text">燃えろ！ オロミン 怒りの業火
+バーニングファイア すべてを焼き尽くせ！
+炎のナイト 操る 一万キロの巨躯（ダイバスター）
+マルク のハンマー 宇宙（そら）の塵に消える！</div>
+    </div>
+
+    <div class="verse v-all">
+        <span class="character-name">▼ALL</span>
+        <div class="lyrics-text">鋼の絆 秘密結社
+春の大乱闘 勝利をその手に
+「見えた！ 落ちろォォッ！！」
+銀河を貫く 正義の咆哮！</div>
+    </div>
+
+    <div class="verse v-rhino">
+        <span class="character-name">▼LEGEND (Net)</span>
+        <div class="lyrics-text">静寂を破り 現れた伝説
+Net その拳は 生身で鋼を砕く！
+だが大尉の慈悲は 大気圏の彼方
+圧倒的火力に 覇王の膝が折れる！ 
+(「かかってこんかっ！」「火力が違いすぎる！」)</div>
+    </div>
+
+    <div class="verse v-knight">
+        <span class="character-name">▼炎のナイト</span>
+        <div class="lyrics-text">戦慄の影が 惑星を包み込む
+炎のナイト 呼び覚ませ 銀河の巨神
+ダイバスター その歩みは 天をも揺るがし
+マルク の脱出艇 絶望を駆け抜ける！
+(「エア、あの機体は！？」「友軍です！ 麻雀マスターです！」)</div>
+    </div>
+
+    <div class="verse v-all">
+        <span class="character-name">▼CHORUS</span>
+        <div class="lyrics-text">たとえ絶望に 心が折れそうでも
+絆のコードが 俺たちを繋いでる
+泣き顔の アルトリア も かみねこ も
+最後は笑って 明日にダイブしろ！</div>
+    </div>
+
+    <div class="verse v-oromin">
+        <span class="character-name">▼オロミン</span>
+        <div class="lyrics-text">燃えろ！ オロミン 極限の闘志
+バーニングファイア 銀河の闇を裂け！
+一万キロの ダイバスター をも飲み込む
+黄金の鳳凰 その翼は不滅だ！</div>
+    </div>
+
+    <div class="verse v-all">
+        <span class="character-name">▼ALL</span>
+        <div class="lyrics-text">鋼の絆 秘密結社
+春の大乱闘 歴史に名を刻め
+「見えた！ 落ちろォォッ！！」
+爆辞の果てに 光を掴み取れ！</div>
+    </div>
+
+    <div class="verse v-all">
+        <div class="lyrics-text">誰にも止められない この衝動
+物理も サイズも 超えてゆけ！
+MS TACTICS 魂の叫び！
+(GO！ GO！ FIGHTING BROTHERS！！)</div>
+    </div>
+
+    <div class="verse v-bob">
+        <span class="character-name">▼OUTRO</span>
+        <div class="lyrics-text">夕陽に染まった 孤独な背中
+「すみません・・またやっちまいましたorz」
+それでも俺たちは 明日も戦う
+「バーニング……！！！」</div>
+    </div>
+
+</div>
+
+</body>
+</html>
