@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="ja" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tactical Command Interface | MST Faction War</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Michroma&family=Rajdhani:wght@400;600;700&family=Noto+Sans+JP:wght@300;400;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        obsidian: '#0b0e14',
+                        tacticalCyan: '#00f2ff',
+                        emergencyOrange: '#ff8c00',
+                        combatRed: '#ff3e3e',
+                        panelBg: 'rgba(11, 14, 20, 0.8)',
+                    },
+                    fontFamily: {
+                        header: ['Michroma', 'sans-serif'],
+                        tech: ['Rajdhani', 'sans-serif'],
+                        body: ['Noto Sans JP', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'scanline': 'scanline 8s linear infinite',
+                    },
+                    keyframes: {
+                        scanline: {
+                            '0%': { transform: 'translateY(-100%)' },
+                            '100%': { transform: 'translateY(1000%)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #0b0e14;
+            color: #e2e8f0;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 50% 50%, rgba(0, 242, 255, 0.05) 0%, transparent 70%),
+                linear-gradient(rgba(18, 22, 30, 0.8) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(18, 22, 30, 0.8) 1px, transparent 1px);
+            background-size: 100% 100%, 40px 40px, 40px 40px;
+        }
+
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(0, 242, 255, 0.2);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
+        }
+
+        .hud-corner {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            border-color: #00f2ff;
+        }
+
+        .scanline {
+            width: 100%;
+            height: 100px;
+            background: linear-gradient(to bottom, transparent, rgba(0, 242, 255, 0.05), transparent);
+            position: fixed;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 50;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.2);
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #00f2ff;
+            border-radius: 10px;
+        }
+
+        .drop-cap::first-letter {
+            font-family: 'Michroma', sans-serif;
+            font-size: 3.5rem;
+            float: left;
+            line-height: 1;
+            padding-right: 12px;
+            color: #00f2ff;
+            text-shadow: 0 0 15px rgba(0, 242, 255, 0.6);
+        }
+
+        .status-bar-bg {
+            background: rgba(255, 255, 255, 0.1);
+            height: 4px;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .status-bar-fill {
+            height: 100%;
+            background: #00f2ff;
+            box-shadow: 0 0 10px #00f2ff;
+        }
+
+        .glitch-text:hover {
+            animation: glitch 0.3s cubic-bezier(.25,.46,.45,.94) both infinite;
+        }
+
+        @keyframes glitch {
+            0% { transform: translate(0) }
+            20% { transform: translate(-2px, 2px) }
+            40% { transform: translate(-2px, -2px) }
+            60% { transform: translate(2px, 2px) }
+            80% { transform: translate(2px, -2px) }
+            100% { transform: translate(0) }
+        }
+    </style>
+</head>
+<body class="font-body selection:bg-tacticalCyan selection:text-obsidian">
+
+    <!-- HUD Elements -->
+    <div class="scanline animate-scanline"></div>
+
+    <!-- Header Section -->
+    <header class="relative pt-12 pb-20 px-6 overflow-hidden border-b border-tacticalCyan/20">
+        <div class="max-w-7xl mx-auto relative z-10">
+            <div class="flex flex-col md:flex-row justify-between items-end gap-6">
+                <div>
+                    <div class="flex items-center gap-3 text-tacticalCyan mb-2">
+                        <span class="w-3 h-3 bg-tacticalCyan animate-pulse"></span>
+                        <span class="font-tech tracking-[0.3em] uppercase text-sm">Operation: Absolute Zero</span>
+                    </div>
+                    <h1 class="font-header text-4xl md:text-6xl text-white tracking-tighter">
+                        TACTICAL COMMAND <span class="text-tacticalCyan">INTERFACE</span>
+                    </h1>
+                    <p class="font-tech text-gray-400 mt-4 tracking-widest uppercase">Secret Society vs Augusta Laboratory | Faction War Log</p>
+                </div>
+                <div class="flex gap-8 font-tech text-xs text-tacticalCyan/60">
+                    <div class="text-right">
+                        <p>STATUS</p>
+                        <p class="text-xl text-tacticalCyan">ENGAGED</p>
+                    </div>
+                    <div class="text-right">
+                        <p>COORDINATES</p>
+                        <p class="text-xl text-white">MST-GRID:094</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Decorative Grid -->
+        <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: radial-gradient(#00f2ff 1px, transparent 1px); background-size: 20px 20px;"></div>
+    </header>
+
+    <main class="max-w-[1600px] mx-auto p-6 grid grid-cols-1 lg:grid-cols-12 gap-8 mt-8">
+        
+        <!-- Left Sidebar: Technical Dossiers -->
+        <aside class="lg:col-span-3 space-y-8 order-2 lg:order-1">
+            <section>
+                <div class="flex justify-between items-center mb-4 border-l-4 border-tacticalCyan pl-3">
+                    <h2 class="font-header text-lg tracking-wider text-white">PILOT PROFILES</h2>
+                    <span class="font-tech text-xs text-tacticalCyan">LVL 99 AUTH</span>
+                </div>
+                
+                <div class="space-y-4 custom-scrollbar max-h-[600px] pr-2 overflow-y-auto">
+                    <!-- Oromin Card -->
+                    <div class="glass-panel p-4 relative group cursor-crosshair">
+                        <div class="absolute top-0 right-0 p-2 text-[10px] font-mono text-tacticalCyan/40">ID: SS-001</div>
+                        <h3 class="font-header text-sm text-tacticalCyan mb-1">OROMIN</h3>
+                        <p class="text-xs text-gray-400 font-tech mb-3 italic">"Society Leader / Rank 6"</p>
+                        <div class="space-y-2">
+                            <div class="text-[10px] font-tech flex justify-between"><span>STRATEGY</span><span>98%</span></div>
+                            <div class="status-bar-bg"><div class="status-bar-fill w-[98%]"></div></div>
+                            <div class="text-[10px] font-tech flex justify-between"><span>SYNERGY</span><span>95%</span></div>
+                            <div class="status-bar-bg"><div class="status-bar-fill w-[95%]"></div></div>
+                        </div>
+                    </div>
+                    <!-- Kamiko Card -->
+                    <div class="glass-panel p-4 relative group">
+                        <h3 class="font-header text-sm text-tacticalCyan mb-1">KAMIKO</h3>
+                        <p class="text-xs text-gray-400 font-tech mb-3 italic">"Clan Mascot / Communications"</p>
+                        <div class="space-y-2">
+                            <div class="text-[10px] font-tech flex justify-between"><span>MORALE</span><span>100%</span></div>
+                            <div class="status-bar-bg"><div class="status-bar-fill w-full"></div></div>
+                        </div>
+                    </div>
+                    <!-- Ozuna Card -->
+                    <div class="glass-panel p-4 relative group">
+                        <h3 class="font-header text-sm text-tacticalCyan mb-1">OZUNA</h3>
+                        <p class="text-xs text-gray-400 font-tech mb-3 italic">"Elite Striker / Zero Shift"</p>
+                        <div class="space-y-2">
+                            <div class="text-[10px] font-tech flex justify-between"><span>AGILITY</span><span>99%</span></div>
+                            <div class="status-bar-bg"><div class="status-bar-fill w-[99%]"></div></div>
+                        </div>
+                    </div>
+                    <!-- Flame Knight Card -->
+                    <div class="glass-panel p-4 relative group border-emergencyOrange/20">
+                        <h3 class="font-header text-sm text-emergencyOrange mb-1">FLAME KNIGHT</h3>
+                        <p class="text-xs text-gray-400 font-tech mb-3 italic">"Master Strategist / Veteran"</p>
+                        <div class="space-y-2">
+                            <div class="text-[10px] font-tech flex justify-between"><span>INTEL</span><span>97%</span></div>
+                            <div class="status-bar-bg"><div class="status-bar-fill w-[97%] bg-emergencyOrange shadow-[0_0_10px_#ff8c00]"></div></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <div class="flex justify-between items-center mb-4 border-l-4 border-combatRed pl-3">
+                    <h2 class="font-header text-lg tracking-wider text-white">THREAT ANALYSIS</h2>
+                </div>
+                <div class="glass-panel p-4 bg-combatRed/5 border-combatRed/30">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-10 h-10 border border-combatRed flex items-center justify-center font-header text-combatRed">01</div>
+                        <div>
+                            <h3 class="font-header text-sm text-combatRed">YACHIYO</h3>
+                            <p class="font-tech text-xs">ABSOLUTE CHAMPION / RANK 1</p>
+                        </div>
+                    </div>
+                    <div class="text-[10px] font-mono text-combatRed/80 space-y-1">
+                        <p>> MECHA: ΨVaisaga</p>
+                        <p>> STYLE: CHIZAN JIKŪKEN</p>
+                        <p>> THREAT LEVEL: EXTREME</p>
+                    </div>
+                </div>
+            </section>
+        </aside>
+
+        <!-- Center Area: Novel Content -->
+        <article class="lg:col-span-6 order-1 lg:order-2">
+            <div class="glass-panel p-8 md:p-12 relative">
+                <!-- HUD Corner Accents -->
+                <div class="hud-corner top-0 left-0 border-t-2 border-l-2"></div>
+                <div class="hud-corner top-0 right-0 border-t-2 border-r-2"></div>
+                <div class="hud-corner bottom-0 left-0 border-b-2 border-l-2"></div>
+                <div class="hud-corner bottom-0 right-0 border-b-2 border-r-2"></div>
+
+                <div class="prose prose-invert max-w-none">
+                    
+                    <!-- Chapter 1 -->
+                    <div class="mb-20">
+                        <div class="flex items-center gap-4 mb-8">
+                            <span class="text-emergencyOrange font-tech tracking-tighter">PHASE 01: TURNS 1-40</span>
+                            <div class="h-[1px] flex-grow bg-gradient-to-r from-emergencyOrange to-transparent"></div>
+                        </div>
+                        <h2 class="font-header text-3xl mb-8 leading-tight text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.3)]">黎明の進撃：静かなる開戦</h2>
+                        
+                        <div class="space-y-6 text-gray-300 leading-relaxed text-lg">
+                            <p class="drop-cap">
+                                広大な仮想現実空間に広がる戦場。それはゲーム「MST」史上初となる、大規模な派閥戦の舞台だった。最大勢力を誇る「シークレットソサエティ」の盟主オロミンは、冷静かつ情熱を秘めた瞳で盤面を見つめていた。対するは、ランキング上位に君臨する「怪物」たちの集団、オガケン（オーガスタ研究所）。
+                            </p>
+                            <p>
+                                「個々の力では届かなくとも、我々には絆と、磨き上げた戦略がある」オロミンの宣言と共に、戦端は開かれた。
+                            </p>
+                            <p>
+                                先陣を切ったのは、ソサエティの看板娘であり、広報担当の神子だった。彼女の駆る特別仕様の「グラブリン」は、極限まで加速し、オガケン第15位のメカコレクター、プリコネへと肉薄する。プリコネはミノフスキー粒子を散布し、ビーム撹乱幕で防御を固めるが、神子は不敵に微笑む。
+                            </p>
+                            <div class="bg-tacticalCyan/10 border-l-4 border-tacticalCyan p-4 my-6 italic text-tacticalCyan">
+                                「この氷の彫刻、綺麗でしょう？ さあ、暖かい場所へ一緒帰りましょう！」
+                            </div>
+                            <p>
+                                神子の放った究極奥義「グラビスフィア・キャノン」が空間を凍らせ、重力で圧縮する。絶対零度の奔流はプリコネの機体を一瞬にして氷の塵へと変え、2100ものダメージを叩き出した。大谷翔平の先頭打者ホームランにも似た、この衝撃的な一撃が、無敵を誇ったオガケンの陣形に決定的な亀裂を生んだのである。
+                            </p>
+                            <p>
+                                続いてトリックスター・ボブがΨガリルナガンから「アキシオン・アッシャー」を放ち、ベテランのフレイムナイトが的確な指揮で敵主力部隊を翻弄する。ナギサとネットは、キュートFシャトナーやアランといった格上の猛者たちを足止めするため、自らの機体を盾にして時間を稼いだ。その自己犠牲こそが、ソサエティの勝機を繋ぐ。
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Chapter 2 -->
+                    <div class="mb-20">
+                        <div class="flex items-center gap-4 mb-8">
+                            <span class="text-tacticalCyan font-tech tracking-tighter">PHASE 02: TURNS 41-80</span>
+                            <div class="h-[1px] flex-grow bg-gradient-to-r from-tacticalCyan to-transparent"></div>
+                        </div>
+                        <h2 class="font-header text-3xl mb-8 leading-tight text-white">激闘の回廊：組織の力</h2>
+                        
+                        <div class="space-y-6 text-gray-300 leading-relaxed text-lg">
+                            <p>
+                                戦いは中盤、乱戦へと突入する。オガケンの反撃が激しさを増す中、ソサエティの第3、第4の勝機が牙を剥く。それはオロミンとオズナによる波状攻撃、そして全メンバーによる「役割の完遂」だった。
+                            </p>
+                            <p>
+                                スレッタ・マーキュリーが操るエアリアルに対し、影の功労者リナセロスが「ゴールドフレーム天Ψ」で潜行攻撃を仕掛ける。リナセロスの放った「天頂閃」はスレッタの装甲を正確に断ち切り、彼女を戦線から離脱させた。
+                            </p>
+                            <p>
+                                オズナの「Ψネイキッド・ジェフティ」は、空間転移（ゼロシフト）を駆使して戦場を縦横無尽に駆け巡る。「バーストブレード」の連撃がアカハナを撃墜し、敵陣をかき乱す。その背後では、軍師フレイムナイトのエクスバインが、あえて敵の射線に身を晒す「巨大なデコイ」となって、主力のアランや八千代の攻撃を完璧に受け流していた。
+                            </p>
+                            <div class="border-y border-white/10 py-6 my-8 text-center">
+                                <span class="font-header text-xl text-tacticalCyan tracking-widest uppercase">Target Neutralized: Cute F. Shatner</span>
+                            </div>
+                            <p>
+                                このフェーズ最大の戦果は、再び神子の手によってもたらされた。オガケンの盟主、キュートFシャトナー。サイコフィールドに守られた難攻不落の要塞に対し、神子は再び絶対零度の光を放つ。フィールドごと凍結された盟主の敗北は、オガケンの士気を根本から揺るがした。
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Chapter 3 -->
+                    <div class="mb-8">
+                        <div class="flex items-center gap-4 mb-8">
+                            <span class="text-combatRed font-tech tracking-tighter">FINAL PHASE: TURNS 81-END</span>
+                            <div class="h-[1px] flex-grow bg-gradient-to-r from-combatRed to-transparent"></div>
+                        </div>
+                        <h2 class="font-header text-3xl mb-8 leading-tight text-white">頂点の証明：伝説を穿つ刃</h2>
+                        
+                        <div class="space-y-6 text-gray-300 leading-relaxed text-lg">
+                            <p>
+                                残るは八千代、アラン、エブリンの3名。追い詰められた獣ほど恐ろしいものはない。エブリンの猛攻によってリナセロスが散るが、ボブがすぐさま仇を討つ。アランの猛攻も、アルトリアの「スパイクシールド」が鉄壁の防御で阻み、盟主オロミンへの道を閉ざした。
+                            </p>
+                            <p>
+                                そして、戦場には最強の戦士、ランキング1位の八千代だけが残った。彼女の「Ψヴァイサーガ」が赤く輝き、次元を切り裂く「地斬疾空剣」を繰り出す。しかし、フレイムナイトの描いた戦略図は完成していた。
+                            </p>
+                            <p>
+                                フレイムナイトが正面を抑え、アルトリアが死角をカバーし、ボブとオロミンが援護射撃で八千代を特定の座標へと追い詰める。そこへ、仲間たちの犠牲と神子が作り出した勝機を背負ったオズナが、ゼロシフトで突撃する。
+                            </p>
+                            <div class="text-2xl font-header text-white text-center py-10 bg-gradient-to-b from-transparent via-tacticalCyan/10 to-transparent">
+                                「これで……終わりだァァ！！」
+                            </div>
+                            <p>
+                                オズナのバーストブレードが、八千代の厚い装甲を真っ二つに裂く。内部爆発の光が宇宙を照らし、絶対王者の機体は沈黙した。
+                            </p>
+                            <p>
+                                システムアナウンスが響き渡る。「Secret Society has won the battle!」
+                            </p>
+                            <p>
+                                通信回線は歓喜の渦に包まれた。フレイムナイトの叫び、ボブの口笛、そして神子の晴れやかな声。オロミンは静かに、しかし誇らしげに宣言した。「我々は個の力ではなく、ソサエティの絆と戦略で伝説を打ち破った。今日、ここが我々の新たな頂点だ」
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </article>
+
+        <!-- Right Sidebar: Battle Logs & Metadata -->
+        <aside class="lg:col-span-3 space-y-8 order-3">
+            <section>
+                <div class="flex justify-between items-center mb-4 border-l-4 border-tacticalCyan pl-3">
+                    <h2 class="font-header text-lg tracking-wider text-white">LIVE COMBAT LOG</h2>
+                </div>
+                <div class="glass-panel h-[500px] flex flex-col overflow-hidden">
+                    <div class="bg-black/40 p-2 border-b border-tacticalCyan/20 flex gap-2">
+                        <div class="w-2 h-2 rounded-full bg-combatRed animate-pulse"></div>
+                        <div class="text-[10px] font-mono text-gray-500 uppercase">Real-time Stream [v4.0.2]</div>
+                    </div>
+                    <div class="p-4 font-mono text-[11px] space-y-3 overflow-y-auto custom-scrollbar flex-grow">
+                        <div class="text-tacticalCyan">[TURN 001] Kamiko (Gravlin) used GRAVISPHERE CANNON.</div>
+                        <div class="text-combatRed ml-4">> Target: Pricone. DAMAGE: 2100. [K.O.]</div>
+                        <div class="text-gray-500">[TURN 015] Bob (ΨGalilnagan) used AXION ASHER.</div>
+                        <div class="text-gray-500">[TURN 034] Oromin used BURNING FIRE.</div>
+                        <div class="text-combatRed ml-4">> Target: Tokki. [K.O.]</div>
+                        <div class="text-tacticalCyan">[TURN 044] Linaceros used TENCHŌSEN.</div>
+                        <div class="text-combatRed ml-4">> Target: Suletta Mercury. [K.O.]</div>
+                        <div class="text-gray-500">[TURN 048] Ozuna used BURST BLADE.</div>
+                        <div class="text-combatRed ml-4">> Target: Akahana. [K.O.]</div>
+                        <div class="text-gray-400">[TURN 102] Evelyn used GATLING SHIELD.</div>
+                        <div class="text-tacticalCyan ml-4">> Target: Linaceros. [K.O.]</div>
+                        <div class="text-tacticalCyan">[TURN 110] Ozuna used ZERO SHIFT.</div>
+                        <div class="text-combatRed ml-4">> Target: Alan McBain. [K.O.]</div>
+                        <div class="text-gray-500">[TURN 118] Ozuna used BURST BLADE (COMBO).</div>
+                        <div class="text-combatRed ml-4">> Target: Yachiyo. [CRITICAL K.O.]</div>
+                        <div class="text-white bg-tacticalCyan/20 p-2 border border-tacticalCyan animate-pulse mt-4">
+                            SYSTEM: MISSION ACCOMPLISHED. SECRET SOCIETY VICTORIOUS.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <div class="flex justify-between items-center mb-4 border-l-4 border-tacticalCyan pl-3">
+                    <h2 class="font-header text-lg tracking-wider text-white">MECHA SCHEMATICS</h2>
+                </div>
+                <div class="grid grid-cols-1 gap-2">
+                    <div class="glass-panel p-3 border-l-2 border-l-tacticalCyan flex justify-between items-center">
+                        <span class="font-tech text-xs">ΨNAKED JEFFTI</span>
+                        <span class="text-[10px] font-mono bg-tacticalCyan/20 px-2 py-1 text-tacticalCyan">CLASS SA</span>
+                    </div>
+                    <div class="glass-panel p-3 border-l-2 border-l-tacticalCyan flex justify-between items-center">
+                        <span class="font-tech text-xs">GRAVLIN (SPECIAL)</span>
+                        <span class="text-[10px] font-mono bg-tacticalCyan/20 px-2 py-1 text-tacticalCyan">CLASS AD</span>
+                    </div>
+                    <div class="glass-panel p-3 border-l-2 border-l-tacticalCyan flex justify-between items-center">
+                        <span class="font-tech text-xs">ΨGALILNAGAN</span>
+                        <span class="text-[10px] font-mono bg-tacticalCyan/20 px-2 py-1 text-tacticalCyan">CLASS LA</span>
+                    </div>
+                    <div class="glass-panel p-3 border-l-2 border-l-combatRed/50 flex justify-between items-center">
+                        <span class="font-tech text-xs text-gray-500 line-through">ΨVAISAGA</span>
+                        <span class="text-[10px] font-mono bg-combatRed/20 px-2 py-1 text-combatRed">LOST</span>
+                    </div>
+                </div>
+            </section>
+
+            <section class="glass-panel p-6 border-emergencyOrange/40">
+                <h3 class="font-header text-xs text-emergencyOrange mb-4 tracking-[0.2em]">TACTICAL SUMMARY</h3>
+                <div class="space-y-4 font-tech text-sm text-gray-300">
+                    <div class="flex items-start gap-3">
+                        <span class="text-emergencyOrange">01</span>
+                        <p>Flame Knight's decoy strategy nullified Rank 1 threats for 40 turns.</p>
+                    </div>
+                    <div class="flex items-start gap-3">
+                        <span class="text-emergencyOrange">02</span>
+                        <p>Kamiko's opening strike reduced Ogaken morale by 42%.</p>
+                    </div>
+                    <div class="flex items-start gap-3">
+                        <span class="text-emergencyOrange">03</span>
+                        <p>Collective bond outperformed individual rankings in Final Phase.</p>
+                    </div>
+                </div>
+            </section>
+        </aside>
+    </main>
+
+    <!-- Bottom Bar / Status Footer replacement -->
+    <div class="fixed bottom-0 left-0 w-full bg-obsidian border-t border-tacticalCyan/30 z-40 h-8 flex items-center px-4 overflow-hidden">
+        <div class="flex gap-6 items-center">
+            <div class="flex items-center gap-2">
+                <div class="w-2 h-2 rounded-full bg-green-500 shadow-[0_0_5px_green]"></div>
+                <span class="text-[9px] font-mono text-gray-500 uppercase">Link Established</span>
+            </div>
+            <div class="text-[9px] font-mono text-tacticalCyan/60 whitespace-nowrap overflow-hidden">
+                <span class="animate-pulse">STREAMING DATA... </span> 
+                HASH: 8f4e2c1a90b3 | EN_LEVEL: 100% | PILOT_SYNC: OPTIMAL | FACTION_CONTROL: 89.4%
+            </div>
+        </div>
+        <div class="ml-auto font-tech text-[10px] text-gray-600 tracking-widest uppercase">
+            Military Grade Encryption Active
+        </div>
+    </div>
+
+    <script>
+        // Micro-interactions and auto-scroll for log
+        const logContainer = document.querySelector('.custom-scrollbar');
+        if(logContainer) {
+            setInterval(() => {
+                logContainer.scrollTop += 1;
+                if(logContainer.scrollTop >= (logContainer.scrollHeight - logContainer.offsetHeight)) {
+                    logContainer.scrollTop = 0;
+                }
+            }, 50);
+        }
+
+        // Add glow effect to elements on hover
+        document.querySelectorAll('.glass-panel').forEach(panel => {
+            panel.addEventListener('mousemove', (e) => {
+                const rect = panel.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                panel.style.setProperty('--mouse-x', `${x}px`);
+                panel.style.setProperty('--mouse-y', `${y}px`);
+            });
+        });
+    </script>
+</body>
+</html>
