@@ -1,0 +1,363 @@
+```html
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>頂点突破 -Break The Legend-</title>
+
+    <style>
+        :root {
+            --bg-color: #0b0f18;
+            --accent-color: #00d4ff;
+            --text-color: #e8f1ff;
+            --card-bg: #161d2a;
+            --chorus-color: #ffcc00;
+            --bridge-color: #ff4d6d;
+            --pre-color: #9b5cff;
+            --build-color: #00ffb3;
+            --shout-color: #ff3b3b;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background:
+                radial-gradient(circle at top, #162238 0%, #0b0f18 60%),
+                #0b0f18;
+            color: var(--text-color);
+            font-family: "Meiryo", "Hiragino Kaku Gothic ProN", sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        header {
+            width: 100%;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: rgba(0,0,0,0.92);
+            backdrop-filter: blur(8px);
+            border-bottom: 2px solid var(--accent-color);
+            padding: 14px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-title {
+            color: var(--accent-color);
+            font-weight: bold;
+            letter-spacing: 2px;
+            text-decoration: none;
+            font-size: 1rem;
+        }
+
+        .nav-item {
+            color: #8ea4c9;
+            text-decoration: none;
+            margin-left: 14px;
+            font-size: 0.85rem;
+        }
+
+        .hero {
+            width: 100%;
+            max-width: 900px;
+            padding: 50px 20px 25px;
+            text-align: center;
+        }
+
+        .main-title {
+            font-size: 2.4rem;
+            margin: 0;
+            color: white;
+            text-shadow: 0 0 18px rgba(0,212,255,0.5);
+            letter-spacing: 3px;
+        }
+
+        .subtitle {
+            margin-top: 14px;
+            color: #9fc7ff;
+            line-height: 1.8;
+            font-size: 0.98rem;
+        }
+
+        .player-section {
+            width: 100%;
+            max-width: 700px;
+            padding: 10px 20px 30px;
+        }
+
+        audio {
+            width: 100%;
+            height: 48px;
+        }
+
+        .lyrics-container {
+            width: 100%;
+            max-width: 900px;
+            padding: 10px 20px 100px;
+        }
+
+        .section {
+            background: rgba(22,29,42,0.92);
+            border-radius: 14px;
+            padding: 24px;
+            margin-bottom: 28px;
+            border-left: 5px solid var(--accent-color);
+            box-shadow: 0 0 24px rgba(0,0,0,0.35);
+        }
+
+        .section-title {
+            font-size: 1.05rem;
+            font-weight: bold;
+            margin-bottom: 18px;
+            letter-spacing: 1px;
+        }
+
+        .lyrics-text {
+            white-space: pre-wrap;
+            line-height: 2;
+            font-size: 1rem;
+        }
+
+        .verse {
+            border-color: var(--accent-color);
+        }
+
+        .verse .section-title {
+            color: var(--accent-color);
+        }
+
+        .pre {
+            border-color: var(--pre-color);
+        }
+
+        .pre .section-title {
+            color: var(--pre-color);
+        }
+
+        .chorus {
+            border-color: var(--chorus-color);
+            background: linear-gradient(135deg, rgba(255,204,0,0.08), rgba(22,29,42,0.95));
+        }
+
+        .chorus .section-title {
+            color: var(--chorus-color);
+        }
+
+        .bridge {
+            border-color: var(--bridge-color);
+        }
+
+        .bridge .section-title {
+            color: var(--bridge-color);
+        }
+
+        .build {
+            border-color: var(--build-color);
+            text-align: center;
+        }
+
+        .build .section-title {
+            color: var(--build-color);
+        }
+
+        .shout {
+            border-color: var(--shout-color);
+            background: linear-gradient(135deg, rgba(255,59,59,0.12), rgba(22,29,42,0.95));
+            text-align: center;
+        }
+
+        .shout .section-title {
+            color: var(--shout-color);
+        }
+
+        @media (max-width: 600px) {
+            .main-title {
+                font-size: 1.7rem;
+            }
+
+            .lyrics-text {
+                font-size: 0.95rem;
+                line-height: 1.9;
+            }
+
+            .section {
+                padding: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <a href="#" class="header-title">Secret Society Archives</a>
+    <nav>
+        <a href="#" class="nav-item">Lyrics</a>
+        <a href="#" class="nav-item">MST</a>
+        <a href="#" class="nav-item">Final Battle</a>
+    </nav>
+</header>
+
+<div class="hero">
+    <h1 class="main-title">頂点突破 -Break The Legend-</h1>
+    <div class="subtitle">
+        Secret Society vs オガ研<br>
+        初めての真剣勝負――そして、伝説を打ち破った戦い。
+    </div>
+</div>
+
+<div class="player-section">
+    <audio controls>
+        <source src="Break The Legend.mp3" type="audio/mpeg">
+        お使いのブラウザはオーディオ再生に対応していません。
+    </audio>
+</div>
+
+<div class="lyrics-container">
+
+    <div class="section verse">
+        <div class="section-title">▼ Verse</div>
+        <div class="lyrics-text">静寂を裂いた　開戦のシグナル
+無限の戦場　火花が舞った
+盤面を睨む　オロミンの声
+「絆で怪物を超えるんだ」
+
+最前線を駆ける　かみねこの閃光
+グラブリンが宙を切り裂く
+なぎさとNetは　盾となり立った
+仲間の未来を繋ぐために</div>
+    </div>
+
+    <div class="section pre">
+        <div class="section-title">▼ Pre-Chorus</div>
+        <div class="lyrics-text">ミノフスキーの霧を越えて
+凍てつく重力が牙を剥く
+「綺麗でしょう？」
+笑ったその瞬間
+グラビスフィア・キャノン！
+
+プリコネの機影を砕いて
+戦場が揺れ始める
+伝説の壁に
+今　亀裂が走った――！</div>
+    </div>
+
+    <div class="section chorus">
+        <div class="section-title">▼ Chorus</div>
+        <div class="lyrics-text">うおぉぉぉ！　進め Secret Society
+魂を燃やして
+一人じゃ辿り着けない夢へ
+仲間と飛び込め！
+
+炎のナイトが道を描き
+ボブが未来を撃ち抜く
+この宇宙を変えるため
+俺たちは今　立ち上がる！</div>
+    </div>
+
+    <div class="section verse">
+        <div class="section-title">▼ Verse</div>
+        <div class="lyrics-text">乱戦の中を　駆け抜けるオズナ
+ゼロシフトで次元を裂いた
+ライナセロスの　黄金の斬撃
+スレッタの装甲を貫いた
+
+巨大なデコイとなった
+炎のナイトの背中
+アルトリアの盾が輝き
+仲間たちを守り抜く</div>
+    </div>
+
+    <div class="section pre">
+        <div class="section-title">▼ Pre-Chorus</div>
+        <div class="lyrics-text">Target Neutralized――
+響く無機質な声
+キュートFシャトナーさえ
+絶対零度に沈む
+
+かみねこの光が
+絶望を凍らせた
+揺らぎ始める王座
+勝利はもう目の前だ！</div>
+    </div>
+
+    <div class="section bridge">
+        <div class="section-title">▼ Bridge</div>
+        <div class="lyrics-text">散っていった願いが
+この胸を焦がしてる
+ライナセロスの炎は消えない
+
+赤く輝く　Ψヴァイサーガ
+八千代の刃が迫る
+それでも誰も　退かなかった
+
+炎のナイトが正面を抑え
+アルトリアが死角を守る
+ボブとオロミンの援護射撃
+そしてオズナが跳ぶ――！</div>
+    </div>
+
+    <div class="section pre">
+        <div class="section-title">▼ Pre-Chorus</div>
+        <div class="lyrics-text">ゼロシフトの閃光が走る
+運命の座標へ突き刺され
+「これで終わりだァァ！！」
+叫びと共に放つ
+バーストブレード！
+
+仲間たちの想いを背負い
+絶対王者を切り裂いた
+宇宙を染める
+勝利の爆炎――！</div>
+    </div>
+
+    <div class="section chorus">
+        <div class="section-title">▼ Chorus</div>
+        <div class="lyrics-text">うおぉぉぉ！　進め Secret Society
+魂を燃やして
+一人じゃ辿り着けない夢へ
+仲間と飛び込め！
+
+炎のナイトが道を描き
+ボブが未来を撃ち抜く
+この宇宙を変えるため
+俺たちは今　立ち上がる！</div>
+    </div>
+
+    <div class="section build">
+        <div class="section-title">▼ Build Up</div>
+        <div class="lyrics-text">最終決戦――
+全てを超える瞬間へ。</div>
+    </div>
+
+    <div class="section chorus">
+        <div class="section-title">▼ Final Chorus</div>
+        <div class="lyrics-text">鳴り響け　勝利のファンファーレ
+新たな頂点へ
+オロミンの旗を掲げて
+時代を塗り替えろ！
+
+かみねこ　オズナ　アルトリア
+なぎさ　Net　ライナセロス
+炎のナイト　ボブと共に
+伝説を超えてゆけ！</div>
+    </div>
+
+    <div class="section shout">
+        <div class="section-title">▼ Shout</div>
+        <div class="lyrics-text">「一人じゃない――」
+「俺たちは、Secret Society！！」</div>
+    </div>
+
+</div>
+
+</body>
+</html>
+```
