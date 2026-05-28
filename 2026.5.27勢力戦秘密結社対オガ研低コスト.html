@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="ja" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tactical Command Interface | Secret Society vs Oga Ken</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Michroma&family=Rajdhani:wght@300;500;700&family=JetBrains+Mono:wght@300;500&family=Noto+Sans+JP:wght@300;400;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        tactical: {
+                            bg: '#0b0e14',
+                            panel: 'rgba(15, 20, 28, 0.85)',
+                            cyan: '#00f2ff',
+                            orange: '#ff8c00',
+                            red: '#ff3e3e',
+                            gold: '#ffd700',
+                            border: 'rgba(0, 242, 255, 0.2)'
+                        }
+                    },
+                    fontFamily: {
+                        header: ['Michroma', 'sans-serif'],
+                        display: ['Rajdhani', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                        body: ['Noto Sans JP', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #0b0e14;
+            background-image: 
+                radial-gradient(circle at 50% 50%, rgba(0, 242, 255, 0.05) 0%, transparent 80%),
+                linear-gradient(rgba(0, 242, 255, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 242, 255, 0.02) 1px, transparent 1px);
+            background-size: 100% 100%, 40px 40px, 40px 40px;
+            color: #e2e8f0;
+            overflow-x: hidden;
+        }
+
+        .glass-panel {
+            background: rgba(15, 20, 28, 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(0, 242, 255, 0.1);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
+        }
+
+        .hud-corner {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            border-color: #00f2ff;
+        }
+
+        .scanline {
+            width: 100%;
+            height: 2px;
+            background: rgba(0, 242, 255, 0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 100;
+            animation: scan 8s linear infinite;
+        }
+
+        @keyframes scan {
+            0% { transform: translateY(-100px); }
+            100% { transform: translateY(100vh); }
+        }
+
+        .typing::after {
+            content: '|';
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            50% { opacity: 0; }
+        }
+
+        .terminal-scroll::-webkit-scrollbar {
+            width: 4px;
+        }
+        .terminal-scroll::-webkit-scrollbar-thumb {
+            background: #00f2ff;
+            border-radius: 2px;
+        }
+
+        .stat-bar {
+            height: 4px;
+            background: rgba(0, 242, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        .stat-fill {
+            height: 100%;
+            background: #00f2ff;
+            box-shadow: 0 0 10px #00f2ff;
+        }
+
+        .drop-cap::first-letter {
+            font-family: 'Michroma', sans-serif;
+            font-size: 3.5rem;
+            float: left;
+            line-height: 1;
+            padding-right: 0.5rem;
+            color: #00f2ff;
+            text-shadow: 0 0 15px rgba(0, 242, 255, 0.5);
+        }
+    </style>
+</head>
+<body class="font-body selection:bg-tactical-cyan selection:text-black">
+
+    <div class="scanline"></div>
+
+    <!-- MAIN INTERFACE -->
+    <div class="min-h-screen p-4 md:p-8 flex flex-col gap-6 max-w-[1600px] mx-auto">
+        
+        <!-- HEADER -->
+        <header class="relative glass-panel p-6 rounded-lg overflow-hidden border-l-4 border-l-tactical-cyan">
+            <div class="absolute top-0 right-0 p-2 text-[10px] font-mono text-tactical-cyan opacity-50">
+                SYSTEM_v2.0.86 // ENCRYPTED_CHANNEL
+            </div>
+            <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+                <div>
+                    <h1 class="font-header text-2xl md:text-4xl tracking-tighter text-white">
+                        TACTICAL COMMAND <span class="text-tactical-cyan">INTERFACE</span>
+                    </h1>
+                    <p class="font-display text-sm tracking-widest text-tactical-cyan opacity-80 mt-1 uppercase">
+                        Secret Society Engagement Log: Phase 02 // Turn 86 Complete
+                    </p>
+                </div>
+                <div class="flex gap-4">
+                    <div class="text-right">
+                        <div class="text-[10px] font-mono text-tactical-orange">MISSION STATUS</div>
+                        <div class="font-header text-xl text-tactical-gold">VICTORY</div>
+                    </div>
+                    <div class="h-12 w-px bg-tactical-border"></div>
+                    <div class="text-right">
+                        <div class="text-[10px] font-mono text-tactical-cyan">ELAPSED TIME</div>
+                        <div class="font-header text-xl text-white">086:00:00</div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- MAIN GRID -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            
+            <!-- LEFT SIDEBAR: INTEL -->
+            <aside class="lg:col-span-3 flex flex-col gap-6 order-2 lg:order-1">
+                <section class="glass-panel rounded-lg overflow-hidden">
+                    <div class="bg-tactical-cyan/10 px-4 py-2 border-b border-tactical-border flex justify-between items-center">
+                        <h2 class="font-display font-bold text-tactical-cyan tracking-wider">PILOT DOSSIER</h2>
+                        <span class="text-[10px] font-mono text-tactical-cyan">RECORDS: 09</span>
+                    </div>
+                    <div class="p-4 flex flex-col gap-3 max-h-[500px] overflow-y-auto terminal-scroll">
+                        <!-- Pilots -->
+                        <div class="p-3 border border-tactical-border bg-black/40 hover:border-tactical-cyan transition-colors group">
+                            <div class="flex justify-between items-start mb-2">
+                                <span class="font-display text-tactical-gold text-lg">ODOMIN</span>
+                                <span class="font-mono text-[10px] px-1 bg-tactical-gold/20 text-tactical-gold border border-tactical-gold/40">RANK 6</span>
+                            </div>
+                            <div class="text-[11px] text-slate-400 mb-2 leading-relaxed">Clan Leader. High communication and strategic expertise.</div>
+                            <div class="stat-bar"><div class="stat-fill w-[95%]"></div></div>
+                        </div>
+
+                        <div class="p-3 border border-tactical-border bg-black/40 hover:border-tactical-cyan transition-colors group">
+                            <div class="flex justify-between items-start mb-2">
+                                <span class="font-display text-white text-lg uppercase">Net</span>
+                                <span class="font-mono text-[10px] px-1 bg-tactical-cyan/20 text-tactical-cyan border border-tactical-cyan/40">MVP</span>
+                            </div>
+                            <div class="text-[11px] text-slate-400 mb-2 leading-relaxed">Faction Elder. Expert maneuvering with Dragon Gundam.</div>
+                            <div class="stat-bar"><div class="stat-fill w-[88%]" style="box-shadow: 0 0 15px #00f2ff;"></div></div>
+                        </div>
+
+                        <div class="p-3 border border-tactical-border bg-black/40 hover:border-tactical-cyan transition-colors group">
+                            <div class="flex justify-between items-start mb-2">
+                                <span class="font-display text-white text-lg uppercase">Flame Knight</span>
+                                <span class="font-mono text-[10px] px-1 bg-tactical-orange/20 text-tactical-orange border border-tactical-orange/40">TACTICIAN</span>
+                            </div>
+                            <div class="text-[11px] text-slate-400 mb-2 leading-relaxed">Veteran strategist. High passion and tactical precision.</div>
+                            <div class="stat-bar"><div class="stat-fill w-[82%]" style="background:#ff8c00; box-shadow: 0 0 10px #ff8c00;"></div></div>
+                        </div>
+
+                        <!-- Others Compact -->
+                        <div class="grid grid-cols-2 gap-2 mt-2">
+                            <div class="p-2 border border-tactical-border bg-black/20 text-[10px] font-mono text-center">ARTORIA [AA]</div>
+                            <div class="p-2 border border-tactical-border bg-black/20 text-[10px] font-mono text-center">LINASEROS [AS]</div>
+                            <div class="p-2 border border-tactical-border bg-black/20 text-[10px] font-mono text-center">KAMINNEKO [LA]</div>
+                            <div class="p-2 border border-tactical-border bg-black/20 text-[10px] font-mono text-center">NAGISA [AA]</div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="glass-panel rounded-lg overflow-hidden">
+                    <div class="bg-tactical-red/10 px-4 py-2 border-b border-tactical-red/20 flex justify-between items-center">
+                        <h2 class="font-display font-bold text-tactical-red tracking-wider">HOSTILE DATA</h2>
+                        <span class="text-[10px] font-mono text-tactical-red">OGA KEN LAB</span>
+                    </div>
+                    <div class="p-4">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-10 h-10 border border-tactical-red flex items-center justify-center font-header text-tactical-red">R1</div>
+                            <div>
+                                <div class="font-display text-white leading-none">YACHIYO</div>
+                                <div class="text-[10px] font-mono text-tactical-red">DARYLBALDE / STATUS: ELIMINATED</div>
+                            </div>
+                        </div>
+                        <div class="space-y-2">
+                            <div class="flex justify-between text-[11px] font-mono border-b border-white/5 pb-1">
+                                <span class="text-slate-400 uppercase">Cute F. Shatner</span>
+                                <span class="text-tactical-red">KIA</span>
+                            </div>
+                            <div class="flex justify-between text-[11px] font-mono border-b border-white/5 pb-1">
+                                <span class="text-slate-400 uppercase">Alan = Macbain</span>
+                                <span class="text-tactical-red">KIA</span>
+                            </div>
+                            <div class="flex justify-between text-[11px] font-mono border-b border-white/5 pb-1">
+                                <span class="text-slate-400 uppercase">Suletta Mercury</span>
+                                <span class="text-tactical-red">KIA</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </aside>
+
+            <!-- CENTER COLUMN: THE NOVEL -->
+            <main class="lg:col-span-6 order-1 lg:order-2">
+                <article class="glass-panel rounded-lg p-6 md:p-10 relative">
+                    <!-- HUD Elements -->
+                    <div class="hud-corner top-0 left-0 border-t-2 border-l-2"></div>
+                    <div class="hud-corner top-0 right-0 border-t-2 border-r-2"></div>
+                    <div class="hud-corner bottom-0 left-0 border-b-2 border-l-2"></div>
+                    <div class="hud-corner bottom-0 right-0 border-b-2 border-r-2"></div>
+
+                    <div class="mb-12 text-center">
+                        <h3 class="text-tactical-cyan font-display tracking-[0.5em] text-sm mb-2">MISSION RECORD</h3>
+                        <h2 class="font-header text-3xl md:text-4xl text-white mb-6 leading-tight">ギルド戦：秘密結社 vs オガ研<br><span class="text-tactical-gold text-2xl md:text-3xl">結末の黄金と散りゆく華</span></h2>
+                        <div class="flex justify-center items-center gap-4">
+                            <div class="h-px w-12 bg-tactical-cyan/40"></div>
+                            <span class="font-mono text-xs text-tactical-cyan tracking-widest">TURN 01 - 86</span>
+                            <div class="h-px w-12 bg-tactical-cyan/40"></div>
+                        </div>
+                    </div>
+
+                    <div class="space-y-12 text-slate-300 leading-relaxed text-lg text-justify font-light">
+                        <!-- Chapter 1 -->
+                        <section>
+                            <h4 class="font-display text-tactical-cyan text-xl mb-6 border-l-4 border-tactical-cyan pl-4">第一章：咆哮と散りゆく華</h4>
+                            <p class="drop-cap mb-6">仮想戦場に巨大な機動兵器が激突し、戦いの幕が開いた。「秘密結社」は、初戦の高コスト戦を制した勢いのまま、この第2戦で「真の勝利」を掴み取ろうとしていた。軍師炎のナイトが描き出した戦略は、実に86ターンに及ぶ壮絶なドラマの序章に過ぎなかった。</p>
+                            <p class="mb-6">初期配置において、秘密結社のリーダー・オロ〇ミンは「Ψゴールドフレーム天ミナ」からミラージュコロイドを展開。炎のナイトの「ガンダム・バルバトス」は四足歩行のような荒々しい動きで突撃を開始した。対するオガ研のリーダー、キュートFシャトナーの「Ψ Project DIVA アーケード仕様 初音ミク」を、炎のナイトのスパイクシールドが捉えようとする。</p>
+                            <p class="mb-6">その混乱の隙を突いたのが、後にMVPと称えられることとなるNetだった。「Ψドラゴンガンダム」を操る彼は、電光石火の動きでイヴリンの「フェイ・イェンHD」を急襲。フェイロンフラッグの一撃が機体を貫き、本日最初の「撃墜」を記録した。</p>
+                            <p class="mb-6">しかし、勝利への道は平坦ではなかった。マスコット的存在のかみねこが操る「ガンダムローズΨ」は、最強の傭兵八千代の「ダリルバルデ」と対峙。必死の「ローゼスハリケーン」も虚しく、八千代の圧倒的な手数の前にかみねこの通信は途絶えた。さらに軍師炎のナイトも、アカハナの「ラーゼフォン」によって撃破される。だが、彼は満足げに言い残した。「あとは……任せたぞ」</p>
+                        </section>
+
+                        <div class="flex items-center justify-center opacity-20">
+                            <div class="h-px w-full bg-gradient-to-r from-transparent via-tactical-cyan to-transparent"></div>
+                        </div>
+
+                        <!-- Chapter 2 -->
+                        <section>
+                            <h4 class="font-display text-tactical-cyan text-xl mb-6 border-l-4 border-tactical-cyan pl-4">第二章：軍師の嘲笑と逆転の連鎖</h4>
+                            <p class="mb-6">軍師を失っても、秘密結社の進撃は止まらなかった。なぎさの「Ψパーフェクティビリティ・ディバイン」が不意を突き、ねねっちのフェニックスガンダムの電子防御をビームサーベルで切り裂く。</p>
+                            <p class="mb-6">戦場のトリックスター、ボブの「Ψタイラントソード改」も猛威を振るった。彼はキュートFシャトナーを退け、さらには難敵八千代をも戦列から除外することに成功する。ボブの勝利の雄叫びがチームの士気を極限まで引き上げた。</p>
+                            <p class="mb-6">そしてNetのドラゴンガンダムは止まらない。パラライカの「ザ・バング」を屠り、さらにはスレッタ・マーキュリーの「ブラックナイトスコード ルドラ」の装甲を貫通。スレッタの「ミオリネさん、ごめんなさい……」という無念の声を背に、Netは次の標的へと転進していった。これら全ての動きは、倒れた炎のナイトが敷いたレールの上の出来事であった。</p>
+                        </section>
+
+                        <div class="flex items-center justify-center opacity-20">
+                            <div class="h-px w-full bg-gradient-to-r from-transparent via-tactical-cyan to-transparent"></div>
+                        </div>
+
+                        <!-- Chapter 3 -->
+                        <section>
+                            <h4 class="font-display text-tactical-cyan text-xl mb-6 border-l-4 border-tactical-cyan pl-4">最終章：終焉の静寂と黄金の勝者</h4>
+                            <p class="mb-6">戦場に残されたのは、オガ研の「守護神」アラン＝マクバインのみ。孤立無援となった彼の「カブール・nuovo」は驚異的な耐久力で秘密結社の猛攻を耐え忍ぶ。しかし、ボブがアカハナを下した時点で、勝敗の天秤は完全に傾いていた。</p>
+                            <p class="mb-6">第86ターン。リーダーのオロ〇ミンが静かに天ミナを前進させる。限界を迎えたカブール・nuovoを前に、オロ〇ミンは「トリケロス改」の爪を振り上げた。アランは薄れゆく意識の中で、アムロとララァの幻影を見る。「今日の都合のために魂を売った者たちの決断は、明日になれば崩れ去るだろう」</p>
+                            <p class="mb-6 text-tactical-gold font-bold italic text-center text-xl">「Society, Victory!」</p>
+                            <p>爆辞が戦場を包み込み、静寂が戻る。コックピットの中でNetは、自らの戦果と完璧に遂行された作戦を噛み締めていた。オロ〇ミンの下で進化した秘密結社。彼らの「隠密なる」快進撃は、ここから始まったばかりなのだ。</p>
+                        </section>
+                    </div>
+                </article>
+            </main>
+
+            <!-- RIGHT SIDEBAR: LOGS -->
+            <aside class="lg:col-span-3 flex flex-col gap-6 order-3">
+                <section class="glass-panel rounded-lg flex flex-col h-[700px]">
+                    <div class="bg-black/60 px-4 py-3 border-b border-tactical-border flex justify-between items-center">
+                        <div class="flex items-center gap-2">
+                            <div class="w-2 h-2 rounded-full bg-tactical-cyan animate-pulse"></div>
+                            <h2 class="font-mono text-sm font-bold text-tactical-cyan tracking-widest uppercase">Battle Log Feed</h2>
+                        </div>
+                        <span class="font-mono text-[10px] text-white/40">SYNC_OK</span>
+                    </div>
+                    <div class="p-4 font-mono text-[12px] overflow-y-auto terminal-scroll space-y-3 bg-black/20 flex-1">
+                        <!-- Log Entries -->
+                        <div class="border-l-2 border-tactical-cyan pl-2 py-1">
+                            <span class="text-tactical-cyan">[T:01]</span> <span class="text-white">FLAME KNIGHT atk CUTE F. SHATNER: <span class="text-tactical-red">MISS</span></span>
+                        </div>
+                        <div class="border-l-2 border-tactical-gold pl-2 py-1">
+                            <span class="text-tactical-gold">[T:02]</span> <span class="text-white">NET atk EVELYN with FEYRON FLAG. DMG: 442. <span class="text-tactical-gold">DESTROYED.</span></span>
+                        </div>
+                        <div class="border-l-2 border-tactical-cyan pl-2 py-1 opacity-60">
+                            <span class="text-tactical-cyan">[T:06]</span> <span class="text-white">NAGISA activate NT-D. Beam Saber DMG: 215 to SHATNER.</span>
+                        </div>
+                        <div class="border-l-2 border-tactical-red pl-2 py-1">
+                            <span class="text-tactical-red">[T:12]</span> <span class="text-white">YACHIYO atk KAMINNEKO with ISHVARA. <span class="text-tactical-red">FATAL DMG.</span></span>
+                        </div>
+                        <div class="border-l-2 border-tactical-cyan pl-2 py-1">
+                            <span class="text-tactical-cyan">[T:14]</span> <span class="text-white">NET atk SULETTA. DMG: 378. Target ELIMINATED.</span>
+                        </div>
+                        <div class="border-l-2 border-tactical-cyan pl-2 py-1">
+                            <span class="text-tactical-cyan">[T:34]</span> <span class="text-white">NET atk BALALAIKA. DMG: 157. Unit Down.</span>
+                        </div>
+                        <div class="border-l-2 border-white/20 pl-2 py-1 opacity-50">
+                            <span class="text-slate-500">[T:52]</span> <span class="text-slate-400">ALAN atk ODOMIN. Blocked by TRICEROS KAI. EN Absorbed.</span>
+                        </div>
+                        <div class="border-l-2 border-tactical-cyan pl-2 py-1">
+                            <span class="text-tactical-cyan">[T:55]</span> <span class="text-white">LINASEROS atk PRIKONE. DMG: 716. DESTROYED.</span>
+                        </div>
+                        <div class="border-l-2 border-tactical-cyan pl-2 py-1">
+                            <span class="text-tactical-cyan">[T:82]</span> <span class="text-white">NET use CORE LANDER. DMG to ALAN: 103.</span>
+                        </div>
+                        <div class="border-l-2 border-tactical-gold pl-2 py-2 bg-tactical-gold/5">
+                            <span class="text-tactical-gold">[T:86]</span> <span class="text-white">ODOMIN atk ALAN with TRICEROS KAI. <span class="font-bold">CRITICAL DMG: 606.</span> TARGET NEUTRALIZED.</span>
+                        </div>
+                        <div class="text-tactical-cyan font-bold pt-4 text-center blink">--- BATTLE CONCLUDED ---</div>
+                    </div>
+                </section>
+
+                <section class="glass-panel rounded-lg p-4">
+                    <h3 class="font-display text-tactical-cyan text-xs tracking-widest mb-3 uppercase">Technical Specs</h3>
+                    <div class="grid grid-cols-1 gap-2">
+                        <div class="bg-white/5 p-2 rounded flex justify-between items-center">
+                            <span class="text-[10px] font-mono text-slate-400">天ミナ (ODOMIN)</span>
+                            <span class="text-[10px] font-mono px-2 bg-tactical-cyan/20 text-tactical-cyan">AA [20]</span>
+                        </div>
+                        <div class="bg-white/5 p-2 rounded flex justify-between items-center">
+                            <span class="text-[10px] font-mono text-slate-400">DRAGON (NET)</span>
+                            <span class="text-[10px] font-mono px-2 bg-tactical-cyan/20 text-tactical-cyan">LA [1]</span>
+                        </div>
+                        <div class="bg-white/5 p-2 rounded flex justify-between items-center">
+                            <span class="text-[10px] font-mono text-slate-400">BARBATOS (FLAME)</span>
+                            <span class="text-[10px] font-mono px-2 bg-tactical-cyan/20 text-tactical-cyan">SD [1]</span>
+                        </div>
+                        <div class="bg-white/5 p-2 rounded flex justify-between items-center">
+                            <span class="text-[10px] font-mono text-slate-400">TYRANT (BOB)</span>
+                            <span class="text-[10px] font-mono px-2 bg-tactical-cyan/20 text-tactical-cyan">SD [1]</span>
+                        </div>
+                    </div>
+                </section>
+            </aside>
+        </div>
+
+        <!-- FOOTER INFO -->
+        <div class="flex flex-col md:flex-row justify-between items-center glass-panel p-4 rounded-lg border-t-2 border-tactical-cyan/30">
+            <div class="flex items-center gap-6">
+                <div class="flex items-center gap-2">
+                    <div class="w-3 h-3 bg-tactical-cyan"></div>
+                    <span class="font-mono text-xs uppercase tracking-tighter">Faction: Secret Society</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <div class="w-3 h-3 bg-tactical-gold"></div>
+                    <span class="font-mono text-xs uppercase tracking-tighter">Status: Victorious</span>
+                </div>
+            </div>
+            <div class="mt-4 md:mt-0 font-mono text-[10px] text-white/40 uppercase tracking-[0.2em]">
+                Data Integrity: Verified // Security Level: Omega
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Simple interactive elements
+        document.querySelectorAll('.glass-panel').forEach(panel => {
+            panel.addEventListener('mouseenter', () => {
+                panel.style.borderColor = 'rgba(0, 242, 255, 0.4)';
+            });
+            panel.addEventListener('mouseleave', () => {
+                panel.style.borderColor = 'rgba(0, 242, 255, 0.1)';
+            });
+        });
+
+        // Initialize terminal scroll to bottom
+        const terminal = document.querySelector('.terminal-scroll');
+        terminal.scrollTop = terminal.scrollHeight;
+    </script>
+</body>
+</html>
