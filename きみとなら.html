@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>きみとなら - Secret Society</title>
+
+    <style>
+        :root {
+            --bg-color: #10131a;
+            --accent-color: #7dd3fc;
+            --text-color: #f1f5f9;
+            --card-bg: #1b2230;
+
+            --verse-color: #7dd3fc;
+            --pre-color: #c084fc;
+            --chorus-color: #facc15;
+            --bridge-color: #fb7185;
+            --final-color: #4ade80;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background:
+                linear-gradient(to bottom, #10131a 0%, #1b2230 100%);
+            color: var(--text-color);
+            font-family: "Meiryo", "Hiragino Kaku Gothic ProN", sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        header {
+            width: 100%;
+            background: rgba(0,0,0,0.92);
+            height: 60px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 2px solid var(--accent-color);
+            padding: 0 15px;
+            box-sizing: border-box;
+        }
+
+        .header-title {
+            text-decoration: none;
+            color: var(--accent-color);
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        .nav-item {
+            color: #94a3b8;
+            text-decoration: none;
+            font-size: 0.85rem;
+            margin-left: 10px;
+        }
+
+        .player-section {
+            width: 100%;
+            max-width: 600px;
+            padding: 20px 15px;
+            text-align: center;
+            position: sticky;
+            top: 60px;
+            background: var(--bg-color);
+            z-index: 900;
+            box-sizing: border-box;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            margin: 0 0 15px 0;
+            letter-spacing: 2px;
+            color: var(--accent-color);
+        }
+
+        .subtitle {
+            color: #cbd5e1;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+            line-height: 1.8;
+        }
+
+        audio {
+            width: 100%;
+            height: 45px;
+        }
+
+        .lyrics-container {
+            width: 100%;
+            max-width: 720px;
+            padding: 20px 15px 100px 15px;
+            box-sizing: border-box;
+        }
+
+        .section {
+            margin-bottom: 35px;
+            padding: 22px;
+            border-radius: 14px;
+            background: var(--card-bg);
+            border-left: 5px solid transparent;
+            box-shadow: 0 0 20px rgba(0,0,0,0.2);
+        }
+
+        .section-title {
+            font-weight: bold;
+            font-size: 1.05rem;
+            margin-bottom: 14px;
+            display: block;
+            letter-spacing: 1px;
+        }
+
+        .lyrics-text {
+            line-height: 2;
+            font-size: 1rem;
+            white-space: pre-wrap;
+        }
+
+        .verse {
+            border-color: var(--verse-color);
+        }
+
+        .verse .section-title {
+            color: var(--verse-color);
+        }
+
+        .pre {
+            border-color: var(--pre-color);
+        }
+
+        .pre .section-title {
+            color: var(--pre-color);
+        }
+
+        .chorus {
+            border-color: var(--chorus-color);
+        }
+
+        .chorus .section-title {
+            color: var(--chorus-color);
+        }
+
+        .bridge {
+            border-color: var(--bridge-color);
+        }
+
+        .bridge .section-title {
+            color: var(--bridge-color);
+        }
+
+        .final {
+            border-color: var(--final-color);
+            text-align: center;
+        }
+
+        .final .section-title {
+            color: var(--final-color);
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.15rem;
+            }
+
+            .lyrics-text {
+                font-size: 0.92rem;
+            }
+
+            .section {
+                padding: 16px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <a href="index.html" class="header-title">ボブの秘密基地</a>
+
+    <nav>
+        <a href="#" class="nav-item">Lyrics</a>
+        <a href="#" class="nav-item">MST</a>
+    </nav>
+</header>
+
+<div class="player-section">
+    <h1>きみとなら</h1>
+
+    <div class="subtitle">
+        Secret Society<br>
+        夜明けを目指した、挑戦者たちの歌
+    </div>
+
+    <audio controls>
+        <source src="kimitonara.mp3" type="audio/mpeg">
+        お使いのブラウザはオーディオ再生に対応していません。
+    </audio>
+</div>
+
+<div class="lyrics-container">
+
+    <div class="section verse">
+        <span class="section-title">▼ Verse 1</span>
+
+        <div class="lyrics-text">まだ誰も知らない
+夜明け前のゲート
+静かなログイン画面
+息を潜めてた
+
+オロ〇ミンの
+ゴールドフレーム天ミナ
+その背中を追いかけて
+僕らは走り出す
+
+かみねこのガンダムローズ
+揺れる薔薇のエフェクト
+「負けたくない」って声が
+少しだけ震えてた</div>
+    </div>
+
+    <div class="section pre">
+        <span class="section-title">▼ Pre-Chorus</span>
+
+        <div class="lyrics-text">見上げた空は
+仮想現実でも
+あの日の夢に似ていた
+
+ねえ
+僕たちはきっと
+ここから変われるよ</div>
+    </div>
+
+    <div class="section chorus">
+        <span class="section-title">▼ Chorus</span>
+
+        <div class="lyrics-text">君となら行ける気がした
+終わらないターンの先へ
+傷ついても　倒れても
+また立ち上がればいい
+
+アルトリア
+ランスロット・アルビオンゼロ
+白い軌跡を描いて
+
+Secret Society
+あの夜の誓いは
+今でも胸で光ってる</div>
+    </div>
+
+    <div class="section verse">
+        <span class="section-title">▼ Verse 2</span>
+
+        <div class="lyrics-text">ライナセロスの
+ゴールドフレーム天ミナC
+無駄のないその一撃に
+時間が止まった
+
+なぎさの
+ペルフェクティビリティ・ディバイン
+蒼く燃えるサイコフレーム
+暗闇を照らしてた
+
+Netのドラゴンガンダム
+誰より前へ進んで
+「信じてる」その言葉が
+リンクを繋いでいく</div>
+    </div>
+
+    <div class="section pre">
+        <span class="section-title">▼ Pre-Chorus</span>
+
+        <div class="lyrics-text">負け続けても
+届かなくても
+諦める理由にならない
+
+ほら
+涙の数だけ
+強くなれるんだ</div>
+    </div>
+
+    <div class="section chorus">
+        <span class="section-title">▼ Chorus</span>
+
+        <div class="lyrics-text">僕たちは夢を見ていた
+名もなき挑戦者たち
+不器用でも　遠回りでも
+この場所を信じた
+
+炎のナイト
+ガンダムバルバタウロス
+その炎は消えなくて
+
+Secret Society
+静かな革命が
+夜空を書き換えていく</div>
+    </div>
+
+    <div class="section bridge">
+        <span class="section-title">▼ Bridge</span>
+
+        <div class="lyrics-text">ボブのタイラント・ソード改
+笑いながら切り裂いた
+「大丈夫だ」って軽口が
+なぜか心を救った
+
+オズナのエルガイムが
+最後の壁を超えていく
+僕らの青春はきっと
+この瞬間だったんだ</div>
+    </div>
+
+    <div class="section final">
+        <span class="section-title">▼ Final Chorus</span>
+
+        <div class="lyrics-text">君と見た景色を
+きっと忘れない
+あの敗北も　あの歓声も
+全部未来になる
+
+オロ〇ミン
+アルトリア
+ライナセロス
+かみねこ
+なぎさ
+オズナ
+ボブ
+Net
+炎のナイト
+
+僕たちがいた証を
+この戦場に刻もう
+
+Secret Society
+夜明けの向こうへ
+新しい伝説が始まる</div>
+    </div>
+
+</div>
+
+</body>
+</html>
